@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">平台演进：北桥/南桥分立 → 一切进 SoC</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">Montevina（左）是 MCH+ICH 两颗芯片的时代；现代（右）内存控制器与 Root Complex 已集成进 CPU</text>
+
+  <defs>
+    <marker id="p05" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- 左：Montevina -->
+  <rect x="30" y="82" width="430" height="440" rx="12" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="245" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#a85a17">① Montevina 时代（分立）</text>
+
+  <rect x="150" y="122" width="190" height="52" rx="8" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="245" y="144" text-anchor="middle" font-size="12" font-weight="700" fill="#2a3b57">CPU（Core 2）</text>
+  <text x="245" y="162" text-anchor="middle" font-size="9" fill="#5a6b86">仅计算，不含内存控制器</text>
+
+  <rect x="120" y="210" width="250" height="96" rx="8" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="245" y="234" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a85a17">MCH（北桥）</text>
+  <text x="245" y="254" text-anchor="middle" font-size="9.5" fill="#3f5678">内存控制器 → DRAM</text>
+  <text x="245" y="270" text-anchor="middle" font-size="9.5" fill="#3f5678">PCIe Root Port（显卡等）</text>
+  <text x="245" y="288" text-anchor="middle" font-size="9.5" fill="#3f5678">是 Bus0 Dev0（本章主角）</text>
+  <line x1="245" y1="174" x2="245" y2="210" stroke="#5a6b86" stroke-width="2" marker-end="url(#p05)"/>
+  <text x="290" y="196" font-size="8.5" fill="#8a97ab">FSB 前端总线</text>
+
+  <rect x="120" y="342" width="250" height="84" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="245" y="366" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b4f9c">ICH（南桥）</text>
+  <text x="245" y="386" text-anchor="middle" font-size="9.5" fill="#3f5678">USB / SATA / 网卡 / 传统 I/O</text>
+  <text x="245" y="404" text-anchor="middle" font-size="9.5" fill="#3f5678">慢速外设、遗留总线</text>
+  <line x1="245" y1="306" x2="245" y2="342" stroke="#5a6b86" stroke-width="2" marker-end="url(#p05)"/>
+  <text x="278" y="328" font-size="8.5" fill="#8a97ab">DMI 链路</text>
+
+  <rect x="80" y="212" width="30" height="92" rx="4" fill="#e6f0e9" stroke="#8fd3ac"/>
+  <text x="95" y="262" text-anchor="middle" font-size="9" fill="#1c7a4a" transform="rotate(-90 95 258)">DRAM</text>
+
+  <!-- 右：现代 SoC -->
+  <rect x="500" y="82" width="430" height="440" rx="12" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="715" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">② 现代（集成进 SoC）</text>
+
+  <rect x="560" y="130" width="310" height="200" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="715" y="154" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">CPU / SoC</text>
+  <rect x="580" y="166" width="270" height="44" rx="6" fill="#fff" stroke="#a9dcc0"/>
+  <text x="715" y="193" text-anchor="middle" font-size="10.5" fill="#33415c">内存控制器（原 MCH 功能）→ DRAM</text>
+  <rect x="580" y="218" width="270" height="44" rx="6" fill="#fff" stroke="#a9dcc0"/>
+  <text x="715" y="245" text-anchor="middle" font-size="10.5" fill="#33415c">Root Complex + Root Ports（PCIe）</text>
+  <rect x="580" y="270" width="270" height="44" rx="6" fill="#fff" stroke="#a9dcc0"/>
+  <text x="715" y="297" text-anchor="middle" font-size="10.5" fill="#33415c">Bus0 Dev0 仍在，但已在片内</text>
+
+  <rect x="560" y="358" width="310" height="72" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="715" y="382" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b4f9c">PCH（芯片组，原 ICH）</text>
+  <text x="715" y="402" text-anchor="middle" font-size="9.5" fill="#3f5678">USB/SATA/慢速 I/O，经片内 DMI 相连</text>
+  <text x="715" y="420" text-anchor="middle" font-size="9" fill="#8a97ab">部分低功耗 SoC 连 PCH 也整合了</text>
+  <line x1="715" y1="330" x2="715" y2="358" stroke="#5a6b86" stroke-width="2" marker-end="url(#p05)"/>
+
+  <!-- 底注 -->
+  <rect x="30" y="532" width="900" height="22" rx="8" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="480" y="548" text-anchor="middle" font-size="10.5" fill="#c6d2e6">📘 不变的是"Bus0 Dev0 承载平台核心配置(ECAM 基址、内存映射)"这套逻辑——只是物理上从北桥搬进了 CPU</text>
+</svg>
