@@ -28,10 +28,10 @@
 
 - ✅ **第10章 MSI 和 MSI-X 中断**（Capability/投递路径；中断重映射、IMS）— 正文 8 节骨架齐全，3 图全部落地
   - SVG：`第10章-MSI对比MSI-X.svg`、`第10章-MSI投递路径.svg`、`第10章-x86消息格式.svg` ✅
-- ⬜ **第12章 PCIe 应用**（Capric 卡/DMA/驱动/带宽延时；用现代速率重算带宽账）
-  - SVG：`第12章-Capric框图.svg`、`第12章-DMA写TLP.svg`、`第12章-DMA读TLP.svg`、`第12章-带宽分解.svg`
-- ⬜ **第13章 虚拟化技术**（IOMMU/ATS/SR-IOV；PASID、PRI、Scalable IOV、CXL）
-  - SVG：`第13章-IOMMU.svg`、`第13章-ATS流程.svg`、`第13章-SR-IOV.svg`、`第13章-PASID与SVM.svg`
+- ✅ **第12章 PCIe 应用**（Capric 卡/DMA/驱动/带宽延时；用现代速率重算带宽账）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第12章-Capric框图.svg`、`第12章-DMA写TLP.svg`、`第12章-DMA读TLP.svg`、`第12章-带宽分解.svg` ✅
+- ✅ **第13章 虚拟化技术**（IOMMU/ATS/SR-IOV；PASID、PRI、Scalable IOV、CXL）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第13章-IOMMU.svg`、`第13章-ATS流程.svg`、`第13章-SR-IOV.svg`、`第13章-PASID与SVM.svg` ✅
 
 ## P3 · 基础铺垫（多数读者已具备，可后写）
 

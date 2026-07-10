@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="580" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">IOMMU：给设备 DMA 装上"地址翻译 + 隔离"的守门人</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">设备发出的 IOVA 不直接落到内存，先过 IOMMU：按 BDF 找到域、查页表翻译成物理地址、越界就拦截</text>
+
+  <defs>
+    <marker id="io13" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- 设备 -->
+  <rect x="40" y="120" width="180" height="120" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="130" y="150" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">设备（Endpoint）</text>
+  <text x="130" y="176" text-anchor="middle" font-size="10" fill="#3f5678">发 DMA，用 IOVA</text>
+  <text x="130" y="196" text-anchor="middle" font-size="10" fill="#3f5678">（未翻译地址）</text>
+  <text x="130" y="222" text-anchor="middle" font-size="10" fill="#8a97ab">身份 = BDF（Bus/Dev/Fn）</text>
+
+  <!-- IOMMU -->
+  <rect x="320" y="96" width="300" height="300" rx="12" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="470" y="124" text-anchor="middle" font-size="14" font-weight="700" fill="#a85a17">IOMMU（VT-d / AMD-Vi）</text>
+
+  <rect x="340" y="140" width="260" height="52" rx="8" fill="#fff" stroke="#f0c193"/>
+  <text x="470" y="162" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a85a17">① 按 BDF 查 Root / Context 表</text>
+  <text x="470" y="180" text-anchor="middle" font-size="9.5" fill="#3f5678">定位该设备属于哪个"翻译域"</text>
+
+  <rect x="340" y="202" width="260" height="60" rx="8" fill="#fff" stroke="#f0c193"/>
+  <text x="470" y="224" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a85a17">② 查该域的多级页表</text>
+  <text x="470" y="242" text-anchor="middle" font-size="9.5" fill="#3f5678">IOVA → 物理地址（PA）</text>
+  <text x="470" y="256" text-anchor="middle" font-size="9" fill="#8a97ab">命中 IOTLB 则免查页表</text>
+
+  <rect x="340" y="272" width="260" height="46" rx="8" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="470" y="294" text-anchor="middle" font-size="10.5" font-weight="700" fill="#c0392b">③ 越权检查</text>
+  <text x="470" y="309" text-anchor="middle" font-size="9.5" fill="#c0392b">不在本域映射内 → 拦截并报错</text>
+
+  <rect x="340" y="330" width="260" height="48" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="470" y="350" text-anchor="middle" font-size="10" font-weight="700" fill="#1b4f9c">IOTLB（地址翻译缓存）</text>
+  <text x="470" y="367" text-anchor="middle" font-size="9" fill="#3f5678">缓存近期翻译，命中即快速返回</text>
+
+  <!-- 内存 + 域 -->
+  <rect x="720" y="96" width="200" height="300" rx="12" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="820" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#2a3b57">物理内存</text>
+  <rect x="738" y="140" width="164" height="66" rx="8" fill="#e6f0e9" stroke="#8fd3ac"/>
+  <text x="820" y="164" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">VM-A 的内存域</text>
+  <text x="820" y="182" text-anchor="middle" font-size="9" fill="#3f5678">设备 A 只能访问这里</text>
+  <rect x="738" y="216" width="164" height="66" rx="8" fill="#efe9f9" stroke="#c4b1e8"/>
+  <text x="820" y="240" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7a5cc0">VM-B 的内存域</text>
+  <text x="820" y="258" text-anchor="middle" font-size="9" fill="#3f5678">与 A 严格隔离</text>
+  <rect x="738" y="292" width="164" height="60" rx="8" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="820" y="316" text-anchor="middle" font-size="10.5" font-weight="700" fill="#c0392b">宿主 / 其他域</text>
+  <text x="820" y="334" text-anchor="middle" font-size="9" fill="#c0392b">设备 A 无权触碰</text>
+
+  <!-- arrows -->
+  <line x1="220" y1="180" x2="320" y2="180" stroke="#5a6b86" stroke-width="2" marker-end="url(#io13)"/>
+  <text x="270" y="170" text-anchor="middle" font-size="9.5" fill="#a85a17">IOVA</text>
+  <line x1="620" y1="200" x2="720" y2="180" stroke="#5a6b86" stroke-width="2" marker-end="url(#io13)"/>
+  <text x="670" y="180" text-anchor="middle" font-size="9.5" fill="#1c7a4a">PA（受限）</text>
+
+  <!-- 底部收束 -->
+  <rect x="40" y="420" width="880" height="140" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="446" font-size="13" font-weight="700" fill="#1b2a4a">IOMMU 解决两个问题</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="472">• <tspan font-weight="700">翻译</tspan>：VM 里的驱动用"自以为的物理地址"发 DMA，IOMMU 把它翻译到真实物理页——VM 无需知道真地址。</text>
+    <text x="60" y="496">• <tspan font-weight="700" fill="#c0392b">隔离</tspan>：设备只能访问被授权的域。一个故障/恶意设备无法越界 DMA 打穿别的 VM 或宿主内存。</text>
+    <text x="60" y="524">这正是<tspan font-weight="700">设备直通（passthrough）</tspan>能安全交给虚拟机的根基——没有 IOMMU，直通设备等于把整台内存交给它。</text>
+    <text x="60" y="548" fill="#8a97ab" font-size="10">📘 中断走的是另一条隔离路径——中断重映射（第10章）；DMA 走地址翻译，两者分工。</text>
+  </g>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="580" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">PASID + SVM：一个设备同时服务多个进程的地址空间</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">TLP Prefix 携带 PASID，IOMMU 据此选对进程页表——设备可直接用进程的虚拟地址 DMA，无需钉住内存</text>
+
+  <defs>
+    <marker id="pa13" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- TLP with PASID prefix -->
+  <text x="60" y="92" font-size="13" font-weight="700" fill="#1b2a4a">① 设备发的 TLP 带上 PASID Prefix</text>
+  <g font-size="10" text-anchor="middle">
+    <rect x="60" y="104" width="150" height="40" fill="#efe9f9" stroke="#c4b1e8"/><text x="135" y="122" fill="#7a5cc0" font-weight="700">PASID Prefix</text><text x="135" y="136" fill="#7a5cc0" font-size="8.5">进程地址空间 ID</text>
+    <rect x="210" y="104" width="120" height="40" fill="#dbe8fb" stroke="#93b7f0"/><text x="270" y="127" fill="#1b4f9c">TLP 头</text>
+    <rect x="330" y="104" width="150" height="40" fill="#bfe3cd" stroke="#4a9a6a"/><text x="405" y="127" fill="#14663f">数据（虚拟地址）</text>
+  </g>
+
+  <!-- IOMMU 选页表 -->
+  <rect x="330" y="180" width="300" height="230" rx="12" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="480" y="206" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">IOMMU：按 PASID 选进程页表</text>
+  <rect x="352" y="224" width="256" height="40" rx="7" fill="#fff" stroke="#f0c193"/>
+  <text x="480" y="249" text-anchor="middle" font-size="10" fill="#3f5678">PASID 1 → 进程 P1 的页表（GVA→PA）</text>
+  <rect x="352" y="272" width="256" height="40" rx="7" fill="#fff" stroke="#f0c193"/>
+  <text x="480" y="297" text-anchor="middle" font-size="10" fill="#3f5678">PASID 2 → 进程 P2 的页表</text>
+  <rect x="352" y="320" width="256" height="40" rx="7" fill="#fff" stroke="#f0c193"/>
+  <text x="480" y="345" text-anchor="middle" font-size="10" fill="#3f5678">PASID n → 进程 Pn 的页表</text>
+  <text x="480" y="392" text-anchor="middle" font-size="9.5" fill="#8a97ab">同一个设备（同一 BDF）可并发挂多个地址空间</text>
+
+  <line x1="135" y1="144" x2="360" y2="224" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#pa13)"/>
+
+  <!-- 进程地址空间 -->
+  <rect x="700" y="180" width="220" height="230" rx="12" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="810" y="206" text-anchor="middle" font-size="13" font-weight="700" fill="#2a3b57">进程虚拟地址空间</text>
+  <rect x="718" y="224" width="184" height="52" rx="7" fill="#e6f0e9" stroke="#8fd3ac"/>
+  <text x="810" y="246" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">进程 P1（用户态）</text>
+  <text x="810" y="264" text-anchor="middle" font-size="9" fill="#3f5678">CPU 与设备共享同一 GVA</text>
+  <rect x="718" y="286" width="184" height="52" rx="7" fill="#efe9f9" stroke="#c4b1e8"/>
+  <text x="810" y="308" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7a5cc0">进程 P2</text>
+  <text x="810" y="326" text-anchor="middle" font-size="9" fill="#3f5678">各自独立、互不可见</text>
+  <text x="810" y="366" text-anchor="middle" font-size="9" fill="#8a97ab">配合 PRI：缺页可触发</text>
+  <text x="810" y="382" text-anchor="middle" font-size="9" fill="#8a97ab">页请求，无需全钉住内存</text>
+
+  <line x1="630" y1="244" x2="700" y2="248" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#pa13)"/>
+
+  <!-- 收束 -->
+  <rect x="40" y="432" width="880" height="130" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="458" font-size="13" font-weight="700" fill="#1b2a4a">SVM / SVA（Shared Virtual Memory / Addressing）解决什么</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="484">• 传统 DMA：驱动要把用户 buffer <tspan font-weight="700">钉住（pin）+ 翻译成物理地址</tspan>再交设备，繁琐且占内存。</text>
+    <text x="60" y="508">• <tspan font-weight="700" fill="#7a5cc0">PASID + SVM</tspan>：设备直接用<tspan font-weight="700">进程的虚拟地址</tspan>发 DMA，IOMMU 用该进程页表翻译——像 CPU 一样看内存。</text>
+    <text x="60" y="532">• <tspan font-weight="700">PRI（页请求接口）</tspan>让设备遇到缺页时请求 OS 换页，实现<tspan font-weight="700">可分页的设备访问</tspan>，不必预先钉住全部内存。</text>
+    <text x="60" y="554" fill="#8a97ab" font-size="10">📘 这是 GPU/加速器"共享内存编程模型"（如 CUDA UM、oneAPI USM）在硬件上的底座；也是 Scalable IOV 的关键拼图。</text>
+  </g>
+</svg>
