@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="540" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">INTx → GSI → irq：一个设备中断怎么拿到内核的 irq 号</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">ACPI 的 _PRT 表把 (设备, INTx 引脚) 映射到 GSI；内核再把 GSI 转成 irq 号，填进 dev->irq</text>
+
+  <defs>
+    <marker id="i15" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- 设备 -->
+  <rect x="40" y="110" width="200" height="120" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="140" y="136" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c7a4a">PCI 设备</text>
+  <text x="140" y="160" text-anchor="middle" font-size="10" fill="#3f5678">Bus X / Dev Y</text>
+  <text x="140" y="182" text-anchor="middle" font-size="10" fill="#3f5678">用 INTA# 引脚</text>
+  <text x="140" y="206" text-anchor="middle" font-size="9" fill="#8a97ab">（经桥可能 swizzle 旋转，第01章）</text>
+
+  <!-- _PRT -->
+  <rect x="320" y="96" width="300" height="150" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="470" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">ACPI _PRT（中断路由表）</text>
+  <text x="470" y="142" text-anchor="middle" font-size="9.5" fill="#3f5678">在 DSDT 里，每个根桥一份（第14章）</text>
+  <g font-size="9.5" font-family="monospace" fill="#33415c">
+    <rect x="336" y="152" width="268" height="20" fill="#fff" stroke="#aab8cc"/><text x="346" y="167" text-anchor="start">(Dev Y, INTA) → GSI 18</text>
+    <rect x="336" y="174" width="268" height="20" fill="#fff" stroke="#aab8cc"/><text x="346" y="189" text-anchor="start">(Dev Y, INTB) → GSI 19</text>
+    <rect x="336" y="196" width="268" height="20" fill="#eef3fa" stroke="#aab8cc"/><text x="346" y="211" text-anchor="start">(Dev Z, INTA) → GSI 20 …</text>
+  </g>
+  <text x="470" y="234" text-anchor="middle" font-size="9" fill="#8a97ab">固件把布线结果写成这张查找表</text>
+
+  <!-- GSI/IOAPIC -->
+  <rect x="700" y="110" width="220" height="120" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="810" y="136" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a85a17">IO-APIC / GSI</text>
+  <text x="810" y="160" text-anchor="middle" font-size="10" fill="#3f5678">GSI = 全局系统中断号</text>
+  <text x="810" y="182" text-anchor="middle" font-size="10" fill="#3f5678">对应 IO-APIC 的输入引脚</text>
+  <text x="810" y="206" text-anchor="middle" font-size="9" fill="#8a97ab">拓扑由 MADT 描述（第14章）</text>
+
+  <line x1="240" y1="170" x2="320" y2="170" stroke="#5a6b86" stroke-width="2" marker-end="url(#i15)"/>
+  <text x="280" y="162" text-anchor="middle" font-size="9" fill="#1c7a4a">查表</text>
+  <line x1="620" y1="170" x2="700" y2="170" stroke="#5a6b86" stroke-width="2" marker-end="url(#i15)"/>
+  <text x="660" y="162" text-anchor="middle" font-size="9" fill="#a85a17">得 GSI</text>
+
+  <!-- irq -->
+  <rect x="360" y="290" width="240" height="60" rx="10" fill="#efe9f9" stroke="#c4b1e8"/>
+  <text x="480" y="314" text-anchor="middle" font-size="12" font-weight="700" fill="#7a5cc0">内核 irq 号（dev-&gt;irq）</text>
+  <text x="480" y="334" text-anchor="middle" font-size="9.5" fill="#3f5678">GSI → irq 映射，驱动 request_irq 用它</text>
+  <line x1="810" y1="230" x2="600" y2="300" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#i15)"/>
+  <text x="720" y="270" text-anchor="middle" font-size="9" fill="#7a5cc0">GSI→irq</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="378" width="880" height="146" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="404" font-size="13" font-weight="700" fill="#1b2a4a">为什么 INTx 这么绕？（对比 MSI 就懂了）</text>
+  <g font-size="11.2" fill="#33415c">
+    <text x="60" y="430">• INTx 是<tspan font-weight="700">物理线</tspan>，走哪根线由主板布线 + 过桥 swizzle 决定——硬件寄存器看不出来，只能靠固件的 _PRT 查找表。</text>
+    <text x="60" y="456">• 一根 GSI 常被<tspan font-weight="700">多个设备共享</tspan> → 中断来了内核要遍历共享该 irq 的所有 handler 问"是不是你"，慢。</text>
+    <text x="60" y="482">• <tspan font-weight="700" fill="#1c7a4a">MSI/MSI-X 没有这套路由</tspan>：设备直接把"地址(选CPU)+数据(选向量)"写出去，向量独立、不共享、可绑核（第10章）。</text>
+    <text x="60" y="508" fill="#8a97ab" font-size="10">📘 所以现代设备一律优先 MSI-X；_PRT/GSI 这条路径主要为兼容遗留 INTx 而保留。</text>
+  </g>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">MSI-X 使能流程：从申请向量到 handler 运行</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#5a6b86">现代内核用统一接口 pci_alloc_irq_vectors 一把搞定选型、分配、写 Table，最后 request_irq 挂处理函数</text>
+
+  <defs>
+    <marker id="m15" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7a5cc0"/></marker>
+  </defs>
+
+  <g font-family="monospace">
+    <rect x="130" y="76" width="700" height="56" rx="8" fill="#efe9f9" stroke="#c4b1e8"/>
+    <text x="150" y="100" font-size="12" font-weight="700" fill="#7a5cc0">① pci_alloc_irq_vectors(dev, min, max, PCI_IRQ_MSIX|MSI|INTX)</text>
+    <text x="150" y="120" font-size="9.5" fill="#5a6b86" font-family="'Segoe UI',sans-serif">一把接口：自动优先 MSI-X → 退 MSI → 再退 INTx；返回实际拿到的向量数</text>
+  </g>
+  <line x1="480" y1="132" x2="480" y2="148" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#m15)"/>
+
+  <g font-family="monospace">
+    <rect x="130" y="148" width="700" height="56" rx="8" fill="#e2d6f5" stroke="#c4b1e8"/>
+    <text x="150" y="172" font-size="12" font-weight="700" fill="#7a5cc0">② 内核分配向量 + 填写设备的 MSI-X Table</text>
+    <text x="150" y="192" font-size="9.5" fill="#5a6b86" font-family="'Segoe UI',sans-serif">经 irqdomain 逐层分配(下一张图)；把 Message Address/Data 写进 BAR 里的 MSI-X Table（第10章）</text>
+  </g>
+  <line x1="480" y1="204" x2="480" y2="220" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#m15)"/>
+
+  <g font-family="monospace">
+    <rect x="130" y="220" width="700" height="56" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="150" y="244" font-size="12" font-weight="700" fill="#1b4f9c">③ pci_irq_vector(dev, i) 取第 i 个向量的 irq 号</text>
+    <text x="150" y="264" font-size="9.5" fill="#5a6b86" font-family="'Segoe UI',sans-serif">多队列设备：每个队列取一个向量，一一对应</text>
+  </g>
+  <line x1="480" y1="276" x2="480" y2="292" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#m15)"/>
+
+  <g font-family="monospace">
+    <rect x="130" y="292" width="700" height="56" rx="8" fill="#e6f0e9" stroke="#8fd3ac"/>
+    <text x="150" y="316" font-size="12" font-weight="700" fill="#1c7a4a">④ request_irq(irq, handler, …) 注册处理函数</text>
+    <text x="150" y="336" font-size="9.5" fill="#5a6b86" font-family="'Segoe UI',sans-serif">可设中断亲和：把每个向量绑到不同 CPU 核（多核并行、无锁）</text>
+  </g>
+  <line x1="480" y1="348" x2="480" y2="364" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#m15)"/>
+
+  <g font-family="monospace">
+    <rect x="130" y="364" width="700" height="66" rx="8" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="150" y="388" font-size="12" font-weight="700" fill="#a85a17">⑤ 运行时：设备发 MSI（一次 MWr）→ handler 被调用</text>
+    <text x="150" y="408" font-size="9.5" fill="#5a6b86" font-family="'Segoe UI',sans-serif">设备往 Address 写 Data → RC 认出中断(经中断重映射)→ 目标 CPU 投递 → 上半部/下半部处理</text>
+    <text x="150" y="423" font-size="9" fill="#8a97ab" font-family="'Segoe UI',sans-serif">强序保证：MSI 是 Posted 写，不越前面数据写 → 中断到时数据已就绪（第11章）</text>
+  </g>
+
+  <!-- 底注 -->
+  <rect x="130" y="446" width="700" height="86" rx="10" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="150" y="470" font-size="12" font-weight="700" fill="#eaf1fb">和旧接口的关系</text>
+  <g font-size="10.3" fill="#c6d2e6" font-family="'Segoe UI',sans-serif">
+    <text x="150" y="492">旧内核：pci_enable_msi()（连续向量）/ pci_enable_msix()（独立向量）——两个接口、要手工管数组。</text>
+    <text x="150" y="512">新内核：一个 pci_alloc_irq_vectors() 统管，自动选型+降级，配 pci_free_irq_vectors() 释放。推荐一律用它。</text>
+  </g>
+</svg>

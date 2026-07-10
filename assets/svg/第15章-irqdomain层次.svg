@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="540" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">irqdomain 层次：一个 MSI 中断的"分配责任链"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">现代内核把中断分配拆成层次化的域：PCI-MSI 域 → 中断重映射域 → vector 域，逐层向上申请资源</text>
+
+  <defs>
+    <marker id="d15" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1b4f9c"/></marker>
+    <marker id="d15b" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <!-- 三层域，从上到下 -->
+  <rect x="300" y="82" width="360" height="80" rx="10" fill="#efe9f9" stroke="#c4b1e8"/>
+  <text x="480" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#7a5cc0">PCI-MSI 域（最底层，贴近设备）</text>
+  <text x="480" y="130" text-anchor="middle" font-size="9.5" fill="#3f5678">负责写设备的 MSI-X Table（Address/Data）</text>
+  <text x="480" y="148" text-anchor="middle" font-size="9" fill="#8a97ab">每个 PCIe 设备一个 MSI 域</text>
+
+  <rect x="300" y="212" width="360" height="80" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="480" y="238" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">中断重映射域（IR，可选）</text>
+  <text x="480" y="260" text-anchor="middle" font-size="9.5" fill="#3f5678">VT-d / AMD-Vi 经 IRTE 重映射（第13章）</text>
+  <text x="480" y="278" text-anchor="middle" font-size="9" fill="#8a97ab">虚拟化隔离 + x2APIC 大系统寻址</text>
+
+  <rect x="300" y="342" width="360" height="80" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="480" y="368" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">vector 域（最顶层，贴近 CPU）</text>
+  <text x="480" y="390" text-anchor="middle" font-size="9.5" fill="#3f5678">分配真实的 CPU 中断向量 + 选目标核</text>
+  <text x="480" y="408" text-anchor="middle" font-size="9" fill="#8a97ab">最终落到 Local APIC（第10章）</text>
+
+  <!-- 申请箭头（向上）-->
+  <line x1="480" y1="212" x2="480" y2="162" stroke="#1b4f9c" stroke-width="2" marker-end="url(#d15)"/>
+  <line x1="480" y1="342" x2="480" y2="292" stroke="#1b4f9c" stroke-width="2" marker-end="url(#d15)"/>
+  <text x="670" y="192" text-anchor="start" font-size="10" fill="#1b4f9c">↑ 向上层申请</text>
+  <text x="670" y="322" text-anchor="start" font-size="10" fill="#1b4f9c">↑ 向上层申请</text>
+
+  <!-- 左侧 alloc 说明 -->
+  <rect x="40" y="120" width="230" height="280" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="155" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1b2a4a">分配时（自下而上）</text>
+  <g font-size="9.8" fill="#33415c">
+    <text x="56" y="172">pci_alloc_irq_vectors</text>
+    <text x="56" y="192">触发 MSI 域 alloc：</text>
+    <text x="66" y="214">① MSI 域向 IR 域要</text>
+    <text x="66" y="234">② IR 域向 vector 域要</text>
+    <text x="66" y="254">③ vector 域分配 CPU 向量</text>
+    <text x="66" y="274">④ 逐层返回、各层填好</text>
+    <text x="66" y="294">   自己那部分</text>
+    <text x="56" y="322" fill="#8a97ab">每层只管自己的资源，</text>
+    <text x="56" y="340" fill="#8a97ab">向上层申请缺的部分——</text>
+    <text x="56" y="358" fill="#8a97ab">解耦、可插拔（有无</text>
+    <text x="56" y="376" fill="#8a97ab">IOMMU 只差 IR 域在不在）</text>
+  </g>
+
+  <!-- 右侧触发说明 -->
+  <rect x="690" y="120" width="230" height="280" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="805" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1b2a4a">中断到来时（自下而上）</text>
+  <g font-size="9.8" fill="#33415c">
+    <text x="706" y="172">设备发 MSI(MWr)</text>
+    <text x="716" y="194">↓</text>
+    <text x="706" y="214">RC 收到</text>
+    <text x="716" y="236">↓ (若有)IR 域重映射</text>
+    <text x="706" y="258">vector 域→目标 CPU</text>
+    <text x="716" y="280">↓</text>
+    <text x="706" y="300">Local APIC 投递向量</text>
+    <text x="716" y="322">↓</text>
+    <text x="706" y="342">handler 运行</text>
+    <text x="706" y="372" fill="#8a97ab">上半部 / 下半部（第12章）</text>
+  </g>
+
+  <!-- 底注 -->
+  <rect x="40" y="446" width="880" height="82" rx="10" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="60" y="470" font-size="12" font-weight="700" fill="#eaf1fb">为什么要分层</text>
+  <g font-size="10.3" fill="#c6d2e6">
+    <text x="60" y="492">• <tspan font-weight="700" fill="#eaf1fb">解耦</tspan>：每层只关心自己的资源（设备 Table / 重映射条目 / CPU 向量），互不侵入。</text>
+    <text x="60" y="512">• <tspan font-weight="700" fill="#eaf1fb">可插拔</tspan>：有无 IOMMU、x86 还是 ARM，只是中间某层换实现——上下层不变。这就是 irqdomain 统一框架的价值。</text>
+  </g>
+</svg>
