@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">Linux PCI 初始化调用流程：从 initcall 到 driver probe</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#5a6b86">内核按 initcall 等级顺序推进：先选配置访问方式，再扫总线建设备树，再分配资源，最后匹配驱动</text>
+
+  <defs>
+    <marker id="f14" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1b4f9c"/></marker>
+  </defs>
+
+  <!-- 步骤块，纵向 -->
+  <g font-family="monospace">
+    <rect x="120" y="76" width="720" height="52" rx="8" fill="#eef3fa" stroke="#aab8cc"/>
+    <text x="140" y="100" font-size="12" font-weight="700" fill="#33415c">① initcall 机制</text>
+    <text x="140" y="118" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">内核启动按等级(core→arch→subsys→device)顺序调用各 __initcall 注册的函数</text>
+  </g>
+  <line x1="480" y1="128" x2="480" y2="144" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#f14)"/>
+
+  <g font-family="monospace">
+    <rect x="120" y="144" width="720" height="52" rx="8" fill="#e6eefb" stroke="#93b7f0"/>
+    <text x="140" y="168" font-size="12" font-weight="700" fill="#1b4f9c">② pci_arch_init（arch 级）</text>
+    <text x="140" y="186" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">选择配置访问方式：优先 ECAM(内存映射, 经 MCFG) → 回退 CF8/CFC 端口</text>
+  </g>
+  <line x1="480" y1="196" x2="480" y2="212" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#f14)"/>
+
+  <g font-family="monospace">
+    <rect x="120" y="212" width="720" height="60" rx="8" fill="#dbe8fb" stroke="#93b7f0"/>
+    <text x="140" y="236" font-size="12" font-weight="700" fill="#1b4f9c">③ pci_subsys_init（subsys 级，真正的入口）</text>
+    <text x="140" y="254" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">经 ACPI 发现 root bridge(PNP0A03/0A08) → 触发总线扫描</text>
+    <text x="140" y="268" font-size="9.5" fill="#8a97ab" font-family="'Segoe UI',sans-serif">新内核: pci_acpi_scan_root → pci_scan_root_bus_bridge</text>
+  </g>
+  <line x1="480" y1="272" x2="480" y2="288" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#f14)"/>
+
+  <g font-family="monospace">
+    <rect x="120" y="288" width="720" height="60" rx="8" fill="#efe9f9" stroke="#c4b1e8"/>
+    <text x="140" y="312" font-size="12" font-weight="700" fill="#7a5cc0">④ pci_scan_child_bus（DFS 枚举，第02章）</text>
+    <text x="140" y="330" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">深度优先扫描每条总线：读 Vendor/Device ID → 建 pci_dev → 遇桥递归下钻</text>
+    <text x="140" y="344" font-size="9.5" fill="#8a97ab" font-family="'Segoe UI',sans-serif">分配 Bus 号、读探每个 BAR 的大小/类型</text>
+  </g>
+  <line x1="480" y1="348" x2="480" y2="364" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#f14)"/>
+
+  <g font-family="monospace">
+    <rect x="120" y="364" width="720" height="60" rx="8" fill="#e6f0e9" stroke="#8fd3ac"/>
+    <text x="140" y="388" font-size="12" font-weight="700" fill="#1c7a4a">⑤ pci_assign_unassigned_resources（资源分配）</text>
+    <text x="140" y="406" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">给每个设备 BAR / 桥窗口分配不冲突、对齐的 MMIO/IO 地址，写回 BAR</text>
+    <text x="140" y="420" font-size="9.5" fill="#8a97ab" font-family="'Segoe UI',sans-serif">处理 64 位高窗口、above-4G、必要时 pci=realloc 重分配</text>
+  </g>
+  <line x1="480" y1="424" x2="480" y2="440" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#f14)"/>
+
+  <g font-family="monospace">
+    <rect x="120" y="440" width="720" height="60" rx="8" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="140" y="464" font-size="12" font-weight="700" fill="#a85a17">⑥ 驱动匹配与 probe</text>
+    <text x="140" y="482" font-size="10" fill="#5a6b86" font-family="'Segoe UI',sans-serif">按 Vendor/Device ID 匹配 pci_driver → 调用 .probe()（第12章驱动）</text>
+    <text x="140" y="496" font-size="9.5" fill="#8a97ab" font-family="'Segoe UI',sans-serif">pci_enable_device → ioremap BAR → set_master → request_irq</text>
+  </g>
+
+  <!-- 底注 -->
+  <rect x="120" y="516" width="720" height="66" rx="10" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="140" y="540" font-size="12" font-weight="700" fill="#eaf1fb">一句话时间线</text>
+  <text x="140" y="562" font-size="10.5" fill="#c6d2e6">上电 → 固件建 ACPI 表 → 内核选配置访问(ECAM) → 发现 root bridge → DFS 扫总线建 pci_dev</text>
+  <text x="140" y="578" font-size="10.5" fill="#c6d2e6">→ 分配资源写回 BAR → 匹配驱动 probe → 设备上线可用</text>
+</svg>

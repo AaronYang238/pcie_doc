@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="620" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">Type 00h 配置头：普通设备的"身份证 + 控制面板"</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#5a6b86">前 64 字节是标准头，软件靠它枚举、分配地址、找能力；PCIe 把 256B 扩展到 4KB</text>
+
+  <!-- 表头 -->
+  <g font-size="10" fill="#8a97ab" text-anchor="middle">
+    <text x="140" y="86">Byte 3</text><text x="330" y="86">Byte 2</text><text x="520" y="86">Byte 1</text><text x="710" y="86">Byte 0</text>
+  </g>
+  <text x="806" y="86" font-size="10" fill="#8a97ab" text-anchor="middle">偏移</text>
+
+  <!-- 行绘制：每行 y 间隔 34 -->
+  <!-- 00h -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="94" width="380" height="30" fill="#dbe8fb" stroke="#93b7f0"/><text x="250" y="114" fill="#1b4f9c" font-weight="700">Device ID</text>
+    <rect x="440" y="94" width="380" height="30" fill="#dbe8fb" stroke="#93b7f0"/><text x="630" y="114" fill="#1b4f9c" font-weight="700">Vendor ID</text>
+    <text x="806" y="114" fill="#5a6b86">00h</text>
+  </g>
+  <!-- 04h -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="126" width="380" height="30" fill="#e6eefb" stroke="#93b7f0"/><text x="250" y="146" fill="#1b4f9c">Status</text>
+    <rect x="440" y="126" width="380" height="30" fill="#fdeee0" stroke="#f0c193"/><text x="630" y="146" fill="#a85a17" font-weight="700">Command</text>
+    <text x="806" y="146" fill="#5a6b86">04h</text>
+  </g>
+  <!-- 08h -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="158" width="570" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="345" y="178" fill="#33415c">Class Code（类别码）</text>
+    <rect x="630" y="158" width="190" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="725" y="178" fill="#33415c">Revision</text>
+    <text x="806" y="178" fill="#5a6b86">08h</text>
+  </g>
+  <!-- 0Ch -->
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="60" y="190" width="190" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="155" y="210" fill="#33415c">BIST</text>
+    <rect x="250" y="190" width="190" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="345" y="210" fill="#33415c">Header Type</text>
+    <rect x="440" y="190" width="190" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="535" y="210" fill="#33415c">Lat. Timer</text>
+    <rect x="630" y="190" width="190" height="30" fill="#eef3fa" stroke="#aab8cc"/><text x="725" y="210" fill="#33415c">Cache Line</text>
+    <text x="806" y="210" fill="#5a6b86">0Ch</text>
+  </g>
+  <!-- BARs 10h-24h -->
+  <g font-size="11" text-anchor="middle" font-weight="700">
+    <rect x="60" y="222" width="760" height="30" fill="#bfe3cd" stroke="#4a9a6a"/><text x="440" y="242" fill="#14663f">BAR0</text><text x="806" y="242" fill="#5a6b86" font-weight="400" font-size="10">10h</text>
+    <rect x="60" y="254" width="760" height="30" fill="#bfe3cd" stroke="#4a9a6a"/><text x="440" y="274" fill="#14663f">BAR1</text><text x="806" y="274" fill="#5a6b86" font-weight="400" font-size="10">14h</text>
+    <rect x="60" y="286" width="760" height="30" fill="#c9ead6" stroke="#4a9a6a"/><text x="440" y="306" fill="#14663f">BAR2</text><text x="806" y="306" fill="#5a6b86" font-weight="400" font-size="10">18h</text>
+    <rect x="60" y="318" width="760" height="30" fill="#c9ead6" stroke="#4a9a6a"/><text x="440" y="338" fill="#14663f">BAR3</text><text x="806" y="338" fill="#5a6b86" font-weight="400" font-size="10">1Ch</text>
+    <rect x="60" y="350" width="760" height="30" fill="#d5efe0" stroke="#4a9a6a"/><text x="440" y="370" fill="#14663f">BAR4</text><text x="806" y="370" fill="#5a6b86" font-weight="400" font-size="10">20h</text>
+    <rect x="60" y="382" width="760" height="30" fill="#d5efe0" stroke="#4a9a6a"/><text x="440" y="402" fill="#14663f">BAR5</text><text x="806" y="402" fill="#5a6b86" font-weight="400" font-size="10">24h</text>
+  </g>
+  <!-- 28h-3Ch -->
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="60" y="414" width="760" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="440" y="433" fill="#33415c">Cardbus CIS Pointer</text><text x="806" y="433" fill="#5a6b86" font-size="10">28h</text>
+    <rect x="60" y="444" width="380" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="250" y="463" fill="#33415c">Subsystem ID</text>
+    <rect x="440" y="444" width="380" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="630" y="463" fill="#33415c">Subsystem Vendor ID</text><text x="806" y="463" fill="#5a6b86" font-size="10">2Ch</text>
+    <rect x="60" y="474" width="760" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="440" y="493" fill="#33415c">Expansion ROM Base Address</text><text x="806" y="493" fill="#5a6b86" font-size="10">30h</text>
+    <rect x="60" y="504" width="570" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="345" y="523" fill="#8a97ab">Reserved</text>
+    <rect x="630" y="504" width="190" height="28" fill="#efe9f9" stroke="#c4b1e8"/><text x="725" y="523" fill="#7a5cc0" font-weight="700">Cap. Pointer</text><text x="806" y="523" fill="#5a6b86" font-size="10">34h</text>
+    <rect x="60" y="534" width="380" height="28" fill="#eef3fa" stroke="#aab8cc"/><text x="250" y="553" fill="#33415c">Max_Lat / Min_Gnt</text>
+    <rect x="440" y="534" width="190" height="28" fill="#fdeee0" stroke="#f0c193"/><text x="535" y="553" fill="#a85a17">Int Pin</text>
+    <rect x="630" y="534" width="190" height="28" fill="#fdeee0" stroke="#f0c193"/><text x="725" y="553" fill="#a85a17">Int Line</text><text x="806" y="553" fill="#5a6b86" font-size="10">3Ch</text>
+  </g>
+
+  <!-- 注解 -->
+  <rect x="60" y="572" width="760" height="38" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="75" y="590" font-size="10.3" fill="#33415c"><tspan font-weight="700" fill="#1b4f9c">蓝</tspan>=身份(Vendor/Device ID，驱动匹配靠它) · <tspan font-weight="700" fill="#a85a17">橙</tspan>=控制(Command 使能 Mem/IO/BusMaster) · <tspan font-weight="700" fill="#14663f">绿</tspan>=6 个 BAR(申请地址窗口)</text>
+  <text x="75" y="605" font-size="10.3" fill="#33415c"><tspan font-weight="700" fill="#7a5cc0">紫</tspan>=Capabilities 指针(串起 MSI/MSI-X/PCIe Cap 等能力链表，第04章) · Header Type[7]=多功能位、[6:0]=00h 表示这是普通设备头</text>
+</svg>

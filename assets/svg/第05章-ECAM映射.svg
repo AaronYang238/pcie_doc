@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="540" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">ECAM：把 Bus/Dev/Fun/Reg 拼成一个内存地址</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">PCIEXBAR 给出基址，设备坐标直接编码成地址高位——CPU 用普通内存读写即可访问任意配置寄存器</text>
+
+  <!-- 公式区 -->
+  <text x="60" y="98" font-size="14" font-weight="700" fill="#1b2a4a">ECAM 地址 = 基址(PCIEXBAR) + 设备坐标的位拼接</text>
+
+  <!-- 位段条 -->
+  <g text-anchor="middle" font-size="11">
+    <rect x="60" y="120" width="180" height="54" fill="#efe9f9" stroke="#c4b1e8"/>
+    <text x="150" y="142" fill="#7a5cc0" font-weight="700">基址（PCIEXBAR）</text>
+    <text x="150" y="162" fill="#3f5678" font-size="9">固件设定的 ECAM 起点</text>
+
+    <rect x="240" y="120" width="150" height="54" fill="#dbe8fb" stroke="#93b7f0"/>
+    <text x="315" y="142" fill="#1b4f9c" font-weight="700">Bus [27:20]</text>
+    <text x="315" y="162" fill="#3f5678" font-size="9">8 位，256 条总线</text>
+
+    <rect x="390" y="120" width="140" height="54" fill="#e6eefb" stroke="#93b7f0"/>
+    <text x="460" y="142" fill="#1b4f9c" font-weight="700">Dev [19:15]</text>
+    <text x="460" y="162" fill="#3f5678" font-size="9">5 位，32 设备</text>
+
+    <rect x="530" y="120" width="130" height="54" fill="#e6f0e9" stroke="#8fd3ac"/>
+    <text x="595" y="142" fill="#1c7a4a" font-weight="700">Fun [14:12]</text>
+    <text x="595" y="162" fill="#3f5678" font-size="9">3 位，8 功能</text>
+
+    <rect x="660" y="120" width="240" height="54" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="780" y="142" fill="#a85a17" font-weight="700">Reg Offset [11:0]</text>
+    <text x="780" y="162" fill="#3f5678" font-size="9">12 位 → 每设备 4KB 配置空间</text>
+  </g>
+
+  <text x="480" y="196" text-anchor="middle" font-size="10.5" fill="#8a97ab">每设备 4KB（2¹²）× 8 功能 × 32 设备 × 256 总线 = 一个 Segment 占 256 MB 地址</text>
+
+  <!-- 示例 -->
+  <rect x="60" y="220" width="840" height="120" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="246" font-size="13" font-weight="700" fill="#1b2a4a">例：访问 Bus 3 / Dev 5 / Fun 0 的偏移 0x10（BAR0）</text>
+  <g font-size="11" fill="#33415c" font-family="monospace">
+    <text x="80" y="274">addr = PCIEXBAR + (3 &lt;&lt; 20) + (5 &lt;&lt; 15) + (0 &lt;&lt; 12) + 0x10</text>
+    <text x="80" y="300">     = PCIEXBAR + 0x300000 + 0x28000 + 0x010</text>
+  </g>
+  <text x="80" y="326" font-size="10.5" fill="#1c7a4a">CPU 直接对这个地址做 32 位读 → 就读到了该设备 BAR0 的内容。无需 CF8/CFC 两步握手。</text>
+
+  <!-- 对比 CF8/CFC -->
+  <rect x="60" y="360" width="410" height="150" rx="10" fill="#fef3ec" stroke="#f0c193"/>
+  <text x="265" y="384" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a85a17">老办法：CF8/CFC 端口</text>
+  <g font-size="10.3" fill="#33415c">
+    <text x="80" y="410">① 写 0xCF8：放入 Bus/Dev/Fun/Reg 编号</text>
+    <text x="80" y="432">② 读写 0xCFC：访问选中的寄存器</text>
+    <text x="80" y="458" fill="#c0392b">• 两步、要加锁（非原子）</text>
+    <text x="80" y="478" fill="#c0392b">• 只能访问每设备前 256 字节</text>
+    <text x="80" y="498" fill="#8a97ab">够不着 PCIe 扩展空间（0x100+）</text>
+  </g>
+
+  <rect x="490" y="360" width="410" height="150" rx="10" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="695" y="384" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c7a4a">新办法：ECAM（PCIEXBAR）</text>
+  <g font-size="10.3" fill="#33415c">
+    <text x="510" y="410">• 一步：直接内存读写，天然原子</text>
+    <text x="510" y="432">• 覆盖完整 4KB 配置空间</text>
+    <text x="510" y="454">• 能访问 Extended Capabilities</text>
+    <text x="510" y="476" fill="#1c7a4a">（AER/SR-IOV/ATS…，第13章）</text>
+    <text x="510" y="498" fill="#8a97ab">📘 基址由固件经 ACPI MCFG 表上报（第14章）</text>
+  </g>
+</svg>

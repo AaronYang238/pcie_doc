@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="520" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">地址"域"：同一个数，在不同域里指不同的地方</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">HOST 主桥是两域翻译官：下行(outbound)把 CPU 地址转成 PCI 地址，上行(inbound)把设备 DMA 地址转回主存地址</text>
+
+  <defs>
+    <marker id="d02" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1b4f9c"/></marker>
+    <marker id="d02b" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <!-- 处理器域 -->
+  <rect x="40" y="96" width="260" height="330" rx="12" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="170" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#2a3b57">处理器域（CPU 视角）</text>
+  <rect x="62" y="140" width="216" height="80" rx="8" fill="#fff" stroke="#aab8cc"/>
+  <text x="170" y="166" text-anchor="middle" font-size="11" font-weight="700" fill="#33415c">主存 DRAM</text>
+  <text x="170" y="186" text-anchor="middle" font-size="9.5" fill="#5a6b86">CPU 直接寻址</text>
+  <text x="170" y="204" text-anchor="middle" font-size="9" fill="#8a97ab">0x0 … 物理内存顶端</text>
+  <rect x="62" y="232" width="216" height="80" rx="8" fill="#eef3fa" stroke="#aab8cc"/>
+  <text x="170" y="258" text-anchor="middle" font-size="11" font-weight="700" fill="#33415c">MMIO 窗口</text>
+  <text x="170" y="278" text-anchor="middle" font-size="9.5" fill="#5a6b86">映射到 PCI 设备的 BAR</text>
+  <text x="170" y="296" text-anchor="middle" font-size="9" fill="#8a97ab">CPU 读写=访问设备</text>
+  <rect x="62" y="324" width="216" height="86" rx="8" fill="#eef3fa" stroke="#aab8cc"/>
+  <text x="170" y="350" text-anchor="middle" font-size="11" font-weight="700" fill="#33415c">I/O 空间 / 配置访问</text>
+  <text x="170" y="370" text-anchor="middle" font-size="9.5" fill="#5a6b86">CF8/CFC 或 ECAM</text>
+  <text x="170" y="388" text-anchor="middle" font-size="9" fill="#8a97ab">枚举/配置设备</text>
+
+  <!-- HOST 主桥 -->
+  <rect x="380" y="180" width="200" height="160" rx="12" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="480" y="208" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">HOST 主桥</text>
+  <text x="480" y="230" text-anchor="middle" font-size="10" fill="#3f5678">两域翻译官</text>
+  <text x="480" y="256" text-anchor="middle" font-size="9.5" fill="#1b4f9c">outbound 窗口 ↓</text>
+  <text x="480" y="272" text-anchor="middle" font-size="9" fill="#8a97ab">CPU 地址 → PCI 地址</text>
+  <text x="480" y="298" text-anchor="middle" font-size="9.5" fill="#1c7a4a">inbound 窗口 ↑</text>
+  <text x="480" y="314" text-anchor="middle" font-size="9" fill="#8a97ab">设备 DMA 地址 → 主存</text>
+
+  <!-- PCI 总线域 -->
+  <rect x="660" y="96" width="260" height="330" rx="12" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="790" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">PCI 总线域（设备视角）</text>
+  <rect x="682" y="140" width="216" height="90" rx="8" fill="#fff" stroke="#a9dcc0"/>
+  <text x="790" y="166" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">设备的 BAR 空间</text>
+  <text x="790" y="186" text-anchor="middle" font-size="9.5" fill="#3f5678">设备在 PCI 域里的地址</text>
+  <text x="790" y="204" text-anchor="middle" font-size="9" fill="#8a97ab">被 CPU 的 MMIO 窗口映射</text>
+  <text x="790" y="220" text-anchor="middle" font-size="9" fill="#8a97ab">到处理器域</text>
+  <rect x="682" y="244" width="216" height="90" rx="8" fill="#f0faf4" stroke="#a9dcc0"/>
+  <text x="790" y="270" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">设备发出的 DMA 地址</text>
+  <text x="790" y="290" text-anchor="middle" font-size="9.5" fill="#3f5678">设备"以为"的主存地址</text>
+  <text x="790" y="308" text-anchor="middle" font-size="9" fill="#8a97ab">经 inbound 翻译到真实主存</text>
+  <text x="790" y="324" text-anchor="middle" font-size="9" fill="#c0392b">（现代还可再经 IOMMU）</text>
+
+  <!-- 箭头 -->
+  <line x1="300" y1="255" x2="380" y2="255" stroke="#1b4f9c" stroke-width="2.2" marker-end="url(#d02)"/>
+  <line x1="580" y1="255" x2="660" y2="185" stroke="#1b4f9c" stroke-width="2" marker-end="url(#d02)"/>
+  <text x="620" y="200" text-anchor="middle" font-size="9" fill="#1b4f9c">下行访问设备</text>
+  <line x1="660" y1="290" x2="580" y2="300" stroke="#1c7a4a" stroke-width="2" marker-end="url(#d02b)"/>
+  <line x1="380" y1="300" x2="300" y2="300" stroke="#1c7a4a" stroke-width="2.2" marker-end="url(#d02b)"/>
+  <text x="330" y="292" text-anchor="middle" font-size="9" fill="#1c7a4a">上行 DMA 回主存</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="440" width="880" height="66" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="464" font-size="12.5" font-weight="700" fill="#1b2a4a">为什么要分"域"？</text>
+  <text x="60" y="486" font-size="11" fill="#33415c">因为<tspan font-weight="700">同一个地址值</tspan>在 CPU 眼里和设备眼里可能指向不同物理位置——桥可以做地址平移。所以驱动<tspan font-weight="700" fill="#c0392b">不能</tspan>把 CPU 地址直接当作设备 DMA 地址用。</text>
+  <text x="60" y="502" font-size="10" fill="#8a97ab">📘 这正是 [第12章] 强调"必须用 DMA API 返回的 dma_addr_t"的根源；现代再叠加 IOMMU 的 IOVA 翻译（第13章）。</text>
+</svg>

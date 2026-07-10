@@ -1,6 +1,6 @@
 # TODO · PCIe 学习笔记正文与配图
 
-> 现状：**CLAUDE.md + 全部 15 章大纲（含术语表）已完成**。下面是「正文填充 + 章内 SVG 绘制」的待办，按优先级排序。
+> 现状：**🎉 全部 15 章正文 + 章内 SVG 已全部完成**（CLAUDE.md 亦已就绪）。下表按当初的优先级排序，均已标记 ✅。后续为维护性工作（勘误、补充、SPEC 章节号回填）。
 > 优先级排序依据：①现代化补充密度（越需要结合 SPEC 7.0 越靠前）②配图收益 ③被其他章依赖的程度 ④原书读者熟悉度（越可能已掌握越靠后）。
 > 图标：⬜ 未开始 · 🟨 进行中 · ✅ 已完成。状态与 [CLAUDE.md §6](CLAUDE.md) 同步。
 
@@ -28,28 +28,28 @@
 
 - ✅ **第10章 MSI 和 MSI-X 中断**（Capability/投递路径；中断重映射、IMS）— 正文 8 节骨架齐全，3 图全部落地
   - SVG：`第10章-MSI对比MSI-X.svg`、`第10章-MSI投递路径.svg`、`第10章-x86消息格式.svg` ✅
-- ⬜ **第12章 PCIe 应用**（Capric 卡/DMA/驱动/带宽延时；用现代速率重算带宽账）
-  - SVG：`第12章-Capric框图.svg`、`第12章-DMA写TLP.svg`、`第12章-DMA读TLP.svg`、`第12章-带宽分解.svg`
-- ⬜ **第13章 虚拟化技术**（IOMMU/ATS/SR-IOV；PASID、PRI、Scalable IOV、CXL）
-  - SVG：`第13章-IOMMU.svg`、`第13章-ATS流程.svg`、`第13章-SR-IOV.svg`、`第13章-PASID与SVM.svg`
+- ✅ **第12章 PCIe 应用**（Capric 卡/DMA/驱动/带宽延时；用现代速率重算带宽账）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第12章-Capric框图.svg`、`第12章-DMA写TLP.svg`、`第12章-DMA读TLP.svg`、`第12章-带宽分解.svg` ✅
+- ✅ **第13章 虚拟化技术**（IOMMU/ATS/SR-IOV；PASID、PRI、Scalable IOV、CXL）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第13章-IOMMU.svg`、`第13章-ATS流程.svg`、`第13章-SR-IOV.svg`、`第13章-PASID与SVM.svg` ✅
 
 ## P3 · 基础铺垫（多数读者已具备，可后写）
 
-- ⬜ **第01章 PCI 总线基础**
-  - SVG：`第01章-PCI拓扑.svg`、`第01章-读事务时序.svg`、`第01章-Posted对比.svg`、`第01章-INTx路由.svg`
-- ⬜ **第02章 PCI 桥与配置**
-  - SVG：`第02章-地址域.svg`、`第02章-配置头Type0.svg`、`第02章-配置头Type1.svg`、`第02章-Bus枚举DFS.svg`、`第02章-非透明桥.svg`
-- ⬜ **第03章 PCI 数据交换**
-  - SVG：`第03章-BAR探测.svg`、`第03章-正负向译码.svg`、`第03章-DMA与Cache一致性.svg`、`第03章-预读.svg`
+- ✅ **第01章 PCI 总线基础** — 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第01章-PCI拓扑.svg`、`第01章-读事务时序.svg`、`第01章-Posted对比.svg`、`第01章-INTx路由.svg` ✅
+- ✅ **第02章 PCI 桥与配置** — 正文 8 节骨架齐全，5 图全部落地
+  - SVG：`第02章-地址域.svg`、`第02章-配置头Type0.svg`、`第02章-配置头Type1.svg`、`第02章-Bus枚举DFS.svg`、`第02章-非透明桥.svg` ✅
+- ✅ **第03章 PCI 数据交换** — 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第03章-BAR探测.svg`、`第03章-正负向译码.svg`、`第03章-DMA与Cache一致性.svg`、`第03章-预读.svg` ✅
 
 ## P4 · 平台与 Linux（时代性强，最后写并加现代注记）
 
-- ⬜ **第05章 平台 MCH 与 ICH**
-  - SVG：`第05章-平台框图.svg`、`第05章-存储器映射.svg`、`第05章-ECAM映射.svg`
-- ⬜ **第14章 Linux PCI 初始化**
-  - SVG：`第14章-初始化调用流程.svg`、`第14章-ACPI表关系.svg`、`第14章-BAR分配.svg`
-- ⬜ **第15章 Linux PCI 中断处理**
-  - SVG：`第15章-INTx路由表.svg`、`第15章-MSI使能流程.svg`、`第15章-irqdomain层次.svg`
+- ✅ **第05章 平台 MCH 与 ICH** — 正文 8 节骨架齐全，3 图全部落地
+  - SVG：`第05章-平台框图.svg`、`第05章-存储器映射.svg`、`第05章-ECAM映射.svg` ✅
+- ✅ **第14章 Linux PCI 初始化** — 正文 8 节骨架齐全，3 图全部落地
+  - SVG：`第14章-初始化调用流程.svg`、`第14章-ACPI表关系.svg`、`第14章-BAR分配.svg` ✅
+- ✅ **第15章 Linux PCI 中断处理** — 正文 8 节骨架齐全，3 图全部落地
+  - SVG：`第15章-INTx路由表.svg`、`第15章-MSI使能流程.svg`、`第15章-irqdomain层次.svg` ✅
 
 ---
 

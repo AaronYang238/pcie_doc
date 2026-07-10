@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="520" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">正向译码 vs 负向译码：一个地址由谁认领？</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">正向=按自己的窗口"主动认领"；负向=没人认领时由兜底桥"收尾接走"（通常是 ISA/LPC 桥）</text>
+
+  <defs>
+    <marker id="pd03" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- 起点 -->
+  <rect x="380" y="82" width="200" height="46" rx="10" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="480" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#2a3b57">总线上出现一个地址</text>
+  <text x="480" y="120" text-anchor="middle" font-size="9.5" fill="#5a6b86">各设备/桥同时"看"这个地址</text>
+
+  <!-- 正向译码分支 -->
+  <rect x="80" y="170" width="360" height="150" rx="12" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="260" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">正向译码（Positive Decode）</text>
+  <text x="260" y="220" text-anchor="middle" font-size="10.5" fill="#33415c">每个设备/桥拿地址和自己的</text>
+  <text x="260" y="238" text-anchor="middle" font-size="10.5" fill="#33415c">BAR / Base-Limit 窗口比对</text>
+  <rect x="110" y="252" width="300" height="30" rx="6" fill="#fff" stroke="#8fd3ac"/>
+  <text x="260" y="272" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">落在我窗口内 → 拉 DEVSEL# 认领</text>
+  <text x="260" y="302" text-anchor="middle" font-size="9.5" fill="#8a97ab">快、常规路径；绝大多数事务走这里</text>
+
+  <!-- 负向译码分支 -->
+  <rect x="520" y="170" width="360" height="150" rx="12" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="700" y="196" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">负向译码（Subtractive Decode）</text>
+  <text x="700" y="220" text-anchor="middle" font-size="10.5" fill="#33415c">等几拍：若<tspan font-weight="700">没有任何设备</tspan>认领</text>
+  <text x="700" y="238" text-anchor="middle" font-size="10.5" fill="#33415c">兜底桥就"我来接"</text>
+  <rect x="550" y="252" width="300" height="30" rx="6" fill="#fff" stroke="#f0c193"/>
+  <text x="700" y="272" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a85a17">无人认领 → 兜底桥认领（ISA/LPC）</text>
+  <text x="700" y="302" text-anchor="middle" font-size="9.5" fill="#8a97ab">慢、兜底路径；一条总线通常只有一个</text>
+
+  <line x1="430" y1="128" x2="300" y2="170" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#pd03)"/>
+  <text x="330" y="152" font-size="9.5" fill="#1c7a4a">命中窗口</text>
+  <line x1="530" y1="128" x2="660" y2="170" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#pd03)"/>
+  <text x="630" y="152" font-size="9.5" fill="#a85a17">都未命中</text>
+
+  <!-- DEVSEL 时序说明 -->
+  <rect x="80" y="340" width="800" height="70" rx="10" fill="#eef3fa" stroke="#aab8cc"/>
+  <text x="100" y="364" font-size="12" font-weight="700" fill="#1b2a4a">为什么叫"负向/兜底"？看 DEVSEL# 的时机</text>
+  <text x="100" y="386" font-size="10.5" fill="#33415c">正向译码的设备在事务开始后<tspan font-weight="700">前几拍</tspan>就拉 DEVSEL# 认领；负向译码桥<tspan font-weight="700">故意等到最后一拍</tspan>——确认"确实没人要"，才把这个地址接走。</text>
+  <text x="100" y="404" font-size="10" fill="#8a97ab">典型：CPU 访问一个既非主存、也非任何 PCI 设备 BAR 的地址（如遗留 ISA I/O），最终落到负向译码的 ISA/LPC 桥。</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="424" width="880" height="82" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="448" font-size="12.5" font-weight="700" fill="#1b2a4a">和 PCIe 的关系</text>
+  <text x="60" y="470" font-size="11" fill="#33415c">PCIe <tspan font-weight="700">没有共享总线、没有 DEVSEL#</tspan>——路由改由拓扑决定：TLP 按地址/ID 在 Switch 里精确转发（第06章路由）。</text>
+  <text x="60" y="490" font-size="11" fill="#33415c">"正/负向译码"是<tspan font-weight="700">共享并行总线时代</tspan>的概念，理解它有助于看懂遗留桥与地址空间兜底逻辑；PCIe 里被<tspan font-weight="700" fill="#1c7a4a">基于窗口/ID 的路由</tspan>取代。</text>
+</svg>

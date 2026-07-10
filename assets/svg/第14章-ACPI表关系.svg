@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">ACPI 表：固件写给 OS 的"硬件说明书"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">OS 从 RSDP 一路找到各张表：MCFG 告诉它 ECAM 在哪、DSDT 描述资源与中断路由、MADT 描述中断控制器</text>
+
+  <defs>
+    <marker id="a14" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- RSDP -->
+  <rect x="380" y="82" width="200" height="48" rx="10" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="480" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2a3b57">RSDP</text>
+  <text x="480" y="121" text-anchor="middle" font-size="9" fill="#5a6b86">根指针（OS 的起点）</text>
+
+  <!-- XSDT -->
+  <rect x="380" y="158" width="200" height="48" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="480" y="180" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b4f9c">XSDT / RSDT</text>
+  <text x="480" y="197" text-anchor="middle" font-size="9" fill="#3f5678">表目录：指向所有其他表</text>
+  <line x1="480" y1="130" x2="480" y2="158" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#a14)"/>
+
+  <!-- 三张表 -->
+  <!-- MCFG -->
+  <rect x="60" y="250" width="260" height="130" rx="10" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="190" y="276" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">MCFG</text>
+  <text x="190" y="298" text-anchor="middle" font-size="10" fill="#33415c">ECAM 基址 + 段/总线范围</text>
+  <text x="190" y="316" text-anchor="middle" font-size="9.5" fill="#5a6b86">→ 内核据此做内存映射</text>
+  <text x="190" y="332" text-anchor="middle" font-size="9.5" fill="#5a6b86">配置访问（pci_mmconfig_*）</text>
+  <text x="190" y="356" text-anchor="middle" font-size="9" fill="#8a97ab">呼应 PCIEXBAR（第05章）</text>
+  <text x="190" y="372" text-anchor="middle" font-size="9" fill="#8a97ab">/ ECAM（第02章）</text>
+
+  <!-- DSDT -->
+  <rect x="350" y="250" width="260" height="130" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="480" y="276" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">DSDT（含 AML）</text>
+  <text x="480" y="298" text-anchor="middle" font-size="10" fill="#33415c">设备树 + 方法（AML 字节码）</text>
+  <text x="480" y="318" text-anchor="middle" font-size="9.5" fill="#5a6b86">• _HID PNP0A03/0A08 = 根桥</text>
+  <text x="480" y="336" text-anchor="middle" font-size="9.5" fill="#5a6b86">• _CRS = 当前资源(总线号/窗口)</text>
+  <text x="480" y="354" text-anchor="middle" font-size="9.5" fill="#5a6b86">• _PRT = 中断路由表</text>
+  <text x="480" y="372" text-anchor="middle" font-size="9" fill="#8a97ab">由内核 AML 解释器执行</text>
+
+  <!-- MADT -->
+  <rect x="640" y="250" width="260" height="130" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="770" y="276" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">MADT</text>
+  <text x="770" y="298" text-anchor="middle" font-size="10" fill="#33415c">中断控制器拓扑</text>
+  <text x="770" y="316" text-anchor="middle" font-size="9.5" fill="#5a6b86">Local APIC / IO-APIC 位置</text>
+  <text x="770" y="334" text-anchor="middle" font-size="9.5" fill="#5a6b86">CPU 与中断输入的连接</text>
+  <text x="770" y="358" text-anchor="middle" font-size="9" fill="#8a97ab">中断处理的基础（第15章）</text>
+
+  <line x1="420" y1="206" x2="200" y2="250" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#a14)"/>
+  <line x1="480" y1="206" x2="480" y2="250" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#a14)"/>
+  <line x1="540" y1="206" x2="760" y2="250" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#a14)"/>
+
+  <!-- 底注 -->
+  <rect x="60" y="404" width="840" height="140" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="430" font-size="13" font-weight="700" fill="#1b2a4a">三张表各解决 PCIe 初始化的一个问题</text>
+  <g font-size="11.2" fill="#33415c">
+    <text x="80" y="456">• <tspan font-weight="700" fill="#1c7a4a">MCFG</tspan>：「配置空间在内存的哪里」——没有它，内核不知道 ECAM 基址、无法用内存映射访问配置。</text>
+    <text x="80" y="482">• <tspan font-weight="700" fill="#1b4f9c">DSDT</tspan>：「根桥在哪、它管哪些总线号和地址窗口、设备中断怎么路由」——`_HID`/`_CRS`/`_PRT`。</text>
+    <text x="80" y="508">• <tspan font-weight="700" fill="#a85a17">MADT</tspan>：「中断控制器在哪、CPU 怎么收中断」——INTx/MSI 最终投递的落点（第15章）。</text>
+    <text x="80" y="532" fill="#8a97ab" font-size="10">📘 固件（UEFI）负责建表；OS 只读表、不猜硬件。这就是 ACPI「固件描述、OS 遵循」的分工。</text>
+  </g>
+</svg>

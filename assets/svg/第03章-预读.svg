@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="520" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">可预读窗口（Prefetchable）：桥能不能"多读一点、合并写"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">关键在"读有没有副作用"：普通内存读一点没关系（可预读）；寄存器读可能改状态（不可预读）</text>
+
+  <!-- 不可预读 -->
+  <rect x="40" y="88" width="420" height="330" rx="12" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="250" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#a85a17">Non-Prefetchable（不可预读）</text>
+  <text x="250" y="138" text-anchor="middle" font-size="10.5" fill="#33415c">典型：设备的寄存器 BAR（控制/状态）</text>
+
+  <rect x="70" y="156" width="360" height="72" rx="8" fill="#fff" stroke="#f0c193"/>
+  <text x="250" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#a85a17">读有副作用</text>
+  <text x="250" y="200" text-anchor="middle" font-size="10" fill="#33415c">读某些寄存器会"读清"、令计数自增…</text>
+  <text x="250" y="216" text-anchor="middle" font-size="9.5" fill="#c0392b">→ 桥绝不能"顺手多读"</text>
+
+  <rect x="70" y="242" width="360" height="60" rx="8" fill="#fff" stroke="#f0c193"/>
+  <text x="250" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#a85a17">写不能随意合并</text>
+  <text x="250" y="286" text-anchor="middle" font-size="10" fill="#33415c">合并可能打乱寄存器写的语义/顺序</text>
+
+  <rect x="70" y="316" width="360" height="88" rx="8" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="250" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#c0392b">桥的行为：老实、精确</text>
+  <text x="250" y="362" text-anchor="middle" font-size="10" fill="#33415c">读多少给多少、写按原样逐个传</text>
+  <text x="250" y="382" text-anchor="middle" font-size="9.5" fill="#8a97ab">32 位 BAR 即可；对应 BAR bit3 = 0</text>
+
+  <!-- 可预读 -->
+  <rect x="500" y="88" width="420" height="330" rx="12" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="710" y="114" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">Prefetchable（可预读）</text>
+  <text x="710" y="138" text-anchor="middle" font-size="10.5" fill="#33415c">典型：显存 / 帧缓冲 / 大块纯数据 BAR</text>
+
+  <rect x="530" y="156" width="360" height="72" rx="8" fill="#fff" stroke="#8fd3ac"/>
+  <text x="710" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">读无副作用</text>
+  <text x="710" y="200" text-anchor="middle" font-size="10" fill="#33415c">就是普通内存语义，读多少次都一样</text>
+  <text x="710" y="216" text-anchor="middle" font-size="9.5" fill="#1c7a4a">→ 桥可"预读"下一段，摊薄延时</text>
+
+  <rect x="530" y="242" width="360" height="60" rx="8" fill="#fff" stroke="#8fd3ac"/>
+  <text x="710" y="266" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">写可合并（Merging）</text>
+  <text x="710" y="286" text-anchor="middle" font-size="10" fill="#33415c">相邻小写攒成大写，提升总线效率</text>
+
+  <rect x="530" y="316" width="360" height="88" rx="8" fill="#e6f0e9" stroke="#8fd3ac"/>
+  <text x="710" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">桥的行为：激进、高效</text>
+  <text x="710" y="362" text-anchor="middle" font-size="10" fill="#33415c">预读 + 合并 → 大块数据吞吐高</text>
+  <text x="710" y="382" text-anchor="middle" font-size="9.5" fill="#8a97ab">可用 64 位 BAR（大显存）；BAR bit3 = 1</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="430" width="880" height="76" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="454" font-size="12.5" font-weight="700" fill="#1b2a4a">一句话判据</text>
+  <text x="200" y="454" font-size="11" fill="#33415c">"<tspan font-weight="700">读会不会改变设备状态</tspan>"——会，就必须 Non-Prefetchable；不会（纯数据），才可 Prefetchable。</text>
+  <text x="60" y="476" font-size="10.5" fill="#33415c">📘 桥的写优化三兄弟：<tspan font-weight="700" fill="#1c7a4a">Combining</tspan>(合并相邻)/<tspan font-weight="700" fill="#1c7a4a">Merging</tspan>(填字节洞) 允许；<tspan font-weight="700" fill="#c0392b">Collapsing</tspan>(丢弃重复写) 一般禁止——会丢语义。</text>
+  <text x="60" y="495" font-size="10" fill="#8a97ab">现代大 BAR 设备（GPU）普遍用 64 位 Prefetchable BAR + Resizable BAR（可协商窗口大小）。</text>
+</svg>

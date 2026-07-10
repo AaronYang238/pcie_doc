@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">平台存储器映射：一张地址空间的"楼层图"</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#5a6b86">MMIO 窗口要占掉 4G 以下一段地址 → 那段物理 DRAM 被"顶"到 4G 以上（remap），避免被 MMIO 遮住</text>
+
+  <!-- 地址轴：从下往上 0→高地址 -->
+  <text x="120" y="86" font-size="11" font-weight="700" fill="#33415c" text-anchor="middle">物理地址</text>
+  <text x="120" y="102" font-size="9" fill="#8a97ab" text-anchor="middle">（低→高）</text>
+
+  <!-- 楼层，从底部 y=540 向上 -->
+  <!-- 0 - 1MB Legacy -->
+  <g text-anchor="middle">
+    <rect x="200" y="500" width="480" height="50" fill="#faf0f0" stroke="#e0b0b0"/>
+    <text x="440" y="522" font-size="11" font-weight="700" fill="#c0392b">Legacy 区（低 1MB）</text>
+    <text x="440" y="540" font-size="9" fill="#8a97ab">VGA / SMM / BIOS 影子等历史保留</text>
+    <text x="700" y="528" font-size="9.5" fill="#5a6b86" text-anchor="start">0</text>
+  </g>
+  <!-- DRAM 主体 -->
+  <g text-anchor="middle">
+    <rect x="200" y="360" width="480" height="140" fill="#e6f0e9" stroke="#8fd3ac"/>
+    <text x="440" y="420" font-size="13" font-weight="700" fill="#1c7a4a">可用 DRAM（主体）</text>
+    <text x="440" y="442" font-size="9.5" fill="#3f5678">操作系统与应用使用的物理内存</text>
+    <text x="700" y="366" font-size="9.5" fill="#5a6b86" text-anchor="start">↑ 到 TOLUD</text>
+  </g>
+  <!-- TOLUD 线 -->
+  <line x1="200" y1="360" x2="700" y2="360" stroke="#1c7a4a" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="710" y="356" font-size="9.5" font-weight="700" fill="#1c7a4a" text-anchor="start">TOLUD（低端可用 DRAM 顶）</text>
+
+  <!-- MMIO low 窗口 -->
+  <g text-anchor="middle">
+    <rect x="200" y="250" width="480" height="110" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="440" y="288" font-size="12.5" font-weight="700" fill="#1b4f9c">MMIO 窗口（4G 以下）</text>
+    <text x="440" y="308" font-size="9.5" fill="#3f5678">PCIe 设备 BAR / ECAM / APIC 等</text>
+    <text x="440" y="326" font-size="9" fill="#c0392b">← 这段占了地址，把同址 DRAM 顶到 4G 以上</text>
+    <text x="440" y="344" font-size="9" fill="#8a97ab">含 PCIEXBAR 指向的 ECAM 区（见下一张图）</text>
+  </g>
+  <!-- 4G 线 -->
+  <line x1="200" y1="250" x2="700" y2="250" stroke="#a85a17" stroke-width="2"/>
+  <text x="710" y="246" font-size="9.5" font-weight="700" fill="#a85a17" text-anchor="start">4 GB（2³²）</text>
+
+  <!-- remap DRAM above 4G -->
+  <g text-anchor="middle">
+    <rect x="200" y="150" width="480" height="100" fill="#d5efe0" stroke="#8fd3ac"/>
+    <text x="440" y="186" font-size="12.5" font-weight="700" fill="#1c7a4a">被 remap 的 DRAM（4G 以上）</text>
+    <text x="440" y="206" font-size="9.5" fill="#3f5678">原本被 MMIO 遮住的那段物理内存，搬到这里</text>
+    <text x="440" y="224" font-size="9" fill="#8a97ab">→ 内存不浪费（"4G 内存空洞"回收）</text>
+    <text x="700" y="156" font-size="9.5" fill="#5a6b86" text-anchor="start">↑ 到 TOUUD</text>
+  </g>
+  <line x1="200" y1="150" x2="700" y2="150" stroke="#1c7a4a" stroke-width="2" stroke-dasharray="5 3"/>
+  <text x="710" y="146" font-size="9.5" font-weight="700" fill="#1c7a4a" text-anchor="start">TOUUD（高端可用 DRAM 顶）</text>
+
+  <!-- 64位 MMIO high -->
+  <g text-anchor="middle">
+    <rect x="200" y="92" width="480" height="58" fill="#dbe8fb" stroke="#93b7f0"/>
+    <text x="440" y="116" font-size="12" font-weight="700" fill="#1b4f9c">64 位 MMIO 高窗口（现代常态）</text>
+    <text x="440" y="136" font-size="9" fill="#3f5678">大 BAR / Resizable BAR（GPU 大显存）落在这里</text>
+  </g>
+
+  <!-- 箭头轴 -->
+  <line x1="120" y1="540" x2="120" y2="92" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#axis05)"/>
+  <defs><marker id="axis05" markerWidth="9" markerHeight="9" refX="4" refY="7" orient="auto"><path d="M0,7 L4,0 L8,7 Z" fill="#5a6b86"/></marker></defs>
+
+  <!-- 底注 -->
+  <rect x="740" y="360" width="200" height="180" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="840" y="384" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1b2a4a">关键点</text>
+  <g font-size="9.5" fill="#33415c">
+    <text x="754" y="408">MMIO 必须占一段真实</text>
+    <text x="754" y="424">地址，才能让 CPU 用</text>
+    <text x="754" y="440">地址访问设备。</text>
+    <text x="754" y="462">它占掉的 4G 以下地址，</text>
+    <text x="754" y="478">让同址的 DRAM 无处安放</text>
+    <text x="754" y="494">→ remap 到 4G 以上。</text>
+    <text x="754" y="516" fill="#8a97ab">TOLUD/TOUUD 就是</text>
+    <text x="754" y="530" fill="#8a97ab">这两条分界线。</text>
+  </g>
+</svg>

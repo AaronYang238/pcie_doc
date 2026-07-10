@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="520" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">Posted vs Non-Posted：全书最该先记牢的一对概念</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">写"发后不管"（便宜、快）；读"必须等完成"（贵在往返）——这套语义被 PCIe 完整继承，是"序"的根基</text>
+
+  <defs>
+    <marker id="p01a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+    <marker id="p01b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#a85a17"/></marker>
+    <marker id="p01c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7a5cc0"/></marker>
+  </defs>
+
+  <!-- Posted 写 -->
+  <rect x="40" y="86" width="880" height="180" rx="12" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="60" y="114" font-size="15" font-weight="700" fill="#1c7a4a">① Posted（存储器写）：发出去就完事，不等回应</text>
+  <text x="160" y="150" font-size="12" font-weight="700" fill="#1c7a4a">发起方（Master）</text>
+  <text x="800" y="150" font-size="12" font-weight="700" fill="#2a3b57">目标（Target）</text>
+  <line x1="160" y1="160" x2="160" y2="240" stroke="#8fd3ac" stroke-width="2"/>
+  <line x1="800" y1="160" x2="800" y2="240" stroke="#8aa0bd" stroke-width="2"/>
+  <line x1="162" y1="185" x2="800" y2="200" stroke="#1c7a4a" stroke-width="2.4" marker-end="url(#p01a)"/>
+  <text x="480" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#1c7a4a">写请求（含数据）→</text>
+  <text x="480" y="228" text-anchor="middle" font-size="11" fill="#33415c">发起方发完立刻去干别的事——<tspan font-weight="700" fill="#1c7a4a">无完成回应</tspan>。吞吐高，但发起方不知道写"何时真正落地"。</text>
+
+  <!-- Non-Posted 读 -->
+  <rect x="40" y="284" width="880" height="196" rx="12" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="60" y="312" font-size="15" font-weight="700" fill="#a85a17">② Non-Posted（读 / I-O 写 / 配置写）：必须等"完成"回来</text>
+  <text x="160" y="348" font-size="12" font-weight="700" fill="#a85a17">发起方（Master）</text>
+  <text x="800" y="348" font-size="12" font-weight="700" fill="#2a3b57">目标（Target）</text>
+  <line x1="160" y1="358" x2="160" y2="452" stroke="#f0c193" stroke-width="2"/>
+  <line x1="800" y1="358" x2="800" y2="452" stroke="#8aa0bd" stroke-width="2"/>
+  <line x1="162" y1="378" x2="800" y2="392" stroke="#a85a17" stroke-width="2.2" marker-end="url(#p01b)"/>
+  <text x="470" y="373" text-anchor="middle" font-size="12" font-weight="700" fill="#a85a17">读请求（只带地址）→</text>
+  <rect x="330" y="400" width="300" height="24" rx="6" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="480" y="417" text-anchor="middle" font-size="9.5" fill="#c0392b">↕ 往返等待：Target 取数据这段时间，发起方在等</text>
+  <line x1="800" y1="436" x2="162" y2="450" stroke="#7a5cc0" stroke-width="2.4" marker-end="url(#p01c)"/>
+  <text x="470" y="448" text-anchor="middle" font-size="12" font-weight="700" fill="#7a5cc0">← 完成（Completion，带数据）</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="490" width="880" height="24" rx="8" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="480" y="507" text-anchor="middle" font-size="10.5" fill="#33415c">📘 PCIe 把这对语义升级为三类 TLP：<tspan font-weight="700" fill="#1c7a4a">Posted</tspan> / <tspan font-weight="700" fill="#a85a17">Non-Posted</tspan> / <tspan font-weight="700" fill="#7a5cc0">Completion</tspan>，并据此定义排序规则（第06、11章）</text>
+</svg>
