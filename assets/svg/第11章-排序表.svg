@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="940" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="470" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">PCIe 排序表：后来的事务能否"超越"先到的？</text>
+  <text x="470" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">行 = 先到的 TLP，列 = 随后到的 TLP；格子 = 随后者能否越过先到者</text>
+
+  <!-- 表 -->
+  <g font-size="12" text-anchor="middle">
+    <!-- 角 -->
+    <rect x="60" y="90" width="180" height="60" fill="#e6edf7" stroke="#c7d0dd"/>
+    <text x="150" y="116" font-size="11" fill="#3f5678">先到 ↓ ＼ 随后 →</text>
+    <text x="150" y="136" font-size="10" fill="#8a97ab">「随后」能越过「先到」吗</text>
+    <!-- 列头 -->
+    <rect x="240" y="90" width="220" height="60" fill="#dbe8fb" stroke="#93b7f0"/><text x="350" y="118" font-weight="700" fill="#1c7a4a">Posted (P)</text><text x="350" y="138" font-size="10" fill="#3f5678">MWr / Msg</text>
+    <rect x="460" y="90" width="220" height="60" fill="#dbe8fb" stroke="#93b7f0"/><text x="570" y="118" font-weight="700" fill="#a85a17">Non-Posted</text><text x="570" y="138" font-size="10" fill="#3f5678">MRd / Cfg</text>
+    <rect x="680" y="90" width="200" height="60" fill="#dbe8fb" stroke="#93b7f0"/><text x="780" y="118" font-weight="700" fill="#7a5cc0">Completion</text><text x="780" y="138" font-size="10" fill="#3f5678">Cpl / CplD</text>
+
+    <!-- 行 Posted -->
+    <rect x="60" y="150" width="180" height="110" fill="#eaf2fe" stroke="#93b7f0"/><text x="150" y="200" font-weight="700" fill="#1c7a4a">Posted (P)</text><text x="150" y="220" font-size="10" fill="#3f5678">MWr / Msg</text>
+    <rect x="240" y="150" width="220" height="110" fill="#faf0f0" stroke="#e0b0b0"/><text x="350" y="196" font-size="15" font-weight="700" fill="#c0392b">No</text><text x="350" y="222" font-size="9.5" fill="#8a6a3a">写保序：P 不越 P</text><text x="350" y="238" font-size="9" fill="#8a97ab">（生产者/消费者根基）</text>
+    <rect x="460" y="150" width="220" height="110" fill="#faf0f0" stroke="#e0b0b0"/><text x="570" y="196" font-size="14" font-weight="700" fill="#c0392b">No*</text><text x="570" y="222" font-size="9.5" fill="#8a6a3a">读不越先前的写</text><text x="570" y="238" font-size="9" fill="#7a5cc0">* RO/IDO 可放宽</text>
+    <rect x="680" y="150" width="200" height="110" fill="#faf0f0" stroke="#e0b0b0"/><text x="780" y="196" font-size="14" font-weight="700" fill="#c0392b">No*</text><text x="780" y="222" font-size="9.5" fill="#8a6a3a">完成不越先前的写</text><text x="780" y="238" font-size="9" fill="#7a5cc0">* RO/IDO 可放宽</text>
+
+    <!-- 行 Non-Posted -->
+    <rect x="60" y="260" width="180" height="110" fill="#fdf1e7" stroke="#f0c193"/><text x="150" y="310" font-weight="700" fill="#a85a17">Non-Posted</text><text x="150" y="330" font-size="10" fill="#3f5678">MRd / Cfg</text>
+    <rect x="240" y="260" width="220" height="110" fill="#f0faf4" stroke="#a9dcc0"/><text x="350" y="306" font-size="15" font-weight="700" fill="#14663f">Yes</text><text x="350" y="332" font-size="9.5" fill="#3f5678">必须允许</text><text x="350" y="348" font-size="9" fill="#8a97ab">（防死锁：写要能绕过读）</text>
+    <rect x="460" y="260" width="220" height="110" fill="#eef1f6" stroke="#c7d0dd"/><text x="570" y="306" font-size="14" font-weight="700" fill="#5a6b86">Y/N</text><text x="570" y="332" font-size="9.5" fill="#3f5678">允许但不强制</text>
+    <rect x="680" y="260" width="200" height="110" fill="#eef1f6" stroke="#c7d0dd"/><text x="780" y="306" font-size="14" font-weight="700" fill="#5a6b86">Y/N</text><text x="780" y="332" font-size="9.5" fill="#3f5678">允许但不强制</text>
+
+    <!-- 行 Completion -->
+    <rect x="60" y="370" width="180" height="110" fill="#efe9f9" stroke="#c4b1e8"/><text x="150" y="420" font-weight="700" fill="#7a5cc0">Completion</text><text x="150" y="440" font-size="10" fill="#3f5678">Cpl / CplD</text>
+    <rect x="240" y="370" width="220" height="110" fill="#f0faf4" stroke="#a9dcc0"/><text x="350" y="416" font-size="15" font-weight="700" fill="#14663f">Yes</text><text x="350" y="442" font-size="9.5" fill="#3f5678">必须允许</text><text x="350" y="458" font-size="9" fill="#8a97ab">（防死锁：完成要能绕过读）</text>
+    <rect x="460" y="370" width="220" height="110" fill="#eef1f6" stroke="#c7d0dd"/><text x="570" y="416" font-size="14" font-weight="700" fill="#5a6b86">Y/N</text><text x="570" y="442" font-size="9.5" fill="#3f5678">允许但不强制</text>
+    <rect x="680" y="370" width="200" height="110" fill="#faf0f0" stroke="#e0b0b0"/><text x="780" y="416" font-size="14" font-weight="700" fill="#c0392b">No*</text><text x="780" y="442" font-size="9.5" fill="#8a6a3a">同 RID 完成保序</text><text x="780" y="458" font-size="9" fill="#7a5cc0">* 不同 RID 可放宽</text>
+  </g>
+
+  <!-- 记忆法 -->
+  <rect x="60" y="500" width="820" height="86" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="526" font-size="13" font-weight="700" fill="#1b2a4a">两类格子，两种目的</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="80" y="550">• <tspan font-weight="700" fill="#c0392b">红 No（Posted 列/行）</tspan>：保证"写保序 + 生产者消费者"——正确性底线（可被 RO/IDO 谨慎放宽）。</text>
+    <text x="80" y="574">• <tspan font-weight="700" fill="#14663f">绿 Yes（Non-Posted 列）</tspan>：<tspan font-weight="700">强制</tspan>让 Posted 和 Completion 能绕过 Non-Posted——防死锁的硬性要求。</text>
+  </g>
+</svg>

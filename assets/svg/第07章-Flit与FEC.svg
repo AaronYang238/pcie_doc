@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="620" rx="14" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#eaf1fb">PAM4 为什么必须配 FEC（Gen6/7 可靠性新范式）</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#8fa6c8">📘 SPEC 7.0：先 FEC 就地纠错，再 CRC + 重放兜底 —— 把昂贵的"整包重传"降到最少</text>
+
+  <!-- PAM4 符号映射 -->
+  <text x="60" y="94" font-size="14" font-weight="700" fill="#c6e88a">PAM4 电平 → 2 bit（Gray 编码）</text>
+  <g font-size="11" fill="#dce6f5">
+    <line x1="120" y1="230" x2="120" y2="110" stroke="#4a6a9a" stroke-width="1.4"/>
+    <line x1="120" y1="230" x2="420" y2="230" stroke="#4a6a9a" stroke-width="1.4"/>
+    <!-- levels -->
+    <line x1="120" y1="122" x2="420" y2="122" stroke="#3a5a2a" stroke-dasharray="3 3"/><text x="440" y="126" fill="#c6e88a">电平 3 → 10</text>
+    <line x1="120" y1="158" x2="420" y2="158" stroke="#3a5a2a" stroke-dasharray="3 3"/><text x="440" y="162" fill="#c6e88a">电平 2 → 11</text>
+    <line x1="120" y1="194" x2="420" y2="194" stroke="#3a5a2a" stroke-dasharray="3 3"/><text x="440" y="198" fill="#c6e88a">电平 1 → 01</text>
+    <line x1="120" y1="228" x2="420" y2="228" stroke="#3a5a2a" stroke-dasharray="3 3"/><text x="440" y="232" fill="#c6e88a">电平 0 → 00</text>
+    <!-- waveform -->
+    <polyline points="120,194 160,194 160,122 210,122 210,228 260,228 260,158 310,158 310,194 360,194 360,122 410,122" fill="none" stroke="#ff9e6b" stroke-width="2.2"/>
+  </g>
+  <text x="60" y="258" font-size="10.5" fill="#8fa6c8">3 个眼图、间距更小 → 判决更易出错；相邻电平只差 1 bit（Gray），错也多为单 bit，利于 FEC。</text>
+
+  <!-- 分层防线 -->
+  <text x="560" y="94" font-size="14" font-weight="700" fill="#8bc6f0">三道可靠性防线（由快到慢）</text>
+  <g font-size="11">
+    <rect x="560" y="108" width="340" height="46" rx="8" fill="#1d2f18" stroke="#3a5a2a"/>
+    <text x="576" y="128" fill="#c6e88a" font-weight="700">① FEC 前向纠错（最先，零往返）</text>
+    <text x="576" y="146" fill="#c6d2e6" font-size="10.5">接收端就地纠正少量错误，不需重传</text>
+    <rect x="560" y="162" width="340" height="46" rx="8" fill="#15263d" stroke="#2c4568"/>
+    <text x="576" y="182" fill="#8bc6f0" font-weight="700">② CRC 校验（FEC 纠不了时发现）</text>
+    <text x="576" y="200" fill="#c6d2e6" font-size="10.5">Flit 级 CRC 判定"这个 Flit 是否仍有错"</text>
+    <rect x="560" y="216" width="340" height="46" rx="8" fill="#241a2e" stroke="#5a3a6a"/>
+    <text x="576" y="236" fill="#d9a7f0" font-weight="700">③ 重放 Replay（最后兜底，一个往返）</text>
+    <text x="576" y="254" fill="#c6d2e6" font-size="10.5">CRC 失败 → 按 Flit 粒度重发（成本最高）</text>
+  </g>
+
+  <!-- Flit 结构 -->
+  <text x="60" y="300" font-size="14" font-weight="700" fill="#eaf1fb">一个 256B Flit 里的固定分区</text>
+  <g text-anchor="middle" font-size="11">
+    <rect x="60" y="314" width="840" height="58" rx="6" fill="#12241a" stroke="#4a8a6a"/>
+    <rect x="70" y="322" width="540" height="42" rx="4" fill="#1a2a44" stroke="#4a6a9a"/>
+    <text x="340" y="348" fill="#9fc0f0" font-weight="700">TLP 载荷区（约 236 B）</text>
+    <rect x="616" y="322" width="90" height="42" rx="4" fill="#2a1c3a" stroke="#8a5cc0"/><text x="661" y="342" fill="#c9a7f0">DLP</text><text x="661" y="357" fill="#8fa6c8" font-size="8.5">~6B</text>
+    <rect x="712" y="322" width="90" height="42" rx="4" fill="#15263d" stroke="#4a6a9a"/><text x="757" y="342" fill="#8bc6f0">CRC</text><text x="757" y="357" fill="#8fa6c8" font-size="8.5">~8B</text>
+    <rect x="808" y="322" width="82" height="42" rx="4" fill="#1d2f18" stroke="#4a8a6a"/><text x="849" y="342" fill="#c6e88a">FEC</text><text x="849" y="357" fill="#8fa6c8" font-size="8.5">~6B</text>
+  </g>
+  <text x="480" y="390" text-anchor="middle" font-size="10" fill="#6f86a8">数值为常见示意，精确划分以 Base Spec 7.0 为准</text>
+
+  <!-- 与传统对比 -->
+  <rect x="60" y="406" width="840" height="196" rx="10" fill="#15263d" stroke="#2c4568"/>
+  <text x="80" y="432" font-size="13" font-weight="700" fill="#eaf1fb">与传统 ACK/NAK 相比，变化在哪</text>
+  <g font-size="11.3" fill="#c6d2e6">
+    <text x="80" y="458">• <tspan font-weight="700" fill="#c6e88a">多了一层 FEC</tspan>：绝大多数位错被 FEC 当场吃掉，重传频率大幅下降 —— 这是 PAM4 高误码下仍可用的关键。</text>
+    <text x="80" y="482">• <tspan font-weight="700" fill="#9fc0f0">重放单位变 Flit</tspan>：不再逐 TLP 重放；ACK/NAK 语义保留，但以固定 256B Flit 为粒度（对照 §7.2）。</text>
+    <text x="80" y="506">• <tspan font-weight="700" fill="#c9a7f0">开销固定化</tspan>：DLP/CRC/FEC 占 Flit 固定比例，不随 TLP 大小抖动，便于精确的延迟与带宽预算。</text>
+    <text x="80" y="530">• <tspan font-weight="700">延迟权衡</tspan>：FEC 增加少量固定解码延迟，但换来"极少整包重传" —— 高速率下净收益为正。</text>
+    <text x="80" y="556" fill="#8fa6c8">• <tspan font-weight="700">语义不变</tspan>：数据链路层"保证相邻两跳可靠"的职责没变，变的只是"怎么纠错、按什么粒度重放"。</text>
+    <text x="80" y="582" fill="#6f86a8" font-size="10">📘 对照 Base Spec 7.0：Flit Mode / FEC / Physical Layer；与 第06章 Flit 封装图、第09章 Flit 流控互为补充。</text>
+  </g>
+</svg>

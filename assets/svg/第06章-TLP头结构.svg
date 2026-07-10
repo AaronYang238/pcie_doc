@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 640" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="980" height="640" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="490" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">通用 TLP 头结构（4DW 头 · 64 位地址存储器请求）</text>
+  <text x="490" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">每行 = 1 个 DWORD（32 bit）；位号从左 31 到右 0。3DW 头去掉 DW3 的地址高 32 位。</text>
+
+  <!-- 位标尺 -->
+  <g font-size="9.5" fill="#8a97ab" text-anchor="middle">
+    <text x="70" y="86">31</text><text x="250" y="86">24</text><text x="430" y="86">16</text><text x="610" y="86">8</text><text x="900" y="86">0</text>
+  </g>
+  <line x1="60" y1="92" x2="920" y2="92" stroke="#c7d0dd"/>
+
+  <!-- DW0 -->
+  <text x="34" y="122" font-size="11" font-weight="700" fill="#1b4f9c">DW0</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="100" width="70" height="34" fill="#dbe8fb" stroke="#93b7f0"/><text x="95" y="121">Fmt</text>
+    <rect x="130" y="100" width="120" height="34" fill="#eaf2fe" stroke="#93b7f0"/><text x="190" y="121">Type</text>
+    <rect x="250" y="100" width="40" height="34" fill="#f2f6fc" stroke="#b7cdf0"/><text x="270" y="121">R</text>
+    <rect x="290" y="100" width="70" height="34" fill="#dbe8fb" stroke="#93b7f0"/><text x="325" y="121">TC</text>
+    <rect x="360" y="100" width="60" height="34" fill="#f2f6fc" stroke="#b7cdf0"/><text x="390" y="118" font-size="9">R/T9/T8</text>
+    <rect x="420" y="100" width="55" height="34" fill="#dbe8fb" stroke="#93b7f0"/><text x="447" y="121">Attr</text>
+    <rect x="475" y="100" width="45" height="34" fill="#f2f6fc" stroke="#b7cdf0"/><text x="497" y="121">AT</text>
+    <rect x="520" y="100" width="400" height="34" fill="#eaf2fe" stroke="#93b7f0"/><text x="720" y="121">Length（10 bit，单位 DW，0=1024）</text>
+  </g>
+  <text x="600" y="150" font-size="9.5" fill="#8a97ab">DW0 还含 TD（有 ECRC）、EP（poison）、TH 位（与 Attr/AT 同区）</text>
+
+  <!-- DW1 -->
+  <text x="34" y="180" font-size="11" font-weight="700" fill="#1b4f9c">DW1</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="158" width="270" height="34" fill="#e9f7ef" stroke="#8fd3ac"/><text x="195" y="179">Requester ID（Bus/Dev/Fun，16 bit）</text>
+    <rect x="330" y="158" width="180" height="34" fill="#e9f7ef" stroke="#8fd3ac"/><text x="420" y="179">Tag（8 bit → 10/14）</text>
+    <rect x="510" y="158" width="205" height="34" fill="#fdf1e7" stroke="#f0c193"/><text x="612" y="179">Last DW BE</text>
+    <rect x="715" y="158" width="205" height="34" fill="#fdf1e7" stroke="#f0c193"/><text x="817" y="179">First DW BE</text>
+  </g>
+
+  <!-- DW2 -->
+  <text x="34" y="238" font-size="11" font-weight="700" fill="#1b4f9c">DW2</text>
+  <rect x="60" y="216" width="860" height="34" fill="#eef1f6" stroke="#c7d0dd"/>
+  <text x="490" y="237" font-size="11.5" text-anchor="middle" fill="#33415c">Address[63:32]（地址高 32 位）</text>
+
+  <!-- DW3 -->
+  <text x="34" y="278" font-size="11" font-weight="700" fill="#1b4f9c">DW3</text>
+  <rect x="60" y="256" width="820" height="34" fill="#eef1f6" stroke="#c7d0dd"/>
+  <text x="470" y="277" font-size="11.5" text-anchor="middle" fill="#33415c">Address[31:2]（地址低 30 位）</text>
+  <rect x="880" y="256" width="40" height="34" fill="#f2f6fc" stroke="#b7cdf0"/><text x="900" y="277" font-size="10" text-anchor="middle">R</text>
+
+  <!-- 可选尾部 -->
+  <rect x="60" y="306" width="860" height="28" rx="5" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="490" y="325" font-size="11" text-anchor="middle" fill="#a85a17">（可选）数据负载 Data Payload … 之后可跟 4B ECRC（当 TD=1）</text>
+
+  <!-- 字段释义 -->
+  <rect x="60" y="352" width="860" height="264" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="378" font-size="13" font-weight="700" fill="#1b2a4a">关键字段速记</text>
+  <g font-size="11.5" fill="#33415c">
+    <text x="80" y="402"><tspan font-weight="700" fill="#1b4f9c">Fmt</tspan>（2→3 bit）：头长 3DW/4DW + 有无数据；现代新增「TLP Prefix」编码。</text>
+    <text x="80" y="424"><tspan font-weight="700" fill="#1b4f9c">Type</tspan>（5 bit）：事务种类（MRd/MWr/Cpl/Cfg/Msg…），与 Fmt 合看。</text>
+    <text x="80" y="446"><tspan font-weight="700" fill="#1b4f9c">TC</tspan>（3 bit）：流量类别 0–7，映射到 VC。</text>
+    <text x="80" y="468"><tspan font-weight="700" fill="#1b4f9c">Attr</tspan>：RO（Relaxed Ordering）+ NS（No Snoop）+ IDO（ID-Based Ordering）。</text>
+    <text x="80" y="490"><tspan font-weight="700" fill="#1b4f9c">AT</tspan>（2 bit）：地址类型，用于 ATS（未翻译/已翻译/翻译请求）。</text>
+    <text x="80" y="512"><tspan font-weight="700" fill="#1b4f9c">Length</tspan>（10 bit）：负载长度，单位 DWORD，编码 0 表示 1024 DW（=4KB）。</text>
+    <text x="80" y="534"><tspan font-weight="700" fill="#1c7a4a">Requester ID + Tag</tspan>：唯一标识一个在途请求，Completion 靠它回程（ID 路由）。</text>
+    <text x="80" y="556"><tspan font-weight="700" fill="#a85a17">Last/First DW BE</tspan>：首/末 DWORD 的字节使能，处理非整 DW 对齐访问。</text>
+    <text x="80" y="578"><tspan font-weight="700" fill="#1b4f9c">TD / EP</tspan>：TD=1 表示尾部带 ECRC；EP=1 表示数据为已知错误（poisoned）。</text>
+    <text x="80" y="600" fill="#5a6b86" font-size="10.5">📘 Gen6+ Flit 模式下头格式调整（OHC/新 Fmt），但上述字段语义整体延续。</text>
+  </g>
+</svg>

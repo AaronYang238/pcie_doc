@@ -1,0 +1,65 @@
+# TODO · PCIe 学习笔记正文与配图
+
+> 现状：**CLAUDE.md + 全部 15 章大纲（含术语表）已完成**。下面是「正文填充 + 章内 SVG 绘制」的待办，按优先级排序。
+> 优先级排序依据：①现代化补充密度（越需要结合 SPEC 7.0 越靠前）②配图收益 ③被其他章依赖的程度 ④原书读者熟悉度（越可能已掌握越靠后）。
+> 图标：⬜ 未开始 · 🟨 进行中 · ✅ 已完成。状态与 [CLAUDE.md §6](CLAUDE.md) 同步。
+
+---
+
+## P0 · 核心机制 + 现代化重头（最先写，收益最大）
+
+- ✅ **第06章 事务层**（TLP 格式/路由/报文/MPS/RCB；Flit 模式、10/14-bit Tag、TLP Prefix 为重头）— 正文 8 节骨架齐全，6 图全部落地
+  - SVG：`第06章-TLP头结构.svg`、`第06章-Fmt-Type编码表.svg`、`第06章-路由决策.svg`、`第06章-读拆分与RCB.svg`、`第06章-MPS与MRRS.svg`、`第06章-Flit封装.svg` ✅
+- ✅ **第07章 数据链路层与物理层**（ACK/NAK；128b/130b→PAM4→FEC+Flit、PIPE 为重头）— 正文 8 节骨架齐全，5 图全部落地
+  - SVG：`第07章-DLLP格式.svg`、`第07章-ACKNAK重放.svg`、`第07章-物理层子块.svg`、`第07章-编码演进.svg`、`第07章-Flit与FEC.svg` ✅
+
+## P1 · 核心机制（承接 P0，构成 PCIe 主干）
+
+- ✅ **第04章 PCIe 概述**（拓扑/RC/Switch/VC/Express Cap）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第04章-系统拓扑.svg`、`第04章-Switch内部.svg`、`第04章-Lane与链路.svg`、`第04章-ExpressCap.svg` ✅
+- ✅ **第08章 链路训练与电源管理**（LTSSM；EQ、L1 子状态、L0p）— 正文 8 节骨架齐全，5 图全部落地
+  - SVG：`第08章-LTSSM状态机.svg`、`第08章-OrderedSets.svg`、`第08章-均衡四阶段.svg`、`第08章-ASPM状态.svg`、`第08章-Dstate与Lstate.svg` ✅
+- ✅ **第09章 流量控制**（Credit/六信用池/VC 初始化；Scaled FC、Flit 流控）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第09章-Credit原理.svg`、`第09章-六类信用池.svg`、`第09章-VC初始化.svg`、`第09章-UpdateFC.svg` ✅
+- ✅ **第11章 总线的序**（排序表/生产者消费者/死锁；RO、IDO、Flit 序）— 正文 8 节骨架齐全，4 图全部落地
+  - SVG：`第11章-生产者消费者.svg`、`第11章-排序表.svg`、`第11章-死锁.svg`、`第11章-IDO与RO.svg` ✅
+
+## P2 · 应用与进阶（依赖 P0/P1 的机制）
+
+- ✅ **第10章 MSI 和 MSI-X 中断**（Capability/投递路径；中断重映射、IMS）— 正文 8 节骨架齐全，3 图全部落地
+  - SVG：`第10章-MSI对比MSI-X.svg`、`第10章-MSI投递路径.svg`、`第10章-x86消息格式.svg` ✅
+- ⬜ **第12章 PCIe 应用**（Capric 卡/DMA/驱动/带宽延时；用现代速率重算带宽账）
+  - SVG：`第12章-Capric框图.svg`、`第12章-DMA写TLP.svg`、`第12章-DMA读TLP.svg`、`第12章-带宽分解.svg`
+- ⬜ **第13章 虚拟化技术**（IOMMU/ATS/SR-IOV；PASID、PRI、Scalable IOV、CXL）
+  - SVG：`第13章-IOMMU.svg`、`第13章-ATS流程.svg`、`第13章-SR-IOV.svg`、`第13章-PASID与SVM.svg`
+
+## P3 · 基础铺垫（多数读者已具备，可后写）
+
+- ⬜ **第01章 PCI 总线基础**
+  - SVG：`第01章-PCI拓扑.svg`、`第01章-读事务时序.svg`、`第01章-Posted对比.svg`、`第01章-INTx路由.svg`
+- ⬜ **第02章 PCI 桥与配置**
+  - SVG：`第02章-地址域.svg`、`第02章-配置头Type0.svg`、`第02章-配置头Type1.svg`、`第02章-Bus枚举DFS.svg`、`第02章-非透明桥.svg`
+- ⬜ **第03章 PCI 数据交换**
+  - SVG：`第03章-BAR探测.svg`、`第03章-正负向译码.svg`、`第03章-DMA与Cache一致性.svg`、`第03章-预读.svg`
+
+## P4 · 平台与 Linux（时代性强，最后写并加现代注记）
+
+- ⬜ **第05章 平台 MCH 与 ICH**
+  - SVG：`第05章-平台框图.svg`、`第05章-存储器映射.svg`、`第05章-ECAM映射.svg`
+- ⬜ **第14章 Linux PCI 初始化**
+  - SVG：`第14章-初始化调用流程.svg`、`第14章-ACPI表关系.svg`、`第14章-BAR分配.svg`
+- ⬜ **第15章 Linux PCI 中断处理**
+  - SVG：`第15章-INTx路由表.svg`、`第15章-MSI使能流程.svg`、`第15章-irqdomain层次.svg`
+
+---
+
+## 建议推进节奏
+1. **先 P0 两章**（第06、07章）—— 全书最硬核、配图收益最高，写完即可支撑对现代 PCIe 的核心理解。
+2. 再 **P1 四章**补齐 PCIe 主干（概述/训练/流控/序）。
+3. **P2/P3/P4** 按需推进；每章「先落 SVG → 再引用 → 更新本表状态」。
+
+## 收尾校验（每完成一章）
+- [ ] 该章 §5.1 骨架 8 节齐全（含术语表）。
+- [ ] 章内 SVG 全部落地、`![]()` 引用无死链、XML 合法、无外链。
+- [ ] 术语首现有中英文；`> 📘 SPEC 7.0` 块标注了 Base Spec 章节号。
+- [ ] 本表对应条目标记 ✅，与 [CLAUDE.md §6](CLAUDE.md) 同步。

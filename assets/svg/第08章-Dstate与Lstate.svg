@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="920" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="460" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">D-state 与 L-state：设备态"带动"链路态</text>
+  <text x="460" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">D = 设备（Device）功耗态，由软件设置；L = 链路（Link）功耗态，随之联动</text>
+
+  <!-- 表头 -->
+  <g font-size="12" font-weight="700" fill="#3f5678">
+    <rect x="40" y="80" width="150" height="34" fill="#e6edf7" stroke="#c7d0dd"/><text x="55" y="102">设备态 D-state</text>
+    <rect x="190" y="80" width="230" height="34" fill="#e6edf7" stroke="#c7d0dd"/><text x="205" y="102">含义</text>
+    <rect x="420" y="80" width="150" height="34" fill="#e6edf7" stroke="#c7d0dd"/><text x="435" y="102">对应链路 L-state</text>
+    <rect x="570" y="80" width="310" height="34" fill="#e6edf7" stroke="#c7d0dd"/><text x="585" y="102">说明</text>
+  </g>
+
+  <!-- rows -->
+  <g font-size="11.5" fill="#22314f">
+    <rect x="40" y="114" width="840" height="46" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="142" font-weight="700" fill="#14663f">D0</text>
+    <text x="205" y="142">完全上电、正常工作</text>
+    <rect x="430" y="122" width="130" height="30" rx="6" fill="#bfe3cd" stroke="#4a9a6a"/><text x="495" y="142" text-anchor="middle" fill="#14663f">L0 / L0s / L1</text>
+    <text x="585" y="142">干活时 L0；空闲可 ASPM 进 L0s/L1</text>
+
+    <rect x="40" y="160" width="840" height="46" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="188" font-weight="700" fill="#a85a17">D1 / D2</text>
+    <text x="205" y="188">中间轻度省电（可选）</text>
+    <rect x="430" y="168" width="130" height="30" rx="6" fill="#fdf1e7" stroke="#f0c193"/><text x="495" y="188" text-anchor="middle" fill="#a85a17">L1</text>
+    <text x="585" y="188">设备部分休眠，链路进 L1</text>
+
+    <rect x="40" y="206" width="840" height="46" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="234" font-weight="700" fill="#8a5a1a">D3hot</text>
+    <text x="205" y="234">软件关闭，仍有辅助供电</text>
+    <rect x="430" y="214" width="130" height="30" rx="6" fill="#fbe9d8" stroke="#e0a860"/><text x="495" y="234" text-anchor="middle" fill="#8a5a1a">L1 → L2/L3</text>
+    <text x="585" y="234">配置空间仍可访问；可被唤醒</text>
+
+    <rect x="40" y="252" width="840" height="46" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="280" font-weight="700" fill="#5a6b86">D3cold</text>
+    <text x="205" y="280">主电源移除，仅 Vaux</text>
+    <rect x="430" y="260" width="130" height="30" rx="6" fill="#eef1f6" stroke="#c7d0dd"/><text x="495" y="280" text-anchor="middle" fill="#5a6b86">L2 / L3</text>
+    <text x="585" y="280">靠 WAKE#/PME 唤醒，或重新上电</text>
+  </g>
+
+  <!-- PME 唤醒 -->
+  <rect x="40" y="320" width="840" height="90" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="60" y="346" font-size="13" font-weight="700" fill="#1b4f9c">PME：设备如何"叫醒"系统</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="370">设备在低功耗态下发生事件（如网卡收到唤醒包），通过 <tspan font-weight="700">PME（Power Management Event）</tspan></text>
+    <text x="60" y="392">+ <tspan font-weight="700">WAKE#</tspan> 边带信号，请求系统把它（及链路）拉回工作态 —— 这就是"网络唤醒(WoL)"的底层。</text>
+  </g>
+
+  <!-- 要点 -->
+  <rect x="40" y="424" width="840" height="116" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="450" font-size="13" font-weight="700" fill="#1b2a4a">三个记忆点</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="474">① <tspan font-weight="700">D 管设备、L 管链路</tspan>：软件设 D-state（PCI-PM Capability，第04章），链路 L-state 随之联动下探。</text>
+    <text x="60" y="498">② <tspan font-weight="700">越深越省、唤醒越慢</tspan>：D0→D3cold 对应 L0→L2/L3，功耗递减、恢复代价递增。</text>
+    <text x="60" y="522">③ <tspan font-weight="700">D3hot vs D3cold</tspan>：前者留辅助电、配置空间可访问；后者主电全断，通常需重新初始化。</text>
+  </g>
+</svg>

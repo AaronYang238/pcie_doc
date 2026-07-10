@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 620" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="940" height="620" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="470" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">常见 TLP 的 Fmt + Type 编码速查</text>
+  <text x="470" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">Fmt：000=3DW无数据 · 001=4DW无数据 · 010=3DW+数据 · 011=4DW+数据</text>
+
+  <!-- 表头 -->
+  <g font-size="12" font-weight="700" fill="#3f5678">
+    <rect x="40" y="78" width="230" height="32" fill="#e6edf7" stroke="#c7d0dd"/><text x="55" y="99">事务（缩写）</text>
+    <rect x="270" y="78" width="120" height="32" fill="#e6edf7" stroke="#c7d0dd"/><text x="285" y="99">Fmt</text>
+    <rect x="390" y="78" width="140" height="32" fill="#e6edf7" stroke="#c7d0dd"/><text x="405" y="99">Type</text>
+    <rect x="530" y="78" width="110" height="32" fill="#e6edf7" stroke="#c7d0dd"/><text x="545" y="99">分类</text>
+    <rect x="640" y="78" width="260" height="32" fill="#e6edf7" stroke="#c7d0dd"/><text x="655" y="99">说明</text>
+  </g>
+
+  <!-- rows -->
+  <g font-size="11.5" fill="#22314f">
+    <!-- helper: each row 30px -->
+    <!-- MRd -->
+    <rect x="40" y="110" width="860" height="30" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="130" font-weight="600">MRd（存储器读）</text><text x="285" y="130">000/001</text><text x="405" y="130">0 0000</text>
+    <text x="545" y="130" fill="#b26a00">Non-Posted</text><text x="655" y="130">3DW/4DW 头，无数据；等 CplD</text>
+    <!-- MWr -->
+    <rect x="40" y="140" width="860" height="30" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="160" font-weight="600">MWr（存储器写）</text><text x="285" y="160">010/011</text><text x="405" y="160">0 0000</text>
+    <text x="545" y="160" fill="#1c7a4a">Posted</text><text x="655" y="160">带数据；不等完成</text>
+    <!-- IORd/IOWr -->
+    <rect x="40" y="170" width="860" height="30" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="190" font-weight="600">IORd / IOWr</text><text x="285" y="190">000 / 010</text><text x="405" y="190">0 0010</text>
+    <text x="545" y="190" fill="#b26a00">Non-Posted</text><text x="655" y="190">传统 I/O 空间，均需完成</text>
+    <!-- CfgRd0/Wr0 -->
+    <rect x="40" y="200" width="860" height="30" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="220" font-weight="600">CfgRd0 / CfgWr0</text><text x="285" y="220">000 / 010</text><text x="405" y="220">0 0100</text>
+    <text x="545" y="220" fill="#b26a00">Non-Posted</text><text x="655" y="220">配置访问，目标在本总线</text>
+    <!-- CfgRd1/Wr1 -->
+    <rect x="40" y="230" width="860" height="30" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="250" font-weight="600">CfgRd1 / CfgWr1</text><text x="285" y="250">000 / 010</text><text x="405" y="250">0 0101</text>
+    <text x="545" y="250" fill="#b26a00">Non-Posted</text><text x="655" y="250">配置访问，经桥透传到下游</text>
+    <!-- Cpl -->
+    <rect x="40" y="260" width="860" height="30" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="280" font-weight="600">Cpl（完成，无数据）</text><text x="285" y="280">000</text><text x="405" y="280">0 1010</text>
+    <text x="545" y="280" fill="#7a5cc0">Completion</text><text x="655" y="280">写完成 / 错误状态回应</text>
+    <!-- CplD -->
+    <rect x="40" y="290" width="860" height="30" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="310" font-weight="600">CplD（完成，带数据）</text><text x="285" y="310">010</text><text x="405" y="310">0 1010</text>
+    <text x="545" y="310" fill="#7a5cc0">Completion</text><text x="655" y="310">读完成，携带返回数据</text>
+    <!-- Msg -->
+    <rect x="40" y="320" width="860" height="30" fill="#f4f8ff" stroke="#eef1f6"/>
+    <text x="55" y="340" font-weight="600">Msg / MsgD（消息）</text><text x="285" y="340">001 / 011</text><text x="405" y="340">1 0rrr</text>
+    <text x="545" y="340" fill="#1c7a4a">Posted</text><text x="655" y="340">rrr=路由子字段（隐式路由）</text>
+    <!-- AtomicOp -->
+    <rect x="40" y="350" width="860" height="30" fill="#ffffff" stroke="#eef1f6"/>
+    <text x="55" y="370" font-weight="600">FetchAdd/Swap/CAS</text><text x="285" y="370">010/011</text><text x="405" y="370">0 11xx</text>
+    <text x="545" y="370" fill="#b26a00">Non-Posted</text><text x="655" y="370">原子操作，带数据且需 CplD</text>
+  </g>
+
+  <!-- 分类说明 -->
+  <rect x="40" y="398" width="860" height="196" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="424" font-size="13" font-weight="700" fill="#1b2a4a">三大事务分类（决定「序」与流控信用池）</text>
+  <g font-size="11.8" fill="#33415c">
+    <rect x="60" y="438" width="14" height="14" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="84" y="450"><tspan font-weight="700" fill="#1c7a4a">Posted</tspan>：MWr、Msg —— 发出即完成，无回程报文；写保序的核心。</text>
+    <rect x="60" y="462" width="14" height="14" fill="#fff2e0" stroke="#f0c193"/>
+    <text x="84" y="474"><tspan font-weight="700" fill="#b26a00">Non-Posted</tspan>：MRd、IO、Cfg、AtomicOp —— 必须由对端回 Completion。</text>
+    <rect x="60" y="486" width="14" height="14" fill="#efe9f9" stroke="#c4b1e8"/>
+    <text x="84" y="498"><tspan font-weight="700" fill="#7a5cc0">Completion</tspan>：Cpl / CplD —— Non-Posted 的应答，ID 路由回请求方。</text>
+    <text x="60" y="524" fill="#5a6b86">记忆法：<tspan font-weight="700">「写是 Posted、读要 Completion、配置/IO 都 Non-Posted」</tspan>。</text>
+    <text x="60" y="548" fill="#5a6b86">这三类各有独立的流控信用池（Header/Data 再各分一份 → 六池，见 第09章）。</text>
+    <text x="60" y="574" font-size="10.5" fill="#8a97ab">📘 Type 中 rrr / xx 为子字段，完整编码以 Base Spec 7.0 报文格式章为准。</text>
+  </g>
+</svg>

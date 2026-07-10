@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="980" height="600" rx="14" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="490" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#eaf1fb">线路编码的三级跃迁：8b/10b → 128b/130b → PAM4</text>
+  <text x="490" y="60" text-anchor="middle" font-size="12" fill="#8fa6c8">📘 原书基线是 8b/10b；现代 PCIe 已走到 PAM4 —— 这是最需要"新旧对照"的地方</text>
+
+  <!-- 三列 -->
+  <!-- 8b/10b -->
+  <rect x="40" y="82" width="290" height="410" rx="10" fill="#15263d" stroke="#2c4568"/>
+  <text x="185" y="110" text-anchor="middle" font-size="15" font-weight="700" fill="#7fd1a8">8b/10b（Gen1/2）</text>
+  <text x="185" y="132" text-anchor="middle" font-size="10.5" fill="#8fa6c8">2.5 / 5 GT/s · NRZ</text>
+  <g font-size="11" fill="#c6d2e6">
+    <text x="58" y="162" font-weight="700" fill="#7fd1a8">原理</text>
+    <text x="58" y="182">每 8 bit 映射为 10 bit 符号</text>
+    <text x="58" y="200">保证 DC 平衡 + 足够跳变</text>
+    <text x="58" y="218">（供接收端恢复时钟）</text>
+    <text x="58" y="244" font-weight="700" fill="#7fd1a8">成帧</text>
+    <text x="58" y="264">用控制字符 K-code</text>
+    <text x="58" y="282">（COM/STP/SDP/END…）</text>
+    <text x="58" y="308" font-weight="700" fill="#7fd1a8">调制</text>
+    <text x="58" y="328">NRZ：每符号 1 bit（2 电平）</text>
+    <text x="58" y="356" font-weight="700" fill="#f0a0a0">编码开销</text>
+    <text x="58" y="378" font-size="15" font-weight="700" fill="#ff9e6b">20%</text>
+    <text x="58" y="398" font-size="10" fill="#8fa6c8">(10 位里 2 位是开销)</text>
+    <text x="58" y="428" font-weight="700" fill="#7fd1a8">同步</text>
+    <text x="58" y="448">符号本身自带跳变</text>
+    <text x="58" y="466">Running Disparity 平衡</text>
+  </g>
+
+  <!-- 128b/130b -->
+  <rect x="345" y="82" width="290" height="410" rx="10" fill="#122036" stroke="#2c4568"/>
+  <text x="490" y="110" text-anchor="middle" font-size="15" font-weight="700" fill="#8bc6f0">128b/130b（Gen3–5）</text>
+  <text x="490" y="132" text-anchor="middle" font-size="10.5" fill="#8fa6c8">8 / 16 / 32 GT/s · NRZ</text>
+  <g font-size="11" fill="#c6d2e6">
+    <text x="363" y="162" font-weight="700" fill="#8bc6f0">原理</text>
+    <text x="363" y="182">128 bit 数据 + 2 bit 同步头</text>
+    <text x="363" y="200">= 130 bit 一个块</text>
+    <text x="363" y="218">同步头 01=数据 / 10=OS</text>
+    <text x="363" y="244" font-weight="700" fill="#8bc6f0">成帧</text>
+    <text x="363" y="264">废弃 K-code；改用</text>
+    <text x="363" y="282">STP/END 令牌 + 扰码对齐</text>
+    <text x="363" y="308" font-weight="700" fill="#8bc6f0">调制</text>
+    <text x="363" y="328">NRZ：每符号 1 bit</text>
+    <text x="363" y="356" font-weight="700" fill="#9fe0bd">编码开销</text>
+    <text x="363" y="378" font-size="15" font-weight="700" fill="#c6e88a">≈ 1.5%</text>
+    <text x="363" y="398" font-size="10" fill="#8fa6c8">(130 位里仅 2 位开销)</text>
+    <text x="363" y="428" font-weight="700" fill="#8bc6f0">新增</text>
+    <text x="363" y="448">发送端均衡 EQ（第08章）</text>
+    <text x="363" y="466">强制扰码保证跳变密度</text>
+  </g>
+
+  <!-- PAM4 -->
+  <rect x="650" y="82" width="290" height="410" rx="10" fill="#1d2f18" stroke="#3a5a2a"/>
+  <text x="795" y="110" text-anchor="middle" font-size="15" font-weight="700" fill="#c6e88a">PAM4（Gen6/7）</text>
+  <text x="795" y="132" text-anchor="middle" font-size="10.5" fill="#8fa6c8">64 / 128 GT/s · 4 电平</text>
+  <g font-size="11" fill="#c6d2e6">
+    <text x="668" y="162" font-weight="700" fill="#c6e88a">原理</text>
+    <text x="668" y="182">4 个电平编码 2 bit/符号</text>
+    <text x="668" y="200">(00/01/11/10，Gray 码)</text>
+    <text x="668" y="218">同波特率下数据翻倍</text>
+    <text x="668" y="244" font-weight="700" fill="#c6e88a">代价</text>
+    <text x="668" y="264">眼图从 1 个变 3 个、更小</text>
+    <text x="668" y="282">→ 误码率飙升</text>
+    <text x="668" y="308" font-weight="700" fill="#c6e88a">补救</text>
+    <text x="668" y="328">强制 FEC 前向纠错</text>
+    <text x="668" y="346">+ CRC + 重放兜底</text>
+    <text x="668" y="372" font-weight="700" fill="#f0b088">封装</text>
+    <text x="668" y="392">强制 Flit 模式（256B）</text>
+    <text x="668" y="410">编码沿用 128b/130b 组织</text>
+    <text x="668" y="438" font-weight="700" fill="#c6e88a">收益</text>
+    <text x="668" y="458">保持低编码开销的同时</text>
+    <text x="668" y="476">把速率推到 64/128 GT/s</text>
+  </g>
+
+  <text x="490" y="520" text-anchor="middle" font-size="12" fill="#8fa6c8">Gray 编码：相邻电平只差 1 bit → 电平判错时通常只错 1 bit，便于 FEC 纠正</text>
+  <text x="490" y="546" text-anchor="middle" font-size="11" fill="#6f86a8">趋势：编码开销一路走低（20% → 1.5%），提速靠"更密的块 + 更高阶调制"，可靠性靠"EQ + FEC"补回</text>
+  <text x="490" y="576" text-anchor="middle" font-size="10.5" fill="#6f86a8">📘 对照 Base Spec 7.0：Physical Layer Logical（Encoding）/ Electrical（PAM4）/ FEC 章节</text>
+</svg>

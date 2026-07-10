@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">DLLP：数据链路层自己的"小报文"</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">DLLP 固定 6 字节（4B 内容 + 2B CRC16），只在相邻两设备间传递，永不跨越链路</text>
+
+  <!-- 结构 -->
+  <text x="60" y="98" font-size="14" font-weight="700" fill="#1c7a4a">线上的 DLLP 结构（传统模式）</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="110" width="90" height="46" rx="5" fill="#fdf1e7" stroke="#f0c193"/><text x="105" y="132" fill="#a85a17" font-weight="700">SDP</text><text x="105" y="148" fill="#8a6a3a" font-size="9">起始符</text>
+    <rect x="150" y="110" width="120" height="46" rx="5" fill="#e9f7ef" stroke="#8fd3ac"/><text x="210" y="130" fill="#1c7a4a" font-weight="700">DLLP Type</text><text x="210" y="147" fill="#3f5678" font-size="9">1 字节</text>
+    <rect x="270" y="110" width="330" height="46" rx="5" fill="#e9f7ef" stroke="#8fd3ac"/><text x="435" y="130" fill="#1c7a4a" font-weight="700">类型相关内容（3 字节）</text><text x="435" y="147" fill="#3f5678" font-size="9">如 Seq# / 信用值</text>
+    <rect x="600" y="110" width="150" height="46" rx="5" fill="#eef3f9" stroke="#c7d0dd"/><text x="675" y="130" fill="#33415c" font-weight="700">CRC16</text><text x="675" y="147" fill="#3f5678" font-size="9">2 字节校验</text>
+    <rect x="750" y="110" width="90" height="46" rx="5" fill="#fdf1e7" stroke="#f0c193"/><text x="795" y="132" fill="#a85a17" font-weight="700">END</text><text x="795" y="148" fill="#8a6a3a" font-size="9">结束符</text>
+  </g>
+  <text x="60" y="178" font-size="10.5" fill="#8a97ab">📘 Gen6+ Flit 模式下 DLLP 信息（DLP）改为嵌入 Flit 固定区，不再单独成帧。</text>
+
+  <!-- 三类 DLLP -->
+  <text x="60" y="212" font-size="14" font-weight="700" fill="#1b2a4a">DLLP 按用途分三大类</text>
+
+  <rect x="60" y="228" width="270" height="150" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="195" y="252" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">① 可靠性：ACK / NAK</text>
+  <g font-size="11" fill="#22314f">
+    <text x="76" y="278">Ack：确认收到序号 ≤ N 的 TLP</text>
+    <text x="76" y="300">Nak：某 TLP 出错，请重发</text>
+    <text x="76" y="322">携带 AckNak_Seq_Num（12 bit）</text>
+    <text x="76" y="350" fill="#3f5678" font-size="10.5">→ 驱动 ACK/NAK 重放协议</text>
+    <text x="76" y="368" fill="#8a97ab" font-size="10">（本章 §7.2 详解）</text>
+  </g>
+
+  <rect x="345" y="228" width="270" height="150" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="480" y="252" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">② 流控：FC DLLP</text>
+  <g font-size="11" fill="#22314f">
+    <text x="361" y="278">InitFC1 / InitFC2：初始化信用</text>
+    <text x="361" y="300">UpdateFC：周期性通告新信用</text>
+    <text x="361" y="322">各分 P / NP / Cpl 三种</text>
+    <text x="361" y="350" fill="#3f5678" font-size="10.5">→ 支撑基于信用的流量控制</text>
+    <text x="361" y="368" fill="#8a97ab" font-size="10">（详见 第09章）</text>
+  </g>
+
+  <rect x="630" y="228" width="270" height="150" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="765" y="252" text-anchor="middle" font-size="13" font-weight="700" fill="#a85a17">③ 电源：PM DLLP</text>
+  <g font-size="11" fill="#22314f">
+    <text x="646" y="278">PM_Enter_L1 / L23</text>
+    <text x="646" y="300">PM_Active_State_Request_L1</text>
+    <text x="646" y="322">PM_Request_Ack</text>
+    <text x="646" y="350" fill="#3f5678" font-size="10.5">→ 链路进入低功耗态的握手</text>
+    <text x="646" y="368" fill="#8a97ab" font-size="10">（详见 第08章）</text>
+  </g>
+
+  <!-- 对比 TLP -->
+  <rect x="60" y="398" width="840" height="182" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="424" font-size="13" font-weight="700" fill="#1b2a4a">DLLP vs TLP —— 一张表看清区别</text>
+  <g font-size="11.5" fill="#33415c">
+    <text x="80" y="450"><tspan font-weight="700">作用范围</tspan>：TLP 端到端（跨越整个拓扑）；DLLP 只在<tspan font-weight="700" fill="#1c7a4a">相邻两设备</tspan>之间，一跳即止。</text>
+    <text x="80" y="474"><tspan font-weight="700">是否有序号/重传</tspan>：TLP 有 Seq# + LCRC，会被重放；<tspan font-weight="700" fill="#c0392b">DLLP 无序号、不重传</tspan>（丢了靠周期性重发兜底）。</text>
+    <text x="80" y="498"><tspan font-weight="700">大小</tspan>：TLP 可长达数千字节；DLLP 固定 6 字节，短小精悍。</text>
+    <text x="80" y="522"><tspan font-weight="700">谁产生</tspan>：TLP 由事务层生成（软件语义）；DLLP 由数据链路层自己生成（管理链路）。</text>
+    <text x="80" y="546" fill="#5a6b86">💡 记忆：<tspan font-weight="700">TLP 是"货物"，DLLP 是两个相邻快递站之间的"对账单和回执"</tspan>——只在站与站之间流转。</text>
+    <text x="80" y="570" fill="#8a97ab" font-size="10.5">正因 DLLP 不重传，ACK/NAK 才要能容忍偶尔丢失：靠 UpdateFC/Ack 的周期性重发保证最终一致。</text>
+  </g>
+</svg>

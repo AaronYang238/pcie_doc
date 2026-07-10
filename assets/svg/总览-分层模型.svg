@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#1b2a4a">PCIe 分层模型全景 · 设备 A ↔ 设备 B</text>
+  <text x="480" y="64" text-anchor="middle" font-size="12.5" fill="#5a6b86">发送端逐层封装（加头/加尾），接收端逐层剥离；每层各司其职</text>
+
+  <!-- 设备 A 栈 -->
+  <text x="200" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2a4a">设备 A（发送）</text>
+  <g>
+    <rect x="70" y="112" width="260" height="72" rx="9" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="200" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">事务层 Transaction Layer</text>
+    <text x="200" y="162" text-anchor="middle" font-size="11.5" fill="#3f5678">生成 TLP · 路由 · 流控 · 序</text>
+    <text x="200" y="177" text-anchor="middle" font-size="11.5" fill="#3f5678">MPS / MRRS / VC / TC</text>
+
+    <rect x="70" y="196" width="260" height="66" rx="9" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="200" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">数据链路层 Data Link Layer</text>
+    <text x="200" y="244" text-anchor="middle" font-size="11.5" fill="#3f5678">加 Seq# + LCRC · ACK/NAK 重传 · DLLP</text>
+
+    <rect x="70" y="274" width="260" height="66" rx="9" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="200" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#a85a17">物理层 Physical Layer</text>
+    <text x="200" y="322" text-anchor="middle" font-size="11.5" fill="#3f5678">编码 · 扰码 · 串化 · 差分/均衡 · Ordered Set</text>
+  </g>
+
+  <!-- 设备 B 栈 -->
+  <text x="760" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2a4a">设备 B（接收）</text>
+  <g>
+    <rect x="630" y="112" width="260" height="72" rx="9" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="760" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">事务层 Transaction Layer</text>
+    <text x="760" y="162" text-anchor="middle" font-size="11.5" fill="#3f5678">解析 TLP · 交付软件/DMA</text>
+    <text x="760" y="177" text-anchor="middle" font-size="11.5" fill="#3f5678">回收 Credit</text>
+
+    <rect x="630" y="196" width="260" height="66" rx="9" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="760" y="222" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">数据链路层 Data Link Layer</text>
+    <text x="760" y="244" text-anchor="middle" font-size="11.5" fill="#3f5678">校验 LCRC/Seq# · 回 ACK/NAK</text>
+
+    <rect x="630" y="274" width="260" height="66" rx="9" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="760" y="300" text-anchor="middle" font-size="14" font-weight="700" fill="#a85a17">物理层 Physical Layer</text>
+    <text x="760" y="322" text-anchor="middle" font-size="11.5" fill="#3f5678">解串 · 解扰 · 解码 · 时钟恢复</text>
+  </g>
+
+  <!-- 纵向封装箭头 -->
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+  <!-- A：自上而下封装 -->
+  <line x1="200" y1="184" x2="200" y2="196" stroke="#5a6b86" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="200" y1="262" x2="200" y2="274" stroke="#5a6b86" stroke-width="2" marker-end="url(#ar)"/>
+  <!-- B：自下而上剥离（与 A 镜像，落在相同 y 间隙） -->
+  <line x1="760" y1="274" x2="760" y2="262" stroke="#5a6b86" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="760" y1="196" x2="760" y2="184" stroke="#5a6b86" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- 物理链路 -->
+  <rect x="360" y="286" width="240" height="44" rx="22" fill="#dfe6f0" stroke="#aab8cc"/>
+  <text x="480" y="305" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33415c">差分链路 · N 条 Lane</text>
+  <text x="480" y="322" text-anchor="middle" font-size="11" fill="#5a6b86">TX/RX 各一对，双单工</text>
+  <line x1="330" y1="300" x2="360" y2="300" stroke="#5a6b86" stroke-width="2"/>
+  <line x1="600" y1="316" x2="630" y2="316" stroke="#5a6b86" stroke-width="2"/>
+
+  <!-- 数据单元封装示意 -->
+  <text x="480" y="378" text-anchor="middle" font-size="15" font-weight="700" fill="#1b2a4a">链路上的数据单元（封装层层叠加）</text>
+  <g font-size="12" text-anchor="middle">
+    <rect x="120" y="398" width="720" height="40" rx="6" fill="#fdf1e7" stroke="#f0c193"/>
+    <rect x="200" y="404" width="560" height="28" rx="5" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <rect x="280" y="409" width="400" height="18" rx="4" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="160" y="422" fill="#a85a17" font-weight="600">帧起止</text>
+    <text x="800" y="422" fill="#a85a17" font-weight="600">帧起止</text>
+    <text x="240" y="421" fill="#1c7a4a" font-weight="600">Seq#</text>
+    <text x="720" y="421" fill="#1c7a4a" font-weight="600">LCRC</text>
+    <text x="480" y="421" fill="#1b4f9c" font-weight="700">TLP（Header + Data + ECRC）</text>
+  </g>
+
+  <!-- 三层职责小结 -->
+  <g font-size="12" fill="#33415c">
+    <rect x="70" y="462" width="820" height="118" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+    <text x="86" y="486" font-weight="700" fill="#1b4f9c">事务层：</text>
+    <text x="170" y="486">把软件的读/写/配置/消息请求，抽象成端到端的 TLP；负责寻址路由、流量控制与事务排序。</text>
+    <text x="86" y="516" font-weight="700" fill="#1c7a4a">数据链路层：</text>
+    <text x="186" y="516">保证相邻两设备间 TLP 可靠传输 —— 编号、CRC 校验、ACK/NAK 重传，并用 DLLP 管理链路。</text>
+    <text x="86" y="546" font-weight="700" fill="#a85a17">物理层：</text>
+    <text x="170" y="546">把比特变成可在铜线上跑的差分信号 —— 编码/扰码、串并转换、均衡、链路训练（LTSSM）。</text>
+    <text x="86" y="570" fill="#5a6b86" font-size="11">📘 现代（Gen6+）Flit 模式下三层边界与封装形式有调整，详见 第06章/第07章。</text>
+  </g>
+</svg>

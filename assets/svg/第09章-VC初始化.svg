@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">VC 的流控初始化：链路进 L0 后要做的第一件事</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">物理层通了（L0）≠ 能发 TLP；还要先交换初始信用，DL_Init → DL_Active</text>
+
+  <defs>
+    <marker id="v9" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+    <marker id="v9g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <text x="220" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">设备 A</text>
+  <text x="740" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">设备 B</text>
+  <line x1="220" y1="100" x2="220" y2="470" stroke="#93b7f0" stroke-width="2"/>
+  <line x1="740" y1="100" x2="740" y2="470" stroke="#8fd3ac" stroke-width="2"/>
+
+  <!-- 起点 -->
+  <rect x="330" y="108" width="300" height="34" rx="8" fill="#eef1f6" stroke="#c7d0dd"/>
+  <text x="480" y="130" text-anchor="middle" font-size="11.5" font-weight="700" fill="#33415c">链路到 L0，数据链路层进入 DL_Init</text>
+
+  <!-- FC_INIT1 -->
+  <rect x="60" y="168" width="320" height="44" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="220" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#1b4f9c">FC_INIT1 阶段</text>
+  <text x="220" y="206" text-anchor="middle" font-size="10" fill="#3f5678">反复广播初始信用（六类）</text>
+  <rect x="580" y="168" width="320" height="44" rx="8" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="740" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#1c7a4a">FC_INIT1 阶段</text>
+  <text x="740" y="206" text-anchor="middle" font-size="10" fill="#3f5678">同样广播自己的初始信用</text>
+  <line x1="220" y1="230" x2="740" y2="246" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#v9)"/>
+  <text x="480" y="228" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4f9c">InitFC1-P / InitFC1-NP / InitFC1-Cpl</text>
+  <line x1="740" y1="266" x2="220" y2="282" stroke="#1c7a4a" stroke-width="1.8" marker-end="url(#v9g)"/>
+  <text x="480" y="278" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">（对向同样发 InitFC1 三类）</text>
+
+  <!-- FC_INIT2 -->
+  <rect x="60" y="304" width="320" height="44" rx="8" fill="#dbe8fb" stroke="#5a8fd0"/>
+  <text x="220" y="326" text-anchor="middle" font-size="12" font-weight="700" fill="#1b4f9c">FC_INIT2 阶段</text>
+  <text x="220" y="342" text-anchor="middle" font-size="10" fill="#3f5678">确认已收到对方的初始信用</text>
+  <rect x="580" y="304" width="320" height="44" rx="8" fill="#c9ecd8" stroke="#4a9a6a"/>
+  <text x="740" y="326" text-anchor="middle" font-size="12" font-weight="700" fill="#14663f">FC_INIT2 阶段</text>
+  <text x="740" y="342" text-anchor="middle" font-size="10" fill="#3f5678">确认收到 → 准备就绪</text>
+  <line x1="220" y1="366" x2="740" y2="382" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#v9)"/>
+  <text x="480" y="364" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4f9c">InitFC2（确认）</text>
+  <line x1="740" y1="402" x2="220" y2="418" stroke="#1c7a4a" stroke-width="1.8" marker-end="url(#v9g)"/>
+  <text x="480" y="414" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">InitFC2（确认）</text>
+
+  <!-- 完成 -->
+  <rect x="330" y="440" width="300" height="34" rx="8" fill="#bfe3cd" stroke="#4a9a6a"/>
+  <text x="480" y="462" text-anchor="middle" font-size="12" font-weight="700" fill="#14663f">✓ DL_Active：VC0 可用，TLP 开始收发</text>
+
+  <!-- 说明 -->
+  <rect x="60" y="490" width="840" height="56" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <g font-size="11" fill="#33415c">
+    <text x="80" y="512">• <tspan font-weight="700">每个 VC 各自初始化</tspan>：VC0 在链路 up 后自动初始化；额外 VC 由软件配置后再各自走一遍 FC 初始化。</text>
+    <text x="80" y="532">• <tspan font-weight="700">初始信用只发一次、之后靠 UpdateFC 维护</tspan>；某些类型（如 RC 的 Completion）可通告"无限信用"以防死锁。</text>
+  </g>
+</svg>

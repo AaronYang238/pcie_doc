@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">DMA 读：设备从主存取数据（发 MRd，等 CplD）</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">读是 Non-Posted、往返、要等完成；一个 MRd 的返回还会按 RCB 拆成多个 CplD</text>
+
+  <defs>
+    <marker id="r12" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#a85a17"/></marker>
+    <marker id="r12c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7a5cc0"/></marker>
+    <marker id="r12p" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <text x="250" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">Capric 卡</text>
+  <text x="720" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#2a3b57">主机（内存 / RC）</text>
+  <line x1="250" y1="100" x2="250" y2="540" stroke="#8fd3ac" stroke-width="2"/>
+  <line x1="720" y1="100" x2="720" y2="540" stroke="#8aa0bd" stroke-width="2"/>
+
+  <!-- MRd -->
+  <line x1="250" y1="130" x2="720" y2="146" stroke="#a85a17" stroke-width="2" marker-end="url(#r12)"/>
+  <text x="470" y="126" text-anchor="middle" font-size="12" font-weight="700" fill="#a85a17">① MRd（读 1KB，Non-Posted，带 Tag）</text>
+
+  <!-- 等待 -->
+  <rect x="300" y="158" width="360" height="30" rx="6" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="480" y="178" text-anchor="middle" font-size="10.5" fill="#c0392b">↓ 往返延时（RTT）+ Completer 处理时间 —— 读"昂贵"就贵在这段等待</text>
+
+  <!-- CplD 返回 -->
+  <g font-size="10.5">
+    <line x1="720" y1="210" x2="250" y2="226" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#r12c)"/>
+    <text x="470" y="206" text-anchor="middle" fill="#7a5cc0" font-weight="700">② CplD #1（按 RCB=64B 拆）</text>
+    <line x1="720" y1="248" x2="250" y2="264" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#r12c)"/>
+    <text x="470" y="244" text-anchor="middle" fill="#7a5cc0">CplD #2</text>
+    <line x1="720" y1="286" x2="250" y2="302" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#r12c)"/>
+    <text x="470" y="282" text-anchor="middle" fill="#7a5cc0">CplD #3 … （共 16 个 64B 完成）</text>
+    <line x1="720" y1="324" x2="250" y2="340" stroke="#7a5cc0" stroke-width="1.8" marker-end="url(#r12c)"/>
+    <text x="470" y="320" text-anchor="middle" fill="#7a5cc0">CplD #16（Byte Count 递减到 0）</text>
+  </g>
+  <text x="470" y="366" text-anchor="middle" font-size="10" fill="#8a97ab">设备靠 同一 Tag + Lower Address + Byte Count 把碎片拼回完整 1KB（第06章）</text>
+
+  <!-- 完成 + MSI -->
+  <rect x="60" y="384" width="380" height="34" rx="8" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="250" y="406" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">③ 设备收齐数据，可继续处理</text>
+  <line x1="250" y1="440" x2="720" y2="456" stroke="#1c7a4a" stroke-width="2.2" marker-end="url(#r12p)"/>
+  <text x="470" y="436" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">④ MSI 通知完成（Posted 写）</text>
+
+  <!-- 并发提示 -->
+  <rect x="60" y="486" width="840" height="96" rx="10" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="80" y="510" font-size="12.5" font-weight="700" fill="#a85a17">性能关键：为什么读要"多发几个、别干等"</text>
+  <g font-size="11" fill="#33415c">
+    <text x="80" y="532">• 读吞吐 ≈ <tspan font-weight="700">在途请求数 × MRRS ÷ RTT</tspan>。如果只发 1 个 MRd 就干等，链路大部分时间在空转。</text>
+    <text x="80" y="554">• 正确做法：<tspan font-weight="700">同时发多个 MRd</tspan>（每个用不同 Tag），让"发请求"和"收完成"流水线重叠，填满带宽×延迟管道。</text>
+    <text x="80" y="574" fill="#8a97ab" font-size="10">📘 现代高速率下 8-bit Tag(256 个)可能不够 → 需 10/14-bit Tag（本章现代化）。</text>
+  </g>
+</svg>

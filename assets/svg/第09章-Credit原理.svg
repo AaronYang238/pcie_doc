@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="600" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">基于信用（Credit）的流量控制：永不发对方放不下的包</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">核心思想：接收方先"通告"自己有多少缓冲，发送方按额度消费，绝不溢出</text>
+
+  <defs>
+    <marker id="c9" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+    <marker id="c9g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <!-- 发送方 -->
+  <rect x="60" y="90" width="330" height="330" rx="12" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="225" y="118" text-anchor="middle" font-size="15" font-weight="700" fill="#1b4f9c">发送方 (Tx)</text>
+  <text x="80" y="148" font-size="12" font-weight="700" fill="#33415c">记两个数（模运算比较）：</text>
+  <rect x="80" y="160" width="290" height="54" rx="8" fill="#ffffff" stroke="#b7cdf0"/>
+  <text x="95" y="182" font-size="11.5" fill="#1b4f9c" font-weight="700">Credits_Consumed (CC)</text>
+  <text x="95" y="202" font-size="10.5" fill="#3f5678">已发出、已消费的信用累计（自增）</text>
+  <rect x="80" y="222" width="290" height="54" rx="8" fill="#ffffff" stroke="#b7cdf0"/>
+  <text x="95" y="244" font-size="11.5" fill="#1b4f9c" font-weight="700">Credit_Limit (CL)</text>
+  <text x="95" y="264" font-size="10.5" fill="#3f5678">对方通告的信用上限（收 UpdateFC 更新）</text>
+  <rect x="80" y="292" width="290" height="70" rx="8" fill="#f0f6ff" stroke="#93b7f0"/>
+  <text x="225" y="316" text-anchor="middle" font-size="12" font-weight="700" fill="#1b4f9c">发送判据</text>
+  <text x="225" y="340" text-anchor="middle" font-size="12" fill="#c0392b" font-weight="700">CC + 本包所需 ≤ CL ?</text>
+  <text x="225" y="356" text-anchor="middle" font-size="10" fill="#8a97ab">成立才发；否则等 UpdateFC 抬高 CL</text>
+  <text x="80" y="392" font-size="10.5" fill="#8a97ab">💡 比较用模 2^字段宽 运算，避免计数回绕出错</text>
+
+  <!-- 接收方 -->
+  <rect x="570" y="90" width="330" height="330" rx="12" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="735" y="118" text-anchor="middle" font-size="15" font-weight="700" fill="#1c7a4a">接收方 (Rx)</text>
+  <text x="590" y="148" font-size="12" font-weight="700" fill="#33415c">管理接收缓冲：</text>
+  <rect x="590" y="160" width="290" height="120" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+  <text x="735" y="182" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">接收缓冲区</text>
+  <g>
+    <rect x="606" y="196" width="258" height="18" fill="#bfe3cd" stroke="#8fd3ac"/>
+    <rect x="606" y="218" width="258" height="18" fill="#bfe3cd" stroke="#8fd3ac"/>
+    <rect x="606" y="240" width="130" height="18" fill="#e0f0e6" stroke="#a9dcc0"/>
+    <text x="740" y="254" font-size="9" fill="#8a97ab">空闲 → 可再通告信用</text>
+  </g>
+  <rect x="590" y="290" width="290" height="72" rx="8" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="735" y="312" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">Credits_Allocated (CA)</text>
+  <text x="735" y="332" text-anchor="middle" font-size="10.5" fill="#3f5678">随缓冲释放而增长</text>
+  <text x="735" y="350" text-anchor="middle" font-size="10.5" fill="#3f5678">→ 打包进 UpdateFC 通告出去</text>
+
+  <!-- 循环箭头 -->
+  <line x1="390" y1="210" x2="570" y2="210" stroke="#5a6b86" stroke-width="2.2" marker-end="url(#c9)"/>
+  <text x="480" y="200" text-anchor="middle" font-size="11.5" font-weight="700" fill="#33415c">① 发 TLP（消费信用）</text>
+  <text x="480" y="228" text-anchor="middle" font-size="9.5" fill="#8a97ab">CC 自增；对方缓冲被占用</text>
+
+  <line x1="570" y1="380" x2="390" y2="380" stroke="#1c7a4a" stroke-width="2.2" marker-end="url(#c9g)"/>
+  <text x="480" y="370" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">② UpdateFC 回信用</text>
+  <text x="480" y="398" text-anchor="middle" font-size="9.5" fill="#8a97ab">缓冲释放 → 抬高 CL，发送方可继续发</text>
+
+  <!-- 底部要点 -->
+  <rect x="60" y="440" width="840" height="130" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="466" font-size="13" font-weight="700" fill="#1b2a4a">和 ACK/NAK 有什么不一样？（都在数据链路层，但管的事不同）</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="80" y="492">• <tspan font-weight="700">ACK/NAK（第07章）</tspan> 管"<tspan fill="#c0392b">已经发出的包别丢</tspan>"——出错重传。</text>
+    <text x="80" y="516">• <tspan font-weight="700">流量控制（本章）</tspan> 管"<tspan fill="#1c7a4a">压根别发对方放不下的包</tspan>"——事前预防溢出。</text>
+    <text x="80" y="540">• 二者配合：流控保证"发得出去且放得下"，ACK/NAK 保证"发出去的不丢"。都靠 DLLP 传递。</text>
+    <text x="80" y="562" fill="#8a97ab" font-size="10.5">📘 Gen6+ Flit 模式下流控信息（DLP）嵌入 Flit 固定区，语义不变、承载方式变（见本章现代化）。</text>
+  </g>
+</svg>

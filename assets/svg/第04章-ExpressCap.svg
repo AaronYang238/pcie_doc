@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 640" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="940" height="640" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="470" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">PCIe 配置空间：256B 兼容区 + 4KB 扩展区</text>
+  <text x="470" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">软件靠一条 Capability 链表逐个找到各能力结构（如 PCI Express Capability）</text>
+
+  <!-- 整体地址条 -->
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="86" width="240" height="52" rx="6" fill="#dbe8fb" stroke="#93b7f0"/>
+    <text x="180" y="108" font-weight="700" fill="#1b4f9c">0x00–0x3F</text><text x="180" y="126" fill="#3f5678" font-size="10">PCI 标准头（Type 0/1）</text>
+    <rect x="300" y="86" width="240" height="52" rx="6" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="420" y="108" font-weight="700" fill="#1b4f9c">0x40–0xFF</text><text x="420" y="126" fill="#3f5678" font-size="10">Capabilities 链表（PM/MSI/PCIe…）</text>
+    <rect x="540" y="86" width="340" height="52" rx="6" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="710" y="104" font-weight="700" fill="#1c7a4a">0x100–0xFFF</text><text x="710" y="122" fill="#3f5678" font-size="10">Extended Capabilities（AER/VC/SR-IOV/ATS…）</text>
+  </g>
+  <text x="180" y="156" text-anchor="middle" font-size="10" fill="#8a97ab">← 256B PCI 兼容配置空间（CF8/CFC 也可访问）→</text>
+  <text x="710" y="156" text-anchor="middle" font-size="10" fill="#8a97ab">← 仅 ECAM 内存映射可访问 →</text>
+
+  <!-- 链表示意 -->
+  <text x="60" y="192" font-size="13" font-weight="700" fill="#1b2a4a">Capability 链表：像单向链表一样"next 指针"串起来</text>
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="60" y="204" width="150" height="40" rx="7" fill="#fff7ec" stroke="#f0c193"/><text x="135" y="222" font-weight="700" fill="#a85a17">Cap Ptr</text><text x="135" y="237" fill="#8a6a3a">头里的入口</text>
+    <rect x="250" y="204" width="150" height="40" rx="7" fill="#eaf2fe" stroke="#93b7f0"/><text x="325" y="222" font-weight="700" fill="#1b4f9c">PM Cap</text><text x="325" y="237" fill="#3f5678">电源管理</text>
+    <rect x="440" y="204" width="150" height="40" rx="7" fill="#eaf2fe" stroke="#93b7f0"/><text x="515" y="222" font-weight="700" fill="#1b4f9c">MSI/MSI-X</text><text x="515" y="237" fill="#3f5678">中断(第10章)</text>
+    <rect x="630" y="204" width="180" height="40" rx="7" fill="#dbe8fb" stroke="#5a8fd0"/><text x="720" y="222" font-weight="700" fill="#1b4f9c">PCI Express Cap</text><text x="720" y="237" fill="#3f5678">★ 每个 PCIe 功能必备</text>
+  </g>
+  <g stroke="#a85a17" stroke-width="1.4" fill="none">
+    <path d="M210,224 L250,224" marker-end="url(#e4)"/><path d="M400,224 L440,224" marker-end="url(#e4)"/><path d="M590,224 L630,224" marker-end="url(#e4)"/>
+  </g>
+  <defs><marker id="e4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a85a17"/></marker></defs>
+
+  <!-- PCI Express Capability 展开 -->
+  <rect x="60" y="272" width="820" height="250" rx="12" fill="#ffffff" stroke="#5a8fd0" stroke-width="1.6"/>
+  <text x="80" y="298" font-size="14" font-weight="700" fill="#1b4f9c">PCI Express Capability 结构（协商链路 / 设备能力的核心）</text>
+  <g font-size="11" text-anchor="middle">
+    <!-- Device -->
+    <rect x="80" y="312" width="240" height="94" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="200" y="334" font-weight="700" fill="#1b4f9c">Device 组</text>
+    <text x="200" y="356" fill="#33415c" font-size="10.5">Device Capabilities</text>
+    <text x="200" y="374" fill="#33415c" font-size="10.5">Device Control（配 MPS/MRRS）</text>
+    <text x="200" y="392" fill="#33415c" font-size="10.5">Device Status（错误位）</text>
+    <!-- Link -->
+    <rect x="350" y="312" width="240" height="94" rx="8" fill="#e6f0fb" stroke="#93b7f0"/>
+    <text x="470" y="334" font-weight="700" fill="#1b4f9c">Link 组 ★</text>
+    <text x="470" y="356" fill="#33415c" font-size="10.5">Link Capabilities（速率/宽度）</text>
+    <text x="470" y="374" fill="#33415c" font-size="10.5">Link Control（ASPM 等）</text>
+    <text x="470" y="392" fill="#33415c" font-size="10.5">Link Status（当前速率/宽度）</text>
+    <!-- Slot/Root -->
+    <rect x="620" y="312" width="240" height="94" rx="8" fill="#eef3f9" stroke="#93b7f0"/>
+    <text x="740" y="334" font-weight="700" fill="#1b4f9c">Slot / Root 组</text>
+    <text x="740" y="356" fill="#33415c" font-size="10.5">Slot Cap/Control（热插拔）</text>
+    <text x="740" y="374" fill="#33415c" font-size="10.5">Root Control/Status（PME 等）</text>
+    <text x="740" y="392" fill="#8a97ab" font-size="9.5">（仅特定端口类型有）</text>
+  </g>
+  <g font-size="11" fill="#33415c">
+    <text x="80" y="432">💡 排障常用：读 <tspan font-weight="700" fill="#1b4f9c">Link Status</tspan> 看"当前跑到了几代速率、几条 Lane"——若 Gen4 卡只跑到 Gen1、x16 只上 x4，</text>
+    <text x="80" y="452">　 多半是插槽/信号/BIOS 设置问题；读 <tspan font-weight="700" fill="#1b4f9c">Device Control</tspan> 看 MPS/MRRS 是否配到了预期值（第06章）。</text>
+    <text x="80" y="480" fill="#5a6b86">📘 现代化：Link Cap/Status 2 扩展支持到 64 GT/s(Gen6)/128 GT/s(Gen7)；Flit、10/14-bit Tag、Scaled FC</text>
+    <text x="80" y="500" fill="#5a6b86">　 的能力位在扩展配置空间（0x100+）的对应 Extended Capability 中声明。</text>
+  </g>
+
+  <!-- 底部提示 -->
+  <rect x="60" y="540" width="820" height="80" rx="10" fill="#f0f6ff" stroke="#c7d9f0"/>
+  <text x="80" y="566" font-size="12.5" font-weight="700" fill="#1b4f9c">为什么分"兼容区 + 扩展区"？</text>
+  <text x="80" y="590" font-size="11" fill="#33415c">前 256B 与 PCI 完全兼容 → 老软件/老工具无需改动即可枚举 PCIe 设备（向后兼容）；</text>
+  <text x="80" y="610" font-size="11" fill="#33415c">0x100 之后的 4KB 扩展区承载 PCIe 独有的新能力，通过 ECAM 内存映射访问（第02/05章）。</text>
+</svg>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="640" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">ACK/NAK 协议：让相邻链路"零丢包"</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">发送端保留副本在 Retry Buffer；接收端校验 LCRC + Seq#，回 Ack 确认或 Nak 请求重发</text>
+
+  <!-- 两侧标题 -->
+  <text x="180" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">发送端 (Tx)</text>
+  <text x="780" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">接收端 (Rx)</text>
+  <line x1="180" y1="100" x2="180" y2="600" stroke="#93b7f0" stroke-width="2"/>
+  <line x1="780" y1="100" x2="780" y2="600" stroke="#8fd3ac" stroke-width="2"/>
+
+  <!-- Retry buffer -->
+  <rect x="40" y="110" width="130" height="120" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="105" y="132" text-anchor="middle" font-size="11" font-weight="700" fill="#1b4f9c">Retry Buffer</text>
+  <text x="105" y="148" text-anchor="middle" font-size="9" fill="#3f5678">(重放缓冲)</text>
+  <g font-size="9.5" text-anchor="middle" fill="#22314f">
+    <rect x="52" y="156" width="106" height="17" fill="#ffffff" stroke="#b7cdf0"/><text x="105" y="169">TLP #5</text>
+    <rect x="52" y="175" width="106" height="17" fill="#ffffff" stroke="#b7cdf0"/><text x="105" y="188">TLP #6</text>
+    <rect x="52" y="194" width="106" height="17" fill="#ffe0e0" stroke="#e0a0a0"/><text x="105" y="207">TLP #7 ✗</text>
+    <rect x="52" y="213" width="106" height="15" fill="#ffffff" stroke="#b7cdf0"/><text x="105" y="225">…保留至被 Ack</text>
+  </g>
+
+  <defs>
+    <marker id="k6" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+    <marker id="kg" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+    <marker id="kr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+  </defs>
+
+  <!-- flow -->
+  <g font-size="11">
+    <!-- TLP5 ok -->
+    <line x1="180" y1="150" x2="780" y2="168" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#k6)"/>
+    <text x="470" y="146" text-anchor="middle" fill="#1b4f9c">TLP #5（Seq#=5 + LCRC）</text>
+    <text x="800" y="172" font-size="10" fill="#1c7a4a">LCRC ✓ Seq# 连续 → 收下</text>
+    <!-- TLP6 ok -->
+    <line x1="180" y1="196" x2="780" y2="214" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#k6)"/>
+    <text x="470" y="192" text-anchor="middle" fill="#1b4f9c">TLP #6</text>
+    <text x="800" y="218" font-size="10" fill="#1c7a4a">✓ 收下，可合并确认</text>
+    <!-- Ack for 6 -->
+    <line x1="780" y1="250" x2="180" y2="268" stroke="#1c7a4a" stroke-width="1.6" marker-end="url(#kg)"/>
+    <text x="470" y="246" text-anchor="middle" fill="#1c7a4a" font-weight="700">Ack (Seq#=6)</text>
+    <text x="30" y="272" font-size="10" fill="#1c7a4a">→ 清除 Retry Buffer 中 #5、#6</text>
+    <!-- TLP7 corrupt -->
+    <line x1="180" y1="300" x2="780" y2="318" stroke="#c0392b" stroke-width="1.8" marker-end="url(#kr)" stroke-dasharray="5 3"/>
+    <text x="470" y="296" text-anchor="middle" fill="#c0392b" font-weight="700">TLP #7（途中出错）</text>
+    <text x="800" y="322" font-size="10" fill="#c0392b">LCRC ✗ → 丢弃</text>
+    <!-- Nak -->
+    <line x1="780" y1="356" x2="180" y2="374" stroke="#c0392b" stroke-width="1.8" marker-end="url(#kr)"/>
+    <text x="470" y="352" text-anchor="middle" fill="#c0392b" font-weight="700">Nak (Seq#=6)</text>
+    <text x="30" y="378" font-size="10" fill="#c0392b">→ 从 #7 起全部重放</text>
+    <!-- replay -->
+    <line x1="180" y1="406" x2="780" y2="424" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#k6)"/>
+    <text x="470" y="402" text-anchor="middle" fill="#1b4f9c">重放 TLP #7（从 Retry Buffer）</text>
+    <text x="800" y="428" font-size="10" fill="#1c7a4a">✓ 这次收下</text>
+    <!-- Ack 7 -->
+    <line x1="780" y1="458" x2="180" y2="476" stroke="#1c7a4a" stroke-width="1.6" marker-end="url(#kg)"/>
+    <text x="470" y="454" text-anchor="middle" fill="#1c7a4a" font-weight="700">Ack (Seq#=7)</text>
+  </g>
+
+  <!-- 要点 -->
+  <rect x="40" y="500" width="880" height="120" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="526" font-size="13" font-weight="700" fill="#1b2a4a">三个关键机制</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="550">• <tspan font-weight="700">Retry Buffer</tspan>：已发 TLP 必须留副本，直到收到覆盖它的 Ack 才能释放；Nak 或超时即重放。</text>
+    <text x="60" y="572">• <tspan font-weight="700">REPLAY_TIMER</tspan>：迟迟收不到 Ack 就自动重放（防 Ack 本身丢失）；连续重放 <tspan font-weight="700">REPLAY_NUM(=3)</tspan> 次仍失败 → 触发链路重训练。</text>
+    <text x="60" y="594">• <tspan font-weight="700">合并确认</tspan>：一个 Ack(Seq#=N) 表示"≤N 的都收到了"，可批量确认，减少 DLLP 数量（ACKNAK_LATENCY_TIMER 控制批量节奏）。</text>
+    <text x="60" y="614" fill="#8a97ab" font-size="10">📘 Gen6+ Flit 模式：重放粒度从"单个 TLP"变为"Flit"，并叠加 FEC 先纠错、CRC 兜底（见本章 §7 现代化）。</text>
+  </g>
+</svg>

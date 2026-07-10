@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="620" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">物理层的两个子块：逻辑子块 + 电气子块</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">从数据链路层递下的字节，经逻辑处理与电气发送，变成铜线上的差分信号（发送方向 ↓）</text>
+
+  <defs>
+    <marker id="p7" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#a85a17"/></marker>
+  </defs>
+
+  <!-- 入口 -->
+  <rect x="330" y="80" width="300" height="40" rx="8" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="480" y="105" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1c7a4a">来自数据链路层：TLP(+Seq#/LCRC) 与 DLLP</text>
+
+  <!-- 逻辑子块 -->
+  <rect x="60" y="140" width="840" height="230" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="80" y="166" font-size="15" font-weight="700" fill="#a85a17">逻辑子块 Logical Sub-block（数字逻辑，可综合）</text>
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="80" y="182" width="180" height="72" rx="8" fill="#ffffff" stroke="#f0c193"/>
+    <text x="170" y="206" font-weight="700" fill="#a85a17">① 成帧 Framing</text>
+    <text x="170" y="226" fill="#33415c" font-size="10.5">加 STP/SDP/END</text>
+    <text x="170" y="242" fill="#33415c" font-size="10.5">标出包边界</text>
+    <rect x="280" y="182" width="180" height="72" rx="8" fill="#ffffff" stroke="#f0c193"/>
+    <text x="370" y="206" font-weight="700" fill="#a85a17">② 扰码 Scrambling</text>
+    <text x="370" y="226" fill="#33415c" font-size="10.5">LFSR 打散数据</text>
+    <text x="370" y="242" fill="#33415c" font-size="10.5">抑制 EMI 峰值</text>
+    <rect x="480" y="182" width="180" height="72" rx="8" fill="#ffffff" stroke="#f0c193"/>
+    <text x="570" y="206" font-weight="700" fill="#a85a17">③ 字节分发</text>
+    <text x="570" y="226" fill="#33415c" font-size="10.5">Byte Striping</text>
+    <text x="570" y="242" fill="#33415c" font-size="10.5">拆到各 Lane</text>
+    <rect x="680" y="182" width="200" height="72" rx="8" fill="#ffffff" stroke="#f0c193"/>
+    <text x="780" y="206" font-weight="700" fill="#a85a17">④ 编码 Encoding</text>
+    <text x="780" y="226" fill="#33415c" font-size="10.5">8b/10b 或</text>
+    <text x="780" y="242" fill="#33415c" font-size="10.5">128b/130b</text>
+  </g>
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="80" y="266" width="380" height="60" rx="8" fill="#fff7ec" stroke="#f0c193"/>
+    <text x="270" y="290" font-weight="700" fill="#a85a17">⑤ Ordered Set 生成</text>
+    <text x="270" y="310" fill="#33415c" font-size="10.5">TS1/TS2（训练）· SKP（时钟补偿）· FTS · EIEOS</text>
+    <rect x="480" y="266" width="400" height="60" rx="8" fill="#fff7ec" stroke="#f0c193"/>
+    <text x="680" y="290" font-weight="700" fill="#a85a17">⑥ 串行化 Serialize + 弹性缓冲</text>
+    <text x="680" y="310" fill="#33415c" font-size="10.5">并→串；Elastic Buffer 吸收两端时钟频差</text>
+  </g>
+  <text x="480" y="352" text-anchor="middle" font-size="10.5" fill="#8a97ab">逻辑子块也承载 LTSSM 链路训练状态机（详见 第08章）</text>
+
+  <line x1="480" y1="370" x2="480" y2="392" stroke="#a85a17" stroke-width="2.2" marker-end="url(#p7)"/>
+
+  <!-- 电气子块 -->
+  <rect x="60" y="398" width="840" height="150" rx="10" fill="#f2ede6" stroke="#c9a06a"/>
+  <text x="80" y="424" font-size="15" font-weight="700" fill="#8a5a1a">电气子块 Electrical Sub-block（模拟 SerDes）</text>
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="80" y="440" width="250" height="90" rx="8" fill="#ffffff" stroke="#c9a06a"/>
+    <text x="205" y="464" font-weight="700" fill="#8a5a1a">发送器 Tx</text>
+    <text x="205" y="486" fill="#33415c" font-size="10.5">差分驱动 + 发送均衡</text>
+    <text x="205" y="504" fill="#33415c" font-size="10.5">(FFE / de-emphasis)</text>
+    <text x="205" y="522" fill="#8a97ab" font-size="9.5">预补偿信道损耗</text>
+    <rect x="355" y="440" width="250" height="90" rx="8" fill="#ffffff" stroke="#c9a06a"/>
+    <text x="480" y="464" font-weight="700" fill="#8a5a1a">接收器 Rx</text>
+    <text x="480" y="486" fill="#33415c" font-size="10.5">CTLE / DFE 均衡</text>
+    <text x="480" y="504" fill="#33415c" font-size="10.5">时钟数据恢复 CDR</text>
+    <text x="480" y="522" fill="#8a97ab" font-size="9.5">从数据流里"抽"出时钟</text>
+    <rect x="630" y="440" width="250" height="90" rx="8" fill="#ffffff" stroke="#c9a06a"/>
+    <text x="755" y="464" font-weight="700" fill="#8a5a1a">PLL / 参考时钟</text>
+    <text x="755" y="486" fill="#33415c" font-size="10.5">REFCLK 架构：</text>
+    <text x="755" y="504" fill="#33415c" font-size="10.5">Common / SRIS / SRNS</text>
+    <text x="755" y="522" fill="#8a97ab" font-size="9.5">决定扩频与时钟共享</text>
+  </g>
+
+  <!-- 出口 -->
+  <rect x="330" y="566" width="300" height="40" rx="20" fill="#dfe6f0" stroke="#aab8cc"/>
+  <text x="480" y="591" text-anchor="middle" font-size="12" font-weight="700" fill="#33415c">差分信号上链路（TX± → 对端 RX±）</text>
+  <line x1="480" y1="548" x2="480" y2="566" stroke="#a85a17" stroke-width="2.2" marker-end="url(#p7)"/>
+</svg>

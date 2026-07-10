@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="940" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="470" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">Lane 与链路宽度：一条 Lane 长什么样</text>
+  <text x="470" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">Lane = 一对差分 TX + 一对差分 RX；xN 链路把 N 条 Lane 并起来</text>
+
+  <!-- 一条 Lane 特写 -->
+  <text x="60" y="98" font-size="14" font-weight="700" fill="#a85a17">① 一条 Lane 的构成（全双工，4 根线）</text>
+  <rect x="60" y="112" width="180" height="120" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="150" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">设备 A</text>
+  <rect x="700" y="112" width="180" height="120" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="790" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">设备 B</text>
+
+  <defs>
+    <marker id="l4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+    <marker id="l4b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+  <!-- TX A->B -->
+  <line x1="240" y1="156" x2="700" y2="156" stroke="#c0392b" stroke-width="2.4" marker-end="url(#l4)"/>
+  <text x="470" y="148" text-anchor="middle" font-size="11.5" font-weight="700" fill="#c0392b">TX+ / TX−（A 发 → B 收）</text>
+  <!-- RX B->A -->
+  <line x1="700" y1="196" x2="240" y2="196" stroke="#1c7a4a" stroke-width="2.4" marker-end="url(#l4b)"/>
+  <text x="470" y="214" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">RX+ / RX−（B 发 → A 收）</text>
+  <text x="470" y="176" text-anchor="middle" font-size="10" fill="#8a97ab">两个方向各一对差分线，可同时收发（全双工）</text>
+
+  <!-- 链路宽度 -->
+  <text x="60" y="272" font-size="14" font-weight="700" fill="#1b4f9c">② 链路宽度 = 并起来的 Lane 数</text>
+  <g font-size="11" text-anchor="middle">
+    <!-- x1 -->
+    <text x="110" y="300" font-weight="700" fill="#33415c">x1</text>
+    <rect x="60" y="308" width="100" height="24" rx="4" fill="#dbe8fb" stroke="#93b7f0"/><text x="110" y="325">1 条 Lane</text>
+    <text x="320" y="325" text-anchor="start" font-size="10.5" fill="#8a97ab">典型：低速网卡、声卡</text>
+    <!-- x4 -->
+    <text x="110" y="352" font-weight="700" fill="#33415c">x4</text>
+    <g fill="#dbe8fb" stroke="#93b7f0"><rect x="60" y="360" width="46" height="24" rx="3"/><rect x="110" y="360" width="46" height="24" rx="3"/><rect x="160" y="360" width="46" height="24" rx="3"/><rect x="210" y="360" width="46" height="24" rx="3"/></g>
+    <text x="320" y="377" text-anchor="start" font-size="10.5" fill="#8a97ab">典型：NVMe SSD、中端网卡</text>
+    <!-- x16 -->
+    <text x="110" y="404" font-weight="700" fill="#33415c">x16</text>
+    <g fill="#dbe8fb" stroke="#93b7f0">
+      <rect x="60" y="412" width="27" height="24" rx="2"/><rect x="90" y="412" width="27" height="24" rx="2"/><rect x="120" y="412" width="27" height="24" rx="2"/><rect x="150" y="412" width="27" height="24" rx="2"/>
+      <rect x="180" y="412" width="27" height="24" rx="2"/><rect x="210" y="412" width="27" height="24" rx="2"/><rect x="240" y="412" width="27" height="24" rx="2"/><rect x="270" y="412" width="27" height="24" rx="2"/>
+      <rect x="300" y="412" width="27" height="24" rx="2"/><rect x="330" y="412" width="27" height="24" rx="2"/><rect x="360" y="412" width="27" height="24" rx="2"/><rect x="390" y="412" width="27" height="24" rx="2"/>
+      <rect x="420" y="412" width="27" height="24" rx="2"/><rect x="450" y="412" width="27" height="24" rx="2"/><rect x="480" y="412" width="27" height="24" rx="2"/><rect x="510" y="412" width="27" height="24" rx="2"/>
+    </g>
+    <text x="620" y="429" text-anchor="start" font-size="10.5" fill="#8a97ab">典型：GPU、高端加速器</text>
+  </g>
+
+  <!-- 要点 -->
+  <rect x="60" y="452" width="820" height="90" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <g font-size="11.3" fill="#33415c">
+    <text x="80" y="478">• <tspan font-weight="700">带宽 ∝ 宽度 × 速率</tspan>：x16 是 x1 的 16 倍带宽；再乘以每 Lane 的代际速率（第03章总纲 演进表）。</text>
+    <text x="80" y="502">• <tspan font-weight="700">宽度会协商与降级</tspan>：训练时两端协商实际可用宽度；某些 Lane 坏了可降到更窄（如 x16 退 x8）仍能工作。</text>
+    <text x="80" y="526">• <tspan font-weight="700">数据按 Lane 分发</tspan>：物理层把字节流轮流铺到各 Lane（Byte Striping，第07章），接收端再做 lane-to-lane deskew 对齐。</text>
+  </g>
+</svg>

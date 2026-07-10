@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">x86 上的 MSI：Message Address 与 Data 怎么编码</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">Address 决定"送给哪个 CPU、怎么路由"；Data 决定"用哪个向量、什么投递模式"</text>
+
+  <!-- Address -->
+  <text x="60" y="94" font-size="14" font-weight="700" fill="#1b4f9c">Message Address（32 位，固定高位 0xFEE）</text>
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="60" y="106" width="240" height="52" fill="#dbe8fb" stroke="#93b7f0"/><text x="180" y="128" font-weight="700" fill="#1b4f9c">[31:20] = 0xFEE</text><text x="180" y="146" fill="#3f5678">中断地址标识（固定）</text>
+    <rect x="300" y="106" width="220" height="52" fill="#eaf2fe" stroke="#93b7f0"/><text x="410" y="128" font-weight="700" fill="#1b4f9c">[19:12] Destination ID</text><text x="410" y="146" fill="#3f5678">目标 APIC（哪个 CPU）</text>
+    <rect x="520" y="106" width="150" height="52" fill="#f2f6fc" stroke="#b7cdf0"/><text x="595" y="128" font-weight="700" fill="#1b4f9c">[11:5]</text><text x="595" y="146" fill="#8a97ab">保留 / 扩展</text>
+    <rect x="670" y="106" width="100" height="52" fill="#fff7ec" stroke="#f0c193"/><text x="720" y="126" font-weight="700" fill="#a85a17">[4] RH</text><text x="720" y="144" fill="#8a6a3a" font-size="9">重定向提示</text>
+    <rect x="770" y="106" width="100" height="52" fill="#fff7ec" stroke="#f0c193"/><text x="820" y="126" font-weight="700" fill="#a85a17">[3] DM</text><text x="820" y="144" fill="#8a6a3a" font-size="9">目标模式</text>
+  </g>
+  <text x="60" y="182" font-size="10.5" fill="#8a97ab">💡 正因高 12 位固定是 0xFEE，RC 才能一眼认出"这是中断消息，不是普通内存写"。</text>
+
+  <!-- Data -->
+  <text x="60" y="218" font-size="14" font-weight="700" fill="#1c7a4a">Message Data（低 16 位有效）</text>
+  <g font-size="10.5" text-anchor="middle">
+    <rect x="60" y="230" width="230" height="52" fill="#c9ecd8" stroke="#8fd3ac"/><text x="175" y="252" font-weight="700" fill="#14663f">[7:0] Vector</text><text x="175" y="270" fill="#3f5678">中断向量号（0–255）</text>
+    <rect x="290" y="230" width="230" height="52" fill="#e9f7ef" stroke="#8fd3ac"/><text x="405" y="252" font-weight="700" fill="#1c7a4a">[10:8] Delivery Mode</text><text x="405" y="270" fill="#3f5678">Fixed / Lowest Pri / NMI…</text>
+    <rect x="520" y="230" width="170" height="52" fill="#f0faf4" stroke="#a9dcc0"/><text x="605" y="252" font-weight="700" fill="#1c7a4a">[14] Level</text><text x="605" y="270" fill="#3f5678" font-size="9">触发电平</text>
+    <rect x="690" y="230" width="180" height="52" fill="#f0faf4" stroke="#a9dcc0"/><text x="780" y="252" font-weight="700" fill="#1c7a4a">[15] Trigger Mode</text><text x="780" y="270" fill="#3f5678" font-size="9">边沿 / 电平</text>
+  </g>
+
+  <!-- 例子 -->
+  <rect x="60" y="306" width="810" height="96" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="332" font-size="13" font-weight="700" fill="#1b2a4a">一次具体的 MSI 写（示意）</text>
+  <g font-size="11.5" fill="#33415c" font-family="Consolas,monospace">
+    <text x="80" y="358">Address = 0xFEE0<tspan fill="#1b4f9c" font-weight="700">2</tspan>000　→ 高位 0xFEE + Destination ID = CPU#2</text>
+    <text x="80" y="382">Data    = 0x00<tspan fill="#14663f" font-weight="700">30</tspan>　　　 → Vector = 0x30(48)，Fixed 投递模式</text>
+  </g>
+  <text x="80" y="396" font-size="9.5" fill="#8a97ab" font-family="'Segoe UI',sans-serif">（具体位布局随平台/x2APIC 而异，此为经典 xAPIC 示意）</text>
+
+  <!-- FSB / 现代 -->
+  <rect x="60" y="420" width="810" height="120" rx="10" fill="#f0f6ff" stroke="#c7d9f0"/>
+  <text x="80" y="446" font-size="13" font-weight="700" fill="#1b4f9c">从"总线事务"到"中断"：FSB Interrupt Message 与现代演进</text>
+  <g font-size="11" fill="#33415c">
+    <text x="80" y="470">• 早期 x86：对 0xFEE… 的写被转成 <tspan font-weight="700">FSB Interrupt Message</tspan> 总线事务，直达目标 Local APIC。</text>
+    <text x="80" y="492">• 📘 <tspan font-weight="700">中断重映射（VT-d/AMD-Vi）</tspan>：现代把 Addr/Data 经 IRTE 重映射，解耦物理 APIC ID —— 虚拟化隔离 + 支持 x2APIC（>255 CPU）。</text>
+    <text x="80" y="514">• 📘 <tspan font-weight="700">x2APIC</tspan>：Destination ID 从 8 位扩展，支持海量 CPU；MSI 地址/数据格式相应调整。</text>
+    <text x="80" y="534" fill="#8a97ab" font-size="10">PowerPC 等其他架构：地址/数据格式不同，由各自中断控制器（如 MPIC）定义，但"写地址=发中断"的思想一致。</text>
+  </g>
+</svg>

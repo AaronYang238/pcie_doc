@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="640" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">LTSSM：把链路从"一片沉寂"训练成"可跑 TLP"的状态机</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">主干（绿）：上电后一路走到 L0；分支（橙 = 省电，蓝 = 恢复/维护）</text>
+
+  <defs>
+    <marker id="m8" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+    <marker id="m8b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a8fd0"/></marker>
+    <marker id="m8o" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c08a3a"/></marker>
+  </defs>
+
+  <!-- 主干 -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="90" y="86" width="160" height="66" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="170" y="112" font-weight="700" fill="#1c7a4a">Detect</text>
+    <text x="170" y="132" fill="#3f5678" font-size="10">探测对端接收器</text>
+    <rect x="300" y="86" width="160" height="66" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="380" y="108" font-weight="700" fill="#1c7a4a">Polling</text>
+    <text x="380" y="126" fill="#3f5678" font-size="10">位/符号锁定</text>
+    <text x="380" y="142" fill="#3f5678" font-size="10">协商数据率能力</text>
+    <rect x="510" y="86" width="160" height="66" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="590" y="108" font-weight="700" fill="#1c7a4a">Configuration</text>
+    <text x="590" y="126" fill="#3f5678" font-size="10">链路宽度/Lane 编号</text>
+    <text x="590" y="142" fill="#3f5678" font-size="10">Lane/极性反转</text>
+    <rect x="720" y="86" width="150" height="66" rx="10" fill="#bfe3cd" stroke="#4a9a6a"/>
+    <text x="795" y="112" font-weight="700" fill="#14663f">L0</text>
+    <text x="795" y="132" fill="#3f5678" font-size="10">★ 正常工作态</text>
+  </g>
+  <line x1="250" y1="119" x2="300" y2="119" stroke="#1c7a4a" stroke-width="2" marker-end="url(#m8)"/>
+  <line x1="460" y1="119" x2="510" y2="119" stroke="#1c7a4a" stroke-width="2" marker-end="url(#m8)"/>
+  <line x1="670" y1="119" x2="720" y2="119" stroke="#1c7a4a" stroke-width="2" marker-end="url(#m8)"/>
+
+  <!-- Recovery -->
+  <rect x="640" y="230" width="230" height="96" rx="10" fill="#eaf2fe" stroke="#5a8fd0"/>
+  <text x="755" y="254" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">Recovery（恢复/维护）</text>
+  <g font-size="10.5" fill="#33415c" text-anchor="middle">
+    <text x="755" y="276">重新锁定 · 变速(speed change)</text>
+    <text x="755" y="294">★ 均衡 Equalization（Gen3+）</text>
+    <text x="755" y="312">链路出错/变速的必经之地</text>
+  </g>
+  <line x1="795" y1="152" x2="775" y2="230" stroke="#5a8fd0" stroke-width="1.8" marker-end="url(#m8b)"/>
+  <line x1="815" y1="230" x2="835" y2="152" stroke="#5a8fd0" stroke-width="1.8" marker-end="url(#m8b)"/>
+  <text x="880" y="200" font-size="9.5" fill="#5a8fd0" text-anchor="middle">互相往返</text>
+
+  <!-- 省电分支 -->
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="120" y="250" width="140" height="56" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="190" y="273" font-weight="700" fill="#a85a17">L0s</text>
+    <text x="190" y="291" fill="#3f5678" font-size="9.5">快速省电·低退出延迟</text>
+    <rect x="290" y="250" width="140" height="56" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="360" y="273" font-weight="700" fill="#a85a17">L1</text>
+    <text x="360" y="291" fill="#3f5678" font-size="9.5">深度省电·恢复较慢</text>
+    <rect x="460" y="250" width="140" height="56" rx="10" fill="#fbe9d8" stroke="#e0a860"/>
+    <text x="530" y="273" font-weight="700" fill="#8a5a1a">L2</text>
+    <text x="530" y="291" fill="#3f5678" font-size="9.5">仅 Vaux + WAKE#</text>
+  </g>
+  <line x1="770" y1="152" x2="200" y2="250" stroke="#c08a3a" stroke-width="1.5" marker-end="url(#m8o)" stroke-dasharray="5 3"/>
+  <line x1="775" y1="152" x2="370" y2="250" stroke="#c08a3a" stroke-width="1.5" marker-end="url(#m8o)" stroke-dasharray="5 3"/>
+  <line x1="780" y1="152" x2="540" y2="250" stroke="#c08a3a" stroke-width="1.5" marker-end="url(#m8o)" stroke-dasharray="5 3"/>
+  <text x="300" y="200" font-size="10" fill="#c08a3a">L0 空闲 → 进省电态；有活干 → 经 Recovery 回 L0</text>
+  <line x1="190" y1="250" x2="740" y2="152" stroke="#c08a3a" stroke-width="1.2" marker-end="url(#m8o)" opacity="0.5"/>
+
+  <!-- 其他状态 -->
+  <rect x="90" y="360" width="780" height="70" rx="10" fill="#eef1f6" stroke="#c7d0dd"/>
+  <text x="110" y="384" font-size="12.5" font-weight="700" fill="#33415c">其他 LTSSM 状态（辅助 / 测试 / 复位）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="110" y="408">• <tspan font-weight="700">Hot Reset</tspan>：带内热复位　• <tspan font-weight="700">Disabled</tspan>：软件禁用链路　• <tspan font-weight="700">Loopback</tspan>：环回测试（信号调试）</text>
+    <text x="110" y="424" fill="#8a97ab" font-size="10">这些状态从 Recovery / Configuration 进入，用于测试、复位或强制关闭链路</text>
+  </g>
+
+  <!-- 说明 -->
+  <rect x="90" y="450" width="780" height="170" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="110" y="476" font-size="13" font-weight="700" fill="#1b2a4a">读懂这张图的三个要点</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="110" y="500">① <tspan font-weight="700">上电必走主干</tspan>：Detect → Polling → Configuration → L0，每一步用 Ordered Set（TS1/TS2）握手（见 Ordered Sets 图）。</text>
+    <text x="110" y="524">② <tspan font-weight="700">Recovery 是"总枢纽"</tspan>：链路出错要恢复、要变速、要做均衡（Gen3+），都得先回到 Recovery，再回 L0。</text>
+    <text x="110" y="548">③ <tspan font-weight="700">省电是从 L0 出发的分支</tspan>：空闲进 L0s/L1/L2；一旦有 TLP 要发，经 Recovery（或 FTS 快速唤醒）拉回 L0。</text>
+    <text x="110" y="574" fill="#5a6b86">🔧 排障：设备"频繁进 Recovery / 掉速"，几乎都指向信号完整性或均衡没收敛——LTSSM 是第一现场。</text>
+    <text x="110" y="600" fill="#8a97ab" font-size="10.5">📘 Gen6+：进入 L0 前在训练中还要协商 Flit 模式与 FEC 参数（第06/07章）。</text>
+  </g>
+</svg>

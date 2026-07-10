@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">MPS 与 MRRS：一个 TLP 能带多少数据</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#5a6b86">MPS = 单个 TLP 的最大负载；MRRS = 单个读请求可索取的最大字节数</text>
+
+  <!-- MPS 协商链 -->
+  <text x="60" y="98" font-size="14" font-weight="700" fill="#1b4f9c">① MPS 取全链路最小值（木桶效应）</text>
+  <g font-size="11.5" text-anchor="middle">
+    <rect x="60" y="112" width="150" height="66" rx="9" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="135" y="136" font-weight="700" fill="#1b4f9c">RC</text><text x="135" y="158" fill="#3f5678">支持 512B</text>
+    <rect x="300" y="112" width="150" height="66" rx="9" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="375" y="136" font-weight="700" fill="#1b4f9c">Switch</text><text x="375" y="158" fill="#c0392b">支持 256B ←最小</text>
+    <rect x="540" y="112" width="150" height="66" rx="9" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="615" y="136" font-weight="700" fill="#1b4f9c">Endpoint</text><text x="615" y="158" fill="#3f5678">支持 512B</text>
+    <rect x="740" y="112" width="180" height="66" rx="9" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="830" y="132" font-weight="700" fill="#1c7a4a">生效 MPS</text><text x="830" y="152" fill="#1c7a4a" font-size="16" font-weight="700">256 B</text><text x="830" y="170" fill="#3f5678" font-size="10">软件按最小者统一配置</text>
+  </g>
+  <line x1="210" y1="145" x2="300" y2="145" stroke="#5a6b86" stroke-width="1.6"/>
+  <line x1="450" y1="145" x2="540" y2="145" stroke="#5a6b86" stroke-width="1.6"/>
+  <line x1="690" y1="145" x2="740" y2="145" stroke="#5a6b86" stroke-width="1.6"/>
+  <text x="60" y="200" font-size="10.5" fill="#8a97ab">若某设备被配置成大于全链路最小值，中途设备会因收到超长 TLP 判为错误 —— 所以必须统一取最小。</text>
+
+  <!-- MPS 编码 -->
+  <rect x="60" y="216" width="400" height="120" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="240" font-size="12.5" font-weight="700" fill="#1b2a4a">MPS 编码（Device Control 寄存器）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="80" y="262">000 → 128 B（默认，最保守）</text>
+    <text x="80" y="282">001 → 256 B　　010 → 512 B</text>
+    <text x="80" y="302">011 → 1024 B　 100 → 2048 B</text>
+    <text x="80" y="322">101 → 4096 B（上限）</text>
+  </g>
+
+  <!-- MRRS -->
+  <rect x="500" y="216" width="420" height="120" rx="10" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="520" y="240" font-size="12.5" font-weight="700" fill="#a85a17">MRRS：最大读请求</text>
+  <g font-size="11" fill="#33415c">
+    <text x="520" y="262">• 与 MPS 独立：限制「一次 MRd 索取多少字节」。</text>
+    <text x="520" y="282">• 同样 128B–4096B 编码；读大块需拆成多个 MRd。</text>
+    <text x="520" y="302">• 每个 MRd 的返回仍受 RCB 再拆成多个 CplD。</text>
+    <text x="520" y="322" fill="#8a6a3a" font-size="10.5">读吞吐 ≈ MRRS × 在途请求数 ÷ 往返延时。</text>
+  </g>
+
+  <!-- 效率对比 -->
+  <text x="60" y="370" font-size="14" font-weight="700" fill="#1c7a4a">② MPS 越大，有效带宽越高（头开销被摊薄）</text>
+  <g font-size="11" text-anchor="middle">
+    <!-- 128B -->
+    <text x="120" y="398" fill="#33415c">MPS=128B</text>
+    <rect x="60" y="406" width="70" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="95" y="424" font-size="9">头~20B</text>
+    <rect x="130" y="406" width="180" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="220" y="424" fill="#1c7a4a">负载 128B</text>
+    <text x="360" y="424" fill="#8a97ab" font-size="10">效率 ≈ 86%</text>
+    <!-- 512B -->
+    <text x="120" y="452" fill="#33415c">MPS=512B</text>
+    <rect x="60" y="460" width="30" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="75" y="478" font-size="8">头</text>
+    <rect x="90" y="460" width="500" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="340" y="478" fill="#1c7a4a">负载 512B</text>
+    <text x="640" y="478" fill="#8a97ab" font-size="10">效率 ≈ 96%</text>
+  </g>
+  <rect x="60" y="500" width="860" height="44" rx="9" fill="#eef3f9" stroke="#c7d0dd"/>
+  <text x="80" y="520" font-size="11.3" fill="#33415c">📘 数值示意：TLP 固定开销 ≈ 头(12/16B)+序号/LCRC/成帧+编码。负载越大，固定开销占比越小 → 有效带宽越高。</text>
+  <text x="80" y="537" font-size="10.5" fill="#8a97ab">但 MPS 越大，单包占用链路时间越长、时延抖动越大，需在吞吐与时延间权衡。Gen6+ Flit 模式的开销模型另算（见 第07章）。</text>
+</svg>

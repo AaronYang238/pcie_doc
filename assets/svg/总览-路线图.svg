@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="42" text-anchor="middle" font-size="24" font-weight="700" fill="#1b2a4a">PCIe 学习笔记 · 全书路线图（3 篇 15 章）</text>
+  <text x="480" y="68" text-anchor="middle" font-size="13" fill="#5a6b86">建议顺序：先建立 PCI 直觉 → 深入 PCIe 分层机制 → 落到软件初始化</text>
+
+  <!-- 篇 I -->
+  <rect x="40" y="100" width="880" height="118" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="60" y="128" font-size="16" font-weight="700" fill="#1b4f9c">第Ⅰ篇　PCI 体系结构概述（基础 · 铺垫直觉）</text>
+  <g font-size="12.5" fill="#22314f">
+    <rect x="60" y="142" width="270" height="60" rx="8" fill="#ffffff" stroke="#b7cdf0"/>
+    <text x="72" y="164" font-weight="600">Ch1 PCI 总线基础</text>
+    <text x="72" y="184" fill="#48597a">信号 / 读写事务 / Posted / 中断</text>
+    <rect x="345" y="142" width="270" height="60" rx="8" fill="#ffffff" stroke="#b7cdf0"/>
+    <text x="357" y="164" font-weight="600">Ch2 桥与配置空间</text>
+    <text x="357" y="184" fill="#48597a">总线域 / 配置 / 枚举 / 非透明桥</text>
+    <rect x="630" y="142" width="270" height="60" rx="8" fill="#ffffff" stroke="#b7cdf0"/>
+    <text x="642" y="164" font-weight="600">Ch3 数据交换</text>
+    <text x="642" y="184" fill="#48597a">BAR / DMA / Cache 一致性 / 预读</text>
+  </g>
+
+  <!-- 篇 II -->
+  <rect x="40" y="234" width="880" height="216" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="60" y="262" font-size="16" font-weight="700" fill="#1c7a4a">第Ⅱ篇　PCI Express 体系结构概述（核心 · 分层机制）</text>
+  <g font-size="12" fill="#22314f">
+    <rect x="60" y="276" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="70" y="297" font-weight="600">Ch4 PCIe 概述</text>
+    <text x="70" y="315" fill="#48597a">端到端 / RC / Switch</text>
+    <rect x="272" y="276" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="282" y="297" font-weight="600">Ch5 平台 MCH/ICH</text>
+    <text x="282" y="315" fill="#48597a">寄存器 / 存储器映射</text>
+    <rect x="484" y="276" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="494" y="297" font-weight="600">Ch6 事务层 TLP</text>
+    <text x="494" y="315" fill="#48597a">格式 / 路由 / 报文</text>
+    <rect x="696" y="276" width="204" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="706" y="297" font-weight="600">Ch7 DLL + 物理层</text>
+    <text x="706" y="315" fill="#48597a">ACK/NAK / 编码</text>
+
+    <rect x="60" y="336" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="70" y="357" font-weight="600">Ch8 链路训练/电源</text>
+    <text x="70" y="375" fill="#48597a">LTSSM / ASPM</text>
+    <rect x="272" y="336" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="282" y="357" font-weight="600">Ch9 流量控制</text>
+    <text x="282" y="375" fill="#48597a">Credit / VC 初始化</text>
+    <rect x="484" y="336" width="200" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="494" y="357" font-weight="600">Ch10 MSI / MSI-X</text>
+    <text x="494" y="375" fill="#48597a">消息中断机制</text>
+    <rect x="696" y="336" width="204" height="52" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="706" y="357" font-weight="600">Ch11 序 (Ordering)</text>
+    <text x="706" y="375" fill="#48597a">生产者消费者 / 死锁</text>
+
+    <rect x="60" y="396" width="412" height="44" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="70" y="423" font-weight="600">Ch12 PCIe 应用（Capric 卡 · DMA · 驱动 · 带宽延时）</text>
+    <rect x="484" y="396" width="416" height="44" rx="8" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="494" y="423" font-weight="600">Ch13 虚拟化（IOMMU · ATS · SR-IOV / MR-IOV）</text>
+  </g>
+
+  <!-- 篇 III -->
+  <rect x="40" y="466" width="880" height="70" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="60" y="494" font-size="16" font-weight="700" fill="#a85a17">第Ⅲ篇　Linux 与 PCI 总线（落地 · 软件视角）</text>
+  <g font-size="12.5" fill="#22314f">
+    <rect x="60" y="504" width="405" height="24" rx="6" fill="#ffffff" stroke="#f0c193"/>
+    <text x="72" y="521" font-weight="600">Ch14 Linux PCI 初始化（枚举 / ACPI / BAR 分配）</text>
+    <rect x="480" y="504" width="420" height="24" rx="6" fill="#ffffff" stroke="#f0c193"/>
+    <text x="492" y="521" font-weight="600">Ch15 Linux PCI 中断（路由 / MSI 使能）</text>
+  </g>
+</svg>

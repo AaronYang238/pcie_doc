@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="580" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">链路均衡（Equalization）：Gen3+ 为高速率"打开眼图"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">📘 8 GT/s 起，信道损耗大，必须双方协商发送系数补偿；在 Recovery.Equalization 分四阶段完成</text>
+
+  <!-- 背景说明 -->
+  <rect x="40" y="78" width="880" height="58" rx="10" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="60" y="102" font-size="11.5" fill="#33415c">高速下高频分量被 PCB / 连接器严重衰减 → 接收端"眼图"闭合、判不清 0/1。发送端用</text>
+  <text x="60" y="122" font-size="11.5" fill="#33415c"><tspan font-weight="700" fill="#a85a17">预加重/去加重（FFE 系数 C-1, C0, C+1）</tspan>预先补偿；双方要协商出一组让眼图最大的系数。</text>
+
+  <defs>
+    <marker id="q8" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a8fd0"/></marker>
+  </defs>
+
+  <!-- 四阶段 -->
+  <g font-size="11.5">
+    <!-- Phase 0 -->
+    <rect x="40" y="160" width="430" height="86" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+    <text x="60" y="184" font-size="13" font-weight="700" fill="#1b4f9c">Phase 0</text>
+    <text x="120" y="184" font-weight="600" fill="#33415c">下行端口告知初始 preset</text>
+    <text x="60" y="206" fill="#33415c">下行端口(RC/Switch)把一组初始预设 preset</text>
+    <text x="60" y="224" fill="#33415c">通过 TS 发给上行端口(设备)，作为起点。</text>
+    <text x="60" y="240" fill="#8a97ab" font-size="10">仍在较低速率下可靠通信</text>
+
+    <!-- Phase 1 -->
+    <rect x="490" y="160" width="430" height="86" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="510" y="184" font-size="13" font-weight="700" fill="#1c7a4a">Phase 1</text>
+    <text x="570" y="184" font-weight="600" fill="#33415c">在目标速率建立可靠链路</text>
+    <text x="510" y="206" fill="#33415c">双方切到目标高速率，用初始系数先把链路</text>
+    <text x="510" y="224" fill="#33415c">勉强跑通，达到一个可通信的误码门限。</text>
+    <text x="510" y="240" fill="#8a97ab" font-size="10">为后续精调打基础</text>
+
+    <!-- Phase 2 -->
+    <rect x="40" y="262" width="430" height="86" rx="10" fill="#eef3f9" stroke="#93b7f0"/>
+    <text x="60" y="286" font-size="13" font-weight="700" fill="#1b4f9c">Phase 2</text>
+    <text x="120" y="286" font-weight="600" fill="#33415c">上行端口调下行端口的 Tx 系数</text>
+    <text x="60" y="308" fill="#33415c">上行端口(设备)一边测眼图质量，一边请求</text>
+    <text x="60" y="326" fill="#33415c">下行端口调整它的发送系数，直到最优。</text>
+    <text x="60" y="342" fill="#8a97ab" font-size="10">"你调你的发送，让我收得最清楚"</text>
+
+    <!-- Phase 3 -->
+    <rect x="490" y="262" width="430" height="86" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="510" y="286" font-size="13" font-weight="700" fill="#1c7a4a">Phase 3</text>
+    <text x="570" y="286" font-weight="600" fill="#33415c">下行端口调上行端口的 Tx 系数</text>
+    <text x="510" y="308" fill="#33415c">反过来，下行端口请求上行端口(设备)调整</text>
+    <text x="510" y="326" fill="#33415c">它的发送系数，对称地优化另一个方向。</text>
+    <text x="510" y="342" fill="#8a97ab" font-size="10">两个方向都调好 → 均衡完成，进 L0</text>
+  </g>
+  <line x1="470" y1="203" x2="490" y2="203" stroke="#5a8fd0" stroke-width="2" marker-end="url(#q8)"/>
+  <line x1="705" y1="246" x2="255" y2="262" stroke="#5a8fd0" stroke-width="2" marker-end="url(#q8)"/>
+  <line x1="470" y1="305" x2="490" y2="305" stroke="#5a8fd0" stroke-width="2" marker-end="url(#q8)"/>
+
+  <!-- 眼图示意 -->
+  <rect x="40" y="366" width="880" height="196" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="392" font-size="13" font-weight="700" fill="#1b2a4a">直观理解：均衡前后的"眼图"</text>
+  <!-- 闭合眼 -->
+  <text x="200" y="416" text-anchor="middle" font-size="11.5" font-weight="700" fill="#c0392b">均衡前：眼图闭合，难判决</text>
+  <rect x="90" y="424" width="220" height="110" rx="6" fill="#faf0f0" stroke="#e0b0b0"/>
+  <path d="M110,530 C160,470 160,470 200,479 C240,470 240,470 290,530" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+  <path d="M110,428 C160,488 160,488 200,479 C240,488 240,488 290,428" fill="none" stroke="#c0392b" stroke-width="1.4"/>
+  <!-- 睁开眼 -->
+  <text x="720" y="416" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1c7a4a">均衡后：眼图张开，判决可靠</text>
+  <rect x="610" y="424" width="220" height="110" rx="6" fill="#eefaf2" stroke="#a0d8b8"/>
+  <path d="M630,532 C680,448 680,448 720,448 C760,448 760,448 810,532" fill="none" stroke="#1c7a4a" stroke-width="1.6"/>
+  <path d="M630,426 C680,510 680,510 720,510 C760,510 760,510 810,426" fill="none" stroke="#1c7a4a" stroke-width="1.6"/>
+  <ellipse cx="720" cy="479" rx="34" ry="20" fill="#bfe3cd" opacity="0.6"/>
+  <text x="720" y="483" text-anchor="middle" font-size="9" fill="#14663f">眼</text>
+  <text x="470" y="479" text-anchor="middle" font-size="11" fill="#8a97ab">📘 PAM4(Gen6+)有</text>
+  <text x="470" y="497" text-anchor="middle" font-size="11" fill="#8a97ab">3 个更小的眼，</text>
+  <text x="470" y="515" text-anchor="middle" font-size="11" fill="#8a97ab">均衡+FEC 更关键</text>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="940" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="470" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">Ordered Sets：链路训练与维护的"暗号"</text>
+  <text x="470" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">不是数据、不是 TLP —— 是物理层之间用来握手、对齐、补偿的特殊控制序列</text>
+
+  <!-- TS1/TS2 -->
+  <rect x="40" y="84" width="430" height="150" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="60" y="110" font-size="14" font-weight="700" fill="#1c7a4a">TS1 / TS2（Training Sequence）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="60" y="134">链路训练的主力"暗号"，一个序列 16 个符号，携带：</text>
+    <text x="72" y="156">• Link Number / Lane Number（协商编号）</text>
+    <text x="72" y="176">• Data Rate 支持位（协商跑几代速率）</text>
+    <text x="72" y="196">• EQ / preset 信息（Gen3+ 均衡用）</text>
+    <text x="72" y="216">• Flit / 各种能力位（现代扩展）</text>
+  </g>
+  <text x="60" y="230" font-size="9.5" fill="#8a97ab" opacity="0">.</text>
+
+  <!-- SKP -->
+  <rect x="490" y="84" width="410" height="150" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="510" y="110" font-size="14" font-weight="700" fill="#1b4f9c">SKP（SKiP Ordered Set）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="510" y="134">周期性插入，用于<tspan font-weight="700">时钟补偿</tspan>：</text>
+    <text x="522" y="156">• 两端参考时钟有微小频差（ppm 级）</text>
+    <text x="522" y="176">• 接收端 Elastic Buffer 会慢慢积压/掏空</text>
+    <text x="522" y="196">• 靠增删 SKP 符号来吸收这个差</text>
+    <text x="522" y="216">• 也用于多 Lane 之间的 deskew 对齐</text>
+  </g>
+
+  <!-- FTS -->
+  <rect x="40" y="252" width="430" height="130" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="60" y="278" font-size="14" font-weight="700" fill="#a85a17">FTS（Fast Training Sequence）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="60" y="302">从 <tspan font-weight="700">L0s 快速唤醒</tspan>回 L0 时发送。</text>
+    <text x="60" y="324">L0s 设计目标就是"退出快"——用 FTS 让接收端</text>
+    <text x="60" y="344">迅速重新锁定，不必走完整的 Recovery 流程。</text>
+    <text x="60" y="366" fill="#8a97ab" font-size="10">N_FTS 数量决定唤醒有多快，训练时协商。</text>
+  </g>
+
+  <!-- EIEOS/EIOS -->
+  <rect x="490" y="252" width="410" height="130" rx="10" fill="#eef3f9" stroke="#c7d0dd"/>
+  <text x="510" y="278" font-size="14" font-weight="700" fill="#33415c">EIOS / EIEOS（电气空闲相关）</text>
+  <g font-size="11" fill="#33415c">
+    <text x="510" y="302"><tspan font-weight="700">EIOS</tspan>：进入 Electrical Idle 前发送，通知对端"我要静默了"。</text>
+    <text x="510" y="326"><tspan font-weight="700">EIEOS</tspan>（Gen2+）：退出电气空闲时发送，帮助对端</text>
+    <text x="510" y="346">重新建立比特/符号锁定，避免误判为断链。</text>
+    <text x="510" y="368" fill="#8a97ab" font-size="10">是省电态进出 L0 的电气"信号弹"。</text>
+  </g>
+
+  <!-- 底部小结 -->
+  <rect x="40" y="400" width="860" height="140" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="426" font-size="13" font-weight="700" fill="#1b2a4a">为什么需要 Ordered Set？——三件普通数据做不到的事</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="452">① <tspan font-weight="700">握手</tspan>：链路还没建好时，双方靠 TS1/TS2 交换能力、协商速率与宽度（此时还传不了 TLP）。</text>
+    <text x="60" y="476">② <tspan font-weight="700">对齐与补偿</tspan>：SKP 吸收时钟频差、做多 Lane deskew——保证并行 Lane 的数据能正确重组。</text>
+    <text x="60" y="500">③ <tspan font-weight="700">状态切换信号</tspan>：EIOS/EIEOS/FTS 标记进入/退出省电态，是 LTSSM 状态迁移的"电气信号弹"。</text>
+    <text x="60" y="526" fill="#8a97ab" font-size="10.5">💡 它们和 TLP/DLLP 的区别：Ordered Set 属于物理层、不承载软件数据，是链路"自己维护自己"的语言。</text>
+  </g>
+</svg>

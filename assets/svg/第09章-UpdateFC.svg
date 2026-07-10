@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">UpdateFC：信用如何"循环再利用"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">接收方处理完 TLP、腾出缓冲后，用 UpdateFC DLLP 把信用"还"给发送方</text>
+
+  <defs>
+    <marker id="u9" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+    <marker id="u9g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+    <marker id="u9r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c0392b"/></marker>
+  </defs>
+
+  <text x="200" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">发送方 (Tx)</text>
+  <text x="760" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">接收方 (Rx)</text>
+  <line x1="200" y1="100" x2="200" y2="470" stroke="#93b7f0" stroke-width="2"/>
+  <line x1="760" y1="100" x2="760" y2="470" stroke="#8fd3ac" stroke-width="2"/>
+
+  <g font-size="11">
+    <!-- 连续发 -->
+    <line x1="200" y1="130" x2="760" y2="146" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#u9)"/>
+    <text x="470" y="126" text-anchor="middle" fill="#1b4f9c">TLP（消费 PH+PD 信用）</text>
+    <line x1="200" y1="160" x2="760" y2="176" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#u9)"/>
+    <text x="470" y="156" text-anchor="middle" fill="#1b4f9c">TLP …</text>
+    <text x="795" y="180" font-size="10" fill="#1c7a4a" text-anchor="start">缓冲渐满</text>
+
+    <!-- 信用耗尽 -->
+    <rect x="230" y="196" width="290" height="40" rx="7" fill="#faf0f0" stroke="#e0b0b0"/>
+    <text x="375" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#c0392b">CC 追平 CL → 信用耗尽，被迫停发！</text>
+    <line x1="200" y1="256" x2="520" y2="256" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="4 3"/>
+    <text x="360" y="272" text-anchor="middle" font-size="10" fill="#c0392b">发送方阻塞等待，链路空转（带宽损失）</text>
+
+    <!-- Rx 处理释放 -->
+    <rect x="600" y="196" width="300" height="60" rx="7" fill="#f0faf4" stroke="#8fd3ac"/>
+    <text x="750" y="218" text-anchor="middle" font-size="11" font-weight="700" fill="#1c7a4a">接收方消化 TLP、释放缓冲</text>
+    <text x="750" y="238" text-anchor="middle" font-size="10" fill="#3f5678">CA 增大 → 有新信用可通告</text>
+
+    <!-- UpdateFC 回 -->
+    <line x1="760" y1="296" x2="200" y2="312" stroke="#1c7a4a" stroke-width="2.2" marker-end="url(#u9g)"/>
+    <text x="470" y="292" text-anchor="middle" font-size="12" font-weight="700" fill="#1c7a4a">UpdateFC DLLP（抬高 CL）</text>
+    <text x="470" y="330" text-anchor="middle" font-size="10" fill="#8a97ab">发送方 CL 增大 → CC ≤ CL 重新成立 → 恢复发送</text>
+
+    <!-- 恢复 -->
+    <line x1="200" y1="356" x2="760" y2="372" stroke="#5a6b86" stroke-width="1.6" marker-end="url(#u9)"/>
+    <text x="470" y="352" text-anchor="middle" fill="#1b4f9c">TLP（继续）</text>
+  </g>
+
+  <!-- 要点 -->
+  <rect x="60" y="400" width="840" height="146" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="80" y="426" font-size="13" font-weight="700" fill="#1b2a4a">性能关键：信用要"够多、还得快"</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="80" y="452">• <tspan font-weight="700">UpdateFC 周期性发送</tspan>：即使没有新释放，也会定期重发当前信用值——因为 DLLP 不重传，靠重发兜底。</text>
+    <text x="80" y="476">• <tspan font-weight="700">信用不足 = 带宽损失</tspan>：若接收缓冲小、UpdateFC 回得慢，发送方会频繁停等，链路跑不满（尤其长链路）。</text>
+    <text x="80" y="500">• <tspan font-weight="700">缓冲要匹配"带宽×延迟积"</tspan>：链路越快越长，需要越大的接收缓冲/信用才能不停顿。</text>
+    <text x="80" y="524" fill="#5a6b86">📘 <tspan font-weight="700">Scaled Flow Control</tspan>：高带宽×高延迟下 8-bit 信用字段不够用，用缩放因子(×4/×16)放大可通告信用量（见正文）。</text>
+  </g>
+</svg>

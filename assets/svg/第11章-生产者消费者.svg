@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="580" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">生产者/消费者模型：为什么"序"是正确性问题</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">数据必须"先于"标志可见，否则消费者会读到半成品——这条因果链靠 Posted 写强序保证</text>
+
+  <defs>
+    <marker id="p11" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+    <marker id="p11b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1b4f9c"/></marker>
+  </defs>
+
+  <!-- 生产者 -->
+  <rect x="50" y="90" width="200" height="90" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="150" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#1b4f9c">生产者</text>
+  <text x="150" y="150" text-anchor="middle" font-size="10.5" fill="#3f5678">（如网卡：写入收到的数据</text>
+  <text x="150" y="166" text-anchor="middle" font-size="10.5" fill="#3f5678">再置"数据就绪"标志）</text>
+
+  <!-- 共享内存 -->
+  <rect x="380" y="80" width="200" height="200" rx="10" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="480" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">共享内存</text>
+  <rect x="400" y="118" width="160" height="90" rx="7" fill="#ffffff" stroke="#a9dcc0"/>
+  <text x="480" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="#33415c">数据缓冲区</text>
+  <text x="480" y="162" text-anchor="middle" font-size="10" fill="#8a97ab">Data</text>
+  <rect x="400" y="220" width="160" height="44" rx="7" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="480" y="242" text-anchor="middle" font-size="11" font-weight="700" fill="#a85a17">就绪标志 Flag</text>
+  <text x="480" y="257" text-anchor="middle" font-size="9.5" fill="#8a97ab">0 → 1</text>
+
+  <!-- 消费者 -->
+  <rect x="710" y="90" width="200" height="90" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="810" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">消费者</text>
+  <text x="810" y="150" text-anchor="middle" font-size="10.5" fill="#3f5678">（如 CPU：轮询标志，</text>
+  <text x="810" y="166" text-anchor="middle" font-size="10.5" fill="#3f5678">见 1 就去读数据）</text>
+
+  <!-- 顺序步骤 -->
+  <text x="315" y="132" font-size="11" font-weight="700" fill="#1b4f9c">① 写数据</text>
+  <line x1="250" y1="150" x2="398" y2="155" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#p11b)"/>
+  <text x="300" y="240" font-size="11" font-weight="700" fill="#a85a17">② 置标志=1</text>
+  <line x1="250" y1="175" x2="398" y2="240" stroke="#a85a17" stroke-width="1.8" marker-end="url(#p11b)"/>
+  <text x="640" y="248" font-size="11" font-weight="700" fill="#1c7a4a">③ 读到标志=1</text>
+  <line x1="560" y1="242" x2="708" y2="180" stroke="#1c7a4a" stroke-width="1.8" marker-end="url(#p11)"/>
+  <text x="640" y="150" font-size="11" font-weight="700" fill="#1c7a4a">④ 再读数据</text>
+  <line x1="708" y1="150" x2="562" y2="155" stroke="#1c7a4a" stroke-width="1.8" marker-end="url(#p11)"/>
+
+  <!-- 正确 vs 错误 -->
+  <rect x="50" y="310" width="420" height="240" rx="10" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="70" y="336" font-size="13" font-weight="700" fill="#1c7a4a">✓ 保序（默认）：正确</text>
+  <g font-size="11" fill="#33415c">
+    <text x="70" y="362">"② 标志写" 不能越过 "① 数据写"，</text>
+    <text x="70" y="382">因为两者都是 Posted 写、且 <tspan font-weight="700">Posted 不能超越 Posted</tspan>。</text>
+    <text x="70" y="408">于是消费者一旦看到标志=1，</text>
+    <text x="70" y="428"><tspan font-weight="700" fill="#1c7a4a">数据一定已经写好</tspan> → 读到完整数据。</text>
+    <text x="70" y="460" fill="#8a97ab" font-size="10.5">这就是"序"作为正确性保证的意义：</text>
+    <text x="70" y="480" fill="#8a97ab" font-size="10.5">不是性能优化，是不出错的底线。</text>
+    <rect x="70" y="500" width="380" height="34" rx="6" fill="#ffffff" stroke="#a9dcc0"/>
+    <text x="80" y="522" font-size="10.5" fill="#14663f">硬件保证：数据写 → 标志写 的到达顺序不被打乱</text>
+  </g>
+
+  <rect x="490" y="310" width="420" height="240" rx="10" fill="#faf0f0" stroke="#e0b0b0"/>
+  <text x="510" y="336" font-size="13" font-weight="700" fill="#c0392b">✗ 若乱序：数据竞争</text>
+  <g font-size="11" fill="#33415c">
+    <text x="510" y="362">假如标志写"抄近道"先到了内存，</text>
+    <text x="510" y="382">而数据写还在路上……</text>
+    <text x="510" y="408">消费者看到标志=1，兴冲冲去读数据，</text>
+    <text x="510" y="428"><tspan font-weight="700" fill="#c0392b">却读到旧的/半截的数据</tspan> → 出错！</text>
+    <text x="510" y="460" fill="#8a97ab" font-size="10.5">⚠️ 这正是滥用 Relaxed Ordering</text>
+    <text x="510" y="480" fill="#8a97ab" font-size="10.5">可能引入的 bug（见 IDO/RO 图）。</text>
+    <rect x="510" y="500" width="380" height="34" rx="6" fill="#ffffff" stroke="#e0b0b0"/>
+    <text x="520" y="522" font-size="10.5" fill="#c0392b">教训：对"标志/门铃"这类有因果的写，绝不放宽序</text>
+  </g>
+</svg>

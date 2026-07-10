@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">一次 MSI 中断的投递路径：写内存 → 变成中断</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">"中断"其实是设备向一个特殊地址（x86 上是 0xFEE…）写一个数——RC 认出它并转成中断</text>
+
+  <defs>
+    <marker id="i10" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5a6b86"/></marker>
+  </defs>
+
+  <!-- 设备 -->
+  <rect x="40" y="110" width="170" height="90" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="125" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#1c7a4a">设备（Endpoint）</text>
+  <text x="125" y="162" text-anchor="middle" font-size="10" fill="#3f5678">DMA 做完，要通知 CPU</text>
+  <text x="125" y="180" text-anchor="middle" font-size="10" fill="#3f5678">→ 发出 MSI</text>
+
+  <!-- RC -->
+  <rect x="360" y="100" width="200" height="110" rx="10" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="460" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#1b4f9c">Root Complex</text>
+  <text x="460" y="150" text-anchor="middle" font-size="10" fill="#3f5678">认出目标地址落在</text>
+  <text x="460" y="166" text-anchor="middle" font-size="10" fill="#3f5678">0xFEE00000–0xFEEFFFFF</text>
+  <text x="460" y="186" text-anchor="middle" font-size="10" fill="#c0392b" font-weight="700">→ 这不是普通内存写！</text>
+  <text x="460" y="202" text-anchor="middle" font-size="9.5" fill="#8a97ab">是中断消息</text>
+
+  <!-- 中断重映射 -->
+  <rect x="360" y="250" width="200" height="80" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+  <text x="460" y="278" text-anchor="middle" font-size="12.5" font-weight="700" fill="#a85a17">中断重映射（现代）</text>
+  <text x="460" y="298" text-anchor="middle" font-size="10" fill="#3f5678">VT-d / AMD-Vi 经 IRTE</text>
+  <text x="460" y="314" text-anchor="middle" font-size="10" fill="#3f5678">重定向到目标 CPU（可选）</text>
+
+  <!-- Local APIC / CPU -->
+  <rect x="710" y="100" width="200" height="110" rx="10" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="810" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#2a3b57">目标 CPU 的 Local APIC</text>
+  <text x="810" y="150" text-anchor="middle" font-size="10" fill="#3f5678">按 Data 里的 Vector</text>
+  <text x="810" y="166" text-anchor="middle" font-size="10" fill="#3f5678">投递中断给该 CPU 核</text>
+  <text x="810" y="188" text-anchor="middle" font-size="10" fill="#14663f" font-weight="700">→ 触发中断处理程序</text>
+
+  <!-- arrows -->
+  <line x1="210" y1="150" x2="360" y2="150" stroke="#5a6b86" stroke-width="2" marker-end="url(#i10)"/>
+  <text x="285" y="140" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">① MWr TLP</text>
+  <text x="285" y="168" text-anchor="middle" font-size="9" fill="#8a97ab">Addr=0xFEE… Data=向量+模式</text>
+
+  <line x1="460" y1="210" x2="460" y2="250" stroke="#5a6b86" stroke-width="1.8" marker-end="url(#i10)"/>
+  <text x="560" y="235" text-anchor="middle" font-size="9.5" fill="#a85a17">② （可选）经重映射</text>
+  <line x1="460" y1="330" x2="460" y2="360" stroke="#c08a3a" stroke-width="1.6"/>
+  <path d="M460,360 Q460,380 710,155" stroke="#c08a3a" stroke-width="1.6" fill="none" marker-end="url(#i10)" stroke-dasharray="5 3"/>
+
+  <line x1="560" y1="150" x2="710" y2="150" stroke="#5a6b86" stroke-width="2" marker-end="url(#i10)"/>
+  <text x="635" y="140" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1b4f9c">③ 投递中断</text>
+
+  <!-- 强序保证 -->
+  <rect x="40" y="380" width="880" height="80" rx="10" fill="#f0faf4" stroke="#8fd3ac"/>
+  <text x="60" y="406" font-size="13" font-weight="700" fill="#1c7a4a">为什么"中断到时数据已就绪"？—— 强序保证（呼应 第11章）</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="60" y="430">MSI 是一次 <tspan font-weight="700">Posted 写</tspan>，而 Posted 不能超越它前面的数据写。所以设备"先写完数据、再发 MSI"，</text>
+    <text x="60" y="450">这个顺序到 CPU 侧不被打乱 → 中断处理程序读到的数据一定是完整的。<tspan fill="#c0392b" font-weight="700">切勿对此链路开 Relaxed Ordering。</tspan></text>
+  </g>
+
+  <!-- 对比 INTx -->
+  <rect x="40" y="480" width="880" height="60" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="504" font-size="12" font-weight="700" fill="#1b2a4a">对比传统 INTx：</text>
+  <text x="60" y="526" font-size="11" fill="#33415c">INTx 用<tspan font-weight="700">专用中断线</tspan>（电平、共享、需边带引脚）；MSI 用<tspan font-weight="700">带内存储器写</tspan>，无需专线、向量多、天然与数据保序。</text>
+</svg>

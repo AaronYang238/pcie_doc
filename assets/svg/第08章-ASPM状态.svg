@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">链路电源状态：省电越深，唤醒越慢</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">横轴 = 省电深度 / 唤醒延迟（越右越省电、越慢唤醒）；ASPM 让链路空闲时自动下探</text>
+
+  <!-- 轴 -->
+  <line x1="70" y1="300" x2="890" y2="300" stroke="#aab8cc" stroke-width="2"/>
+  <text x="70" y="330" font-size="10.5" fill="#8a97ab">功耗高 · 唤醒快</text>
+  <text x="820" y="330" font-size="10.5" fill="#8a97ab">功耗低 · 唤醒慢</text>
+
+  <!-- 状态块 -->
+  <g text-anchor="middle">
+    <rect x="80" y="150" width="130" height="120" rx="10" fill="#bfe3cd" stroke="#4a9a6a"/>
+    <text x="145" y="178" font-size="15" font-weight="700" fill="#14663f">L0</text>
+    <text x="145" y="202" font-size="10.5" fill="#33415c">全速工作</text>
+    <text x="145" y="220" font-size="10.5" fill="#33415c">链路完全活跃</text>
+    <text x="145" y="244" font-size="9.5" fill="#8a97ab">唤醒延迟：0</text>
+
+    <rect x="240" y="150" width="130" height="120" rx="10" fill="#e9f7ef" stroke="#8fd3ac"/>
+    <text x="305" y="178" font-size="15" font-weight="700" fill="#1c7a4a">L0s</text>
+    <text x="305" y="202" font-size="10.5" fill="#33415c">单向快速省电</text>
+    <text x="305" y="220" font-size="10.5" fill="#33415c">硬件自动进出</text>
+    <text x="305" y="244" font-size="9.5" fill="#8a97ab">唤醒：~ns-µs（FTS）</text>
+
+    <rect x="400" y="130" width="200" height="160" rx="10" fill="#fdf1e7" stroke="#f0c193"/>
+    <text x="500" y="156" font-size="15" font-weight="700" fill="#a85a17">L1</text>
+    <text x="500" y="178" font-size="10.5" fill="#33415c">深度省电（双向静默）</text>
+    <rect x="416" y="188" width="168" height="42" rx="7" fill="#fff" stroke="#f0c193"/>
+    <text x="500" y="205" font-size="10.5" font-weight="700" fill="#a85a17">L1.1 子状态</text>
+    <text x="500" y="221" font-size="9" fill="#3f5678">保持共模电压</text>
+    <rect x="416" y="234" width="168" height="42" rx="7" fill="#fbe9d8" stroke="#e0a860"/>
+    <text x="500" y="251" font-size="10.5" font-weight="700" fill="#8a5a1a">L1.2 子状态</text>
+    <text x="500" y="267" font-size="9" fill="#3f5678">关共模，最省（配 CLKREQ#）</text>
+
+    <rect x="630" y="150" width="130" height="120" rx="10" fill="#fbe9d8" stroke="#e0a860"/>
+    <text x="695" y="178" font-size="15" font-weight="700" fill="#8a5a1a">L2</text>
+    <text x="695" y="202" font-size="10.5" fill="#33415c">主电源关</text>
+    <text x="695" y="220" font-size="10.5" fill="#33415c">仅 Vaux + WAKE#</text>
+    <text x="695" y="244" font-size="9.5" fill="#8a97ab">唤醒：ms 级</text>
+
+    <rect x="790" y="150" width="110" height="120" rx="10" fill="#eef1f6" stroke="#c7d0dd"/>
+    <text x="845" y="178" font-size="15" font-weight="700" fill="#5a6b86">L3</text>
+    <text x="845" y="202" font-size="10.5" fill="#33415c">完全断电</text>
+    <text x="845" y="222" font-size="10.5" fill="#33415c">Off</text>
+  </g>
+
+  <!-- 迁移箭头 -->
+  <defs><marker id="a8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5a6b86"/></marker></defs>
+  <g stroke="#5a6b86" stroke-width="1.4" fill="none">
+    <path d="M210,300 L240,300" marker-end="url(#a8)"/>
+    <path d="M370,300 L400,300" marker-end="url(#a8)"/>
+    <path d="M600,300 L630,300" marker-end="url(#a8)"/>
+    <path d="M760,300 L790,300" marker-end="url(#a8)"/>
+  </g>
+
+  <!-- ASPM vs PCI-PM -->
+  <rect x="70" y="356" width="820" height="184" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="90" y="382" font-size="13" font-weight="700" fill="#1b2a4a">两套电源管理，别混淆</text>
+  <g font-size="11.3" fill="#33415c">
+    <text x="90" y="408">• <tspan font-weight="700" fill="#1c7a4a">ASPM（Active State PM）</tspan>：<tspan font-weight="700">硬件自动</tspan>在链路空闲时进 L0s/L1，无需软件干预——"活跃态里见缝插针地省电"。</text>
+    <text x="90" y="432">• <tspan font-weight="700" fill="#a85a17">软件 PM</tspan>：由 OS 主动把设备置于低功耗（对应 L2/L3），配合设备的 D-state（见 D/L 映射图）。</text>
+    <text x="90" y="458">• <tspan font-weight="700">L1 子状态（L1.1/L1.2）</tspan>：📘 现代新增，配合 CLKREQ# 把空闲功耗压到极低——NVMe/笔记本续航的关键。</text>
+    <text x="90" y="484">• <tspan font-weight="700">权衡本质</tspan>：省得越深，退出要做的"重建工作"越多、唤醒越慢。延迟敏感的设备会限制能进的最深省电态。</text>
+    <text x="90" y="512" fill="#5a6b86">📘 L0p（Gen6）：不退出 L0，动态减少活动 Lane 数来省电（宽度可伸缩），是"边工作边省电"的新玩法。</text>
+    <text x="90" y="532" fill="#8a97ab" font-size="10">🔧 排障：ASPM 配置不当会导致高延迟抖动甚至掉线；服务器有时会在 BIOS 关 ASPM 换稳定性。</text>
+  </g>
+</svg>
