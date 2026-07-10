@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="520" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">非透明桥（NTB）：让两台独立主机安全对接</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">透明桥两侧同属一棵枚举树；非透明桥两侧各自枚举，靠"地址翻译窗口 + 门铃/scratchpad"跨界传数据</text>
+
+  <defs>
+    <marker id="n02" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1b4f9c"/></marker>
+  </defs>
+
+  <!-- 主机A -->
+  <rect x="40" y="90" width="230" height="300" rx="12" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="155" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#2a3b57">主机 A（独立枚举树）</text>
+  <rect x="62" y="132" width="186" height="54" rx="8" fill="#fff" stroke="#aab8cc"/>
+  <text x="155" y="154" text-anchor="middle" font-size="10.5" font-weight="700" fill="#33415c">CPU A / 内存 A</text>
+  <text x="155" y="172" text-anchor="middle" font-size="9" fill="#5a6b86">RC A 是自己树的根</text>
+  <rect x="62" y="300" width="186" height="72" rx="8" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="155" y="322" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">A 侧地址窗口</text>
+  <text x="155" y="340" text-anchor="middle" font-size="9" fill="#3f5678">写这里 = 写到 B 的内存</text>
+  <text x="155" y="356" text-anchor="middle" font-size="9" fill="#8a97ab">（经翻译）</text>
+
+  <!-- 主机B -->
+  <rect x="690" y="90" width="230" height="300" rx="12" fill="#e9f7ef" stroke="#8fd3ac"/>
+  <text x="805" y="116" text-anchor="middle" font-size="14" font-weight="700" fill="#1c7a4a">主机 B（独立枚举树）</text>
+  <rect x="712" y="132" width="186" height="54" rx="8" fill="#fff" stroke="#a9dcc0"/>
+  <text x="805" y="154" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1c7a4a">CPU B / 内存 B</text>
+  <text x="805" y="172" text-anchor="middle" font-size="9" fill="#3f5678">RC B 是自己树的根</text>
+  <rect x="712" y="300" width="186" height="72" rx="8" fill="#dfe6f0" stroke="#8aa0bd"/>
+  <text x="805" y="322" text-anchor="middle" font-size="10.5" font-weight="700" fill="#2a3b57">B 侧地址窗口</text>
+  <text x="805" y="340" text-anchor="middle" font-size="9" fill="#3f5678">写这里 = 写到 A 的内存</text>
+
+  <!-- NTB 中间 -->
+  <rect x="340" y="120" width="280" height="250" rx="12" fill="#efe9f9" stroke="#c4b1e8"/>
+  <text x="480" y="146" text-anchor="middle" font-size="13" font-weight="700" fill="#7a5cc0">非透明桥 NTB</text>
+  <rect x="360" y="162" width="240" height="60" rx="8" fill="#fff" stroke="#c4b1e8"/>
+  <text x="480" y="184" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7a5cc0">地址翻译窗口</text>
+  <text x="480" y="202" text-anchor="middle" font-size="9" fill="#3f5678">A 域地址 ⇄ B 域地址</text>
+  <text x="480" y="216" text-anchor="middle" font-size="9" fill="#8a97ab">两侧各看到对方为一个"端点"</text>
+
+  <rect x="360" y="234" width="240" height="52" rx="8" fill="#fff7ec" stroke="#f0c193"/>
+  <text x="480" y="256" text-anchor="middle" font-size="10.5" font-weight="700" fill="#a85a17">门铃（Doorbell）</text>
+  <text x="480" y="273" text-anchor="middle" font-size="9" fill="#3f5678">一侧写→触发另一侧中断</text>
+
+  <rect x="360" y="298" width="240" height="52" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="480" y="320" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1b4f9c">Scratchpad 寄存器</text>
+  <text x="480" y="337" text-anchor="middle" font-size="9" fill="#3f5678">两侧共享的小信箱，传控制信息</text>
+
+  <!-- arrows -->
+  <line x1="248" y1="336" x2="360" y2="192" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#n02)"/>
+  <line x1="600" y1="192" x2="712" y2="336" stroke="#1b4f9c" stroke-width="1.8" marker-end="url(#n02)"/>
+
+  <!-- 底注 -->
+  <rect x="40" y="410" width="880" height="98" rx="10" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="60" y="434" font-size="12.5" font-weight="700" fill="#1b2a4a">透明桥 vs 非透明桥</text>
+  <g font-size="11" fill="#33415c">
+    <text x="60" y="458">• <tspan font-weight="700" fill="#1b4f9c">透明桥（普通 PCI-PCI 桥）</tspan>：两侧同属一棵枚举树，上游软件能"看穿"它枚举到下游所有设备。</text>
+    <text x="60" y="480">• <tspan font-weight="700" fill="#7a5cc0">非透明桥（NTB）</tspan>：两侧是<tspan font-weight="700">两台独立主机</tspan>，各自枚举、互相看不穿；只通过地址翻译窗口暴露有限的对方内存。</text>
+    <text x="60" y="500" font-size="10" fill="#8a97ab">用途：双主机高可用/冗余、主机间高速互联（存储控制器双控），把 PCIe 当作机间通信通道。</text>
+  </g>
+</svg>
