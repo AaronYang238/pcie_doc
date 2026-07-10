@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="'Segoe UI',system-ui,sans-serif">
+  <rect x="0" y="0" width="960" height="560" rx="14" fill="#f7f9fc" stroke="#d8dee9"/>
+  <text x="480" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#1b2a4a">BAR 资源分配：内核当"地址空间管理员"</text>
+  <text x="480" y="58" text-anchor="middle" font-size="12" fill="#5a6b86">枚举时探出每个 BAR 要多大 → 分配器按对齐、不冲突地摆进地址空间 → 写回 BAR，并让上游桥窗口覆盖</text>
+
+  <defs>
+    <marker id="ba14" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1c7a4a"/></marker>
+  </defs>
+
+  <!-- 左：待分配需求 -->
+  <rect x="40" y="86" width="300" height="290" rx="12" fill="#eef3fa" stroke="#aab8cc"/>
+  <text x="190" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#33415c">① 枚举探出的需求清单</text>
+  <g font-size="10" text-anchor="middle">
+    <rect x="60" y="128" width="260" height="40" rx="6" fill="#bfe3cd" stroke="#4a9a6a"/><text x="190" y="146" fill="#14663f" font-weight="700">设备A BAR0：64MB(可预读,64位)</text><text x="190" y="162" fill="#5a6b86">对齐 64MB</text>
+    <rect x="60" y="176" width="260" height="36" rx="6" fill="#c9ead6" stroke="#4a9a6a"/><text x="190" y="198" fill="#14663f" font-weight="700">设备A BAR2：16KB(寄存器)</text>
+    <rect x="60" y="220" width="260" height="36" rx="6" fill="#bfe3cd" stroke="#4a9a6a"/><text x="190" y="242" fill="#14663f" font-weight="700">设备B BAR0：1MB</text>
+    <rect x="60" y="264" width="260" height="36" rx="6" fill="#c9ead6" stroke="#4a9a6a"/><text x="190" y="286" fill="#14663f" font-weight="700">设备C BAR0：256MB(GPU 大 BAR)</text>
+    <text x="190" y="326" font-size="9.5" fill="#8a97ab">各 BAR 只知"要多大、什么类型、对齐"</text>
+    <text x="190" y="344" font-size="9.5" fill="#8a97ab">还不知道"放哪"——分配器来定</text>
+    <text x="190" y="362" font-size="9.5" fill="#c0392b">约束：大的、对齐严的先放，避免碎片</text>
+  </g>
+
+  <!-- 中间箭头 -->
+  <line x1="340" y1="230" x2="410" y2="230" stroke="#1c7a4a" stroke-width="2.4" marker-end="url(#ba14)"/>
+  <text x="375" y="220" text-anchor="middle" font-size="9" fill="#1c7a4a">分配器</text>
+  <text x="375" y="248" text-anchor="middle" font-size="8" fill="#8a97ab">pci_assign_resource</text>
+
+  <!-- 右：地址空间布局 -->
+  <rect x="430" y="86" width="490" height="360" rx="12" fill="#ffffff" stroke="#d8dee9"/>
+  <text x="675" y="112" text-anchor="middle" font-size="13" font-weight="700" fill="#1b2a4a">② 摆进平台的 MMIO 窗口（第05章的楼层）</text>
+
+  <!-- 4G以下窗口 -->
+  <rect x="450" y="128" width="450" height="120" rx="8" fill="#eaf2fe" stroke="#93b7f0"/>
+  <text x="470" y="150" font-size="11" font-weight="700" fill="#1b4f9c">4G 以下 MMIO 窗口</text>
+  <rect x="470" y="160" width="150" height="30" rx="4" fill="#c9ead6" stroke="#4a9a6a"/><text x="545" y="180" text-anchor="middle" font-size="9" fill="#14663f">B BAR0 1MB</text>
+  <rect x="630" y="160" width="90" height="30" rx="4" fill="#c9ead6" stroke="#4a9a6a"/><text x="675" y="180" text-anchor="middle" font-size="9" fill="#14663f">A BAR2</text>
+  <rect x="470" y="200" width="410" height="30" rx="4" fill="#f4f7fb" stroke="#aab8cc" stroke-dasharray="4 3"/><text x="675" y="220" text-anchor="middle" font-size="9" fill="#8a97ab">空闲（对齐留出的间隙）</text>
+
+  <!-- 4G以上窗口 -->
+  <rect x="450" y="262" width="450" height="130" rx="8" fill="#dbe8fb" stroke="#93b7f0"/>
+  <text x="470" y="284" font-size="11" font-weight="700" fill="#1b4f9c">64 位高窗口（above 4G，第03/05章）</text>
+  <rect x="470" y="294" width="200" height="34" rx="4" fill="#bfe3cd" stroke="#4a9a6a"/><text x="570" y="316" text-anchor="middle" font-size="9.5" fill="#14663f">A BAR0 64MB(可预读)</text>
+  <rect x="470" y="336" width="410" height="46" rx="4" fill="#bfe3cd" stroke="#4a9a6a"/><text x="675" y="363" text-anchor="middle" font-size="10" fill="#14663f" font-weight="700">C BAR0 256MB(GPU 大 BAR，对齐到 256MB)</text>
+
+  <text x="675" y="418" text-anchor="middle" font-size="9.5" fill="#8a97ab">大 BAR / 可预读放高窗口；小寄存器 BAR 放 4G 以下</text>
+  <text x="675" y="434" text-anchor="middle" font-size="9.5" fill="#8a97ab">分配完写回各 BAR，桥的 Memory Base/Limit 覆盖其下所有</text>
+
+  <!-- 底注 -->
+  <rect x="40" y="460" width="880" height="84" rx="10" fill="#0f1b2d" stroke="#243a5c"/>
+  <text x="60" y="484" font-size="12.5" font-weight="700" fill="#eaf1fb">分配器要处理的三件事</text>
+  <g font-size="10.5" fill="#c6d2e6">
+    <text x="60" y="506">• <tspan font-weight="700">对齐</tspan>：每个 BAR 起始必须对齐到自身大小（64MB BAR 起点须 64MB 对齐）→ 会产生间隙。</text>
+    <text x="60" y="524">• <tspan font-weight="700">不冲突</tspan>：所有 BAR/桥窗口互不重叠，且被上游桥 Base/Limit 完整覆盖（第02章）。</text>
+    <text x="60" y="540">• <tspan font-weight="700">空间不够时</tspan>：64 位 BAR 放 above-4G；仍不够可 pci=realloc 重排，或缩小 Resizable BAR。</text>
+  </g>
+</svg>
