@@ -29,14 +29,14 @@
 
   <!-- 现代速率 -->
   <rect x="500" y="196" width="400" height="180" rx="10" fill="#0f1b2d" stroke="#243a5c"/>
-  <text x="520" y="222" font-size="13" font-weight="700" fill="#eaf1fb">📘 用现代速率重算（近似）</text>
+  <text x="520" y="222" font-size="13" font-weight="700" fill="#eaf1fb">📘 用 Gen5（当前主流）重算（近似）</text>
   <g font-size="11" fill="#c6d2e6">
     <text x="520" y="248">原书 Gen1 8b/10b：编码就先亏 20%</text>
     <text x="520" y="272">Gen3–5 用 128b/130b：编码仅亏 ~1.5%</text>
-    <text x="520" y="300" fill="#8bc6f0">Gen4 x16 裸速 ≈ 31.5 GB/s（单向）</text>
-    <text x="520" y="322" fill="#c6e88a">× TLP 效率 ~90% ≈ 28 GB/s 可用</text>
-    <text x="520" y="348" fill="#f0b088">Gen5 x16 ≈ 63 GB/s、Gen6 ≈ 121 GB/s（裸速）</text>
-    <text x="520" y="368" font-size="9.5" fill="#6f86a8">Flit 模式开销结构不同，需另算</text>
+    <text x="520" y="300" fill="#8bc6f0">Gen5 x16 裸速 ≈ 63 GB/s（单向）</text>
+    <text x="520" y="322" fill="#c6e88a">× TLP 效率 ~90% ≈ 57 GB/s 可用</text>
+    <text x="520" y="348" fill="#f0b088">Gen4 x16 ≈ 31.5 GB/s 同理 → ≈ 28 GB/s 可用</text>
+    <text x="520" y="368" font-size="9.5" fill="#6f86a8">🔭 Gen6 ≈ 121 GB/s（PAM4+Flit，开销另算，展望）</text>
   </g>
 
   <!-- 延时 + 优化 -->

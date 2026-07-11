@@ -1,43 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" font-family="'Segoe UI',system-ui,sans-serif">
   <rect x="0" y="0" width="960" height="580" rx="14" fill="#0f1b2d" stroke="#243a5c"/>
-  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#eaf1fb">Flit 模式：Gen6/7 如何封装 TLP（现代化补充）</text>
-  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#8fa6c8">📘 SPEC 7.0：Gen6 起强制 Flit（Flow Control Unit）模式，取代传统「逐 TLP 成帧 + LCRC」</text>
+  <text x="480" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#eaf1fb">TLP 的线上封装：Gen5 逐包成帧（当前主流）vs Gen6+ Flit（展望）</text>
+  <text x="480" y="60" text-anchor="middle" font-size="12" fill="#8fa6c8">你今天抓包/调试看到的是上面这种格式；Flit 是 Gen6 起的下一代封装，作展望了解即可</text>
 
-  <!-- 传统模式 -->
-  <text x="60" y="98" font-size="14" font-weight="700" fill="#8bc6f0">传统模式（Gen1–5，非 Flit）</text>
-  <g font-size="10.5" text-anchor="middle">
-    <rect x="60" y="110" width="60" height="40" fill="#3a2a1a" stroke="#a86a2a"/><text x="90" y="134" fill="#f0c193">STP</text>
-    <rect x="120" y="110" width="70" height="40" fill="#1c3a2a" stroke="#4a8a6a"/><text x="155" y="128" fill="#9fe0bd">Seq#</text>
-    <rect x="190" y="110" width="320" height="40" fill="#1a2a44" stroke="#4a6a9a"/><text x="350" y="134" fill="#9fc0f0">TLP（Header + Data + 可选 ECRC）</text>
-    <rect x="510" y="110" width="80" height="40" fill="#1c3a2a" stroke="#4a8a6a"/><text x="550" y="134" fill="#9fe0bd">LCRC</text>
-    <rect x="590" y="110" width="60" height="40" fill="#3a2a1a" stroke="#a86a2a"/><text x="620" y="134" fill="#f0c193">END</text>
-    <text x="760" y="134" fill="#6f86a8" font-size="10">每个 TLP 独立成帧、独立 LCRC</text>
+  <!-- Gen5 主流模式（主体，高亮框） -->
+  <rect x="40" y="80" width="880" height="210" rx="10" fill="#1a3050" stroke="#8bc6f0" stroke-width="2"/>
+  <text x="60" y="108" font-size="15" font-weight="700" fill="#8bc6f0">Gen1–5 非 Flit 模式 ⭐ 当前主流：每个 TLP 独立成帧 + 独立 LCRC</text>
+  <g font-size="11" text-anchor="middle">
+    <rect x="60" y="124" width="70" height="48" fill="#3a2a1a" stroke="#a86a2a"/><text x="95" y="144" fill="#f0c193" font-weight="700">STP</text><text x="95" y="162" fill="#8fa6c8" font-size="8.5">帧起始令牌</text>
+    <rect x="130" y="124" width="80" height="48" fill="#1c3a2a" stroke="#4a8a6a"/><text x="170" y="144" fill="#9fe0bd" font-weight="700">Seq#</text><text x="170" y="162" fill="#8fa6c8" font-size="8.5">2B 序号(DLL)</text>
+    <rect x="210" y="124" width="380" height="48" fill="#1a2a44" stroke="#4a6a9a"/><text x="400" y="144" fill="#9fc0f0" font-weight="700">TLP（Header 12/16B + Data + 可选 ECRC）</text><text x="400" y="162" fill="#8fa6c8" font-size="8.5">本章主角：事务层打包的部分</text>
+    <rect x="590" y="124" width="90" height="48" fill="#1c3a2a" stroke="#4a8a6a"/><text x="635" y="144" fill="#9fe0bd" font-weight="700">LCRC</text><text x="635" y="162" fill="#8fa6c8" font-size="8.5">4B 链路校验</text>
+    <rect x="680" y="124" width="70" height="48" fill="#3a2a1a" stroke="#a86a2a"/><text x="715" y="144" fill="#f0c193" font-weight="700">END</text><text x="715" y="162" fill="#8fa6c8" font-size="8.5">帧结束</text>
+    <text x="835" y="150" fill="#6f86a8" font-size="10">…下一个 TLP</text>
   </g>
-  <text x="60" y="172" font-size="10.5" fill="#6f86a8">可靠性：ACK/NAK 以「单个 TLP」为重放粒度；编码 128b/130b（同步头开销）。</text>
-
-  <!-- Flit 模式 -->
-  <text x="60" y="212" font-size="14" font-weight="700" fill="#c6e88a">Flit 模式（Gen6/7）：固定 256B 为一个传输单元</text>
-  <g text-anchor="middle" font-size="11">
-    <!-- 整块 flit -->
-    <rect x="60" y="228" width="840" height="58" rx="6" fill="#12241a" stroke="#4a8a6a"/>
-    <rect x="70" y="236" width="560" height="42" rx="4" fill="#1a2a44" stroke="#4a6a9a"/>
-    <text x="350" y="262" fill="#9fc0f0" font-weight="700">TLP 载荷区（约 236 B，可含多个 TLP / 部分 TLP）</text>
-    <rect x="636" y="236" width="90" height="42" rx="4" fill="#2a1c3a" stroke="#8a5cc0"/><text x="681" y="256" fill="#c9a7f0">DLP</text><text x="681" y="270" fill="#8a97ab" font-size="8.5">~6B 流控/Ack</text>
-    <rect x="732" y="236" width="80" height="42" rx="4" fill="#1c3a2a" stroke="#4a8a6a"/><text x="772" y="256" fill="#9fe0bd">CRC</text><text x="772" y="270" fill="#8a97ab" font-size="8.5">~8B</text>
-    <rect x="818" y="236" width="72" height="42" rx="4" fill="#3a2a1a" stroke="#a86a2a"/><text x="854" y="256" fill="#f0c193">FEC</text><text x="854" y="270" fill="#8a97ab" font-size="8.5">~6B</text>
+  <g font-size="11" fill="#dce6f5">
+    <text x="60" y="204">· 开销随 TLP 逐包产生：成帧 + Seq + LCRC ≈ 每包固定 ~26B（第12章带宽账的口径）</text>
+    <text x="60" y="226">· 可靠性：ACK/NAK 以「单个 TLP」为重放粒度（第07章）；编码 128b/130b，编码开销仅 ~1.5%</text>
+    <text x="60" y="248">· 事务层视角：本章讲的 TLP 头/路由/MPS 全部落在中间蓝色区 —— 这就是 Gen5 链路的真实线上形态</text>
+    <text x="60" y="272" fill="#8fa6c8" font-size="10">📘 对照 Base Spec 7.0：TLP / Data Link Layer Packet Framing（非 Flit 模式）章节</text>
   </g>
-  <text x="480" y="304" text-anchor="middle" font-size="10.5" fill="#8fa6c8">← 合计固定 256 字节（数值为常见示意，精确划分以 Base Spec 7.0 为准）→</text>
 
-  <!-- 变化点 -->
-  <rect x="60" y="326" width="840" height="222" rx="10" fill="#15263d" stroke="#2c4568"/>
-  <text x="80" y="352" font-size="13" font-weight="700" fill="#eaf1fb">Flit 模式带来的四个关键变化</text>
-  <g font-size="11.5" fill="#c6d2e6">
-    <text x="80" y="380">① <tspan font-weight="700" fill="#c6e88a">封装单位改变</tspan>：不再逐 TLP 加 STP/END/LCRC；TLP 直接打包进定长 Flit，成帧开销固定化。</text>
-    <text x="80" y="406">② <tspan font-weight="700" fill="#f0b088">强制 FEC</tspan>：PAM4 误码率高，用前向纠错先纠错、再靠 CRC + 重放兜底，降低重传频率（见 第07章）。</text>
-    <text x="80" y="432">③ <tspan font-weight="700" fill="#c9a7f0">重放粒度 = Flit</tspan>：ACK/NAK 与流控（DLP）以 Flit 为单位，延迟预算与信用换算随之调整（见 第09章）。</text>
-    <text x="80" y="458">④ <tspan font-weight="700" fill="#9fc0f0">头格式演进</tspan>：引入新 Fmt 与 OHC（Orthogonal Header Content），支持更多前缀（PASID 等，见 第13章）。</text>
-    <text x="80" y="490" font-size="11" fill="#8fa6c8">效率收益：固定小开销 + 高阶调制（PAM4），使 64/128 GT/s 下仍保持高有效带宽。</text>
-    <text x="80" y="514" font-size="11" fill="#8fa6c8">兼容性：Flit 能力在链路训练阶段协商；低速率也可运行于 Flit（Gen6 起为链路默认工作方式）。</text>
-    <text x="80" y="538" font-size="10" fill="#6f86a8">📘 对照 Base Spec 7.0：Flit Mode / Physical Layer（FEC、Encoding）章节。</text>
+  <!-- Gen6+ Flit 展望（压缩条带） -->
+  <rect x="40" y="310" width="880" height="240" rx="10" fill="#101c14" stroke="#3a5a2a"/>
+  <text x="60" y="338" font-size="14" font-weight="700" fill="#c6e88a">🔭 Gen6/7 展望：Flit（Flow Control Unit）定长封装</text>
+  <g text-anchor="middle" font-size="10.5">
+    <rect x="60" y="352" width="840" height="52" rx="6" fill="#12241a" stroke="#4a8a6a"/>
+    <rect x="70" y="360" width="560" height="36" rx="4" fill="#1a2a44" stroke="#4a6a9a"/>
+    <text x="350" y="383" fill="#9fc0f0" font-weight="700">TLP 载荷区（约 236B，可含多个 / 部分 TLP）</text>
+    <rect x="636" y="360" width="86" height="36" rx="4" fill="#2a1c3a" stroke="#8a5cc0"/><text x="679" y="383" fill="#c9a7f0">DLP ~6B</text>
+    <rect x="728" y="360" width="82" height="36" rx="4" fill="#1c3a2a" stroke="#4a8a6a"/><text x="769" y="383" fill="#9fe0bd">CRC ~8B</text>
+    <rect x="816" y="360" width="74" height="36" rx="4" fill="#3a2a1a" stroke="#a86a2a"/><text x="853" y="383" fill="#f0c193">FEC ~6B</text>
+  </g>
+  <text x="480" y="422" text-anchor="middle" font-size="10" fill="#8fa6c8">合计固定 256B（数值为常见示意，精确划分以 Base Spec 7.0 为准）</text>
+  <g font-size="11" fill="#c6d2e6">
+    <text x="60" y="450">要点（与上面 Gen5 格式的差异）：① 不再逐 TLP 加 STP/END/LCRC，TLP 打包进定长 Flit，开销固定化；</text>
+    <text x="60" y="472">② PAM4 误码高 → 强制 FEC（第07章展望）；③ ACK/NAK 与流控以 Flit 为粒度（第09章展望）；</text>
+    <text x="60" y="494">④ 头格式演进：新 Fmt 与 OHC（Orthogonal Header Content），承载 PASID 等更多前缀（第13章）。</text>
+    <text x="60" y="520" fill="#8fa6c8" font-size="10">语义不变：TLP 的头、路由、MPS 规则照旧 —— Flit 只是"外面再套一层定长外壳"。等 Gen6 设备到手，本章知识全部直接迁移。</text>
+    <text x="60" y="540" fill="#6f86a8" font-size="10">📘 对照 Base Spec 7.0：Flit Mode 章节。</text>
   </g>
 </svg>
