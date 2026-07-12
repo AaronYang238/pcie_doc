@@ -27,7 +27,7 @@
 | VC, Virtual Channel | 虚拟通道 | 共享物理链路上相互独立的缓冲 / 流控通道 |
 | TC, Traffic Class | 流量类别 | TLP 的优先级标签，映射到 VC |
 | RCIEP | RC 集成端点 | 直接集成在 RC 内部、不经外部链路的端点 |
-| PCI Express Capability | — | 配置空间中协商链路速率 / 宽度 / MPS 等的能力结构 |
+| PCI Express Capability | PCIe 能力结构 | 配置空间中协商链路速率 / 宽度 / MPS 等的能力结构 |
 | Extended Capability | 扩展能力 | 位于配置空间 0x100 以后的 PCIe 专属能力（AER/SR-IOV…） |
 
 ---
@@ -205,13 +205,13 @@ PCI PM Capability 定义了设备的 **D-state（D0/D1/D2/D3）** 功耗态与�
 
 ## 📘 SPEC 7.0 现代化对照
 
-> 📘 **链路速率 / 宽度协商**：`Link Capabilities/Status 2` 已扩展支持到 **64 GT/s（Gen6）/ 128 GT/s（Gen7）**，Data Rate 字段相应扩展。读 `Link Status` 时要用新版字段解释当前速率。
+> 📘 **链路速率 / 宽度协商**：`Link Capabilities/Status 2` 描述并协商链路速率——当前主流部署的上限是 **32 GT/s（Gen5）**；字段已进一步扩展支持 64/128 GT/s（🔭 Gen6/7）。读 `Link Status` 时要用新版字段解释当前速率。
 
 > 📘 **RC 高度集成**：现代 RC 深度集成 IOMMU；并且 **PCIe 与 CXL 复用同一套物理层（`TX/RX`）**——同一个物理接口，训练时协商是走 PCIe 还是 CXL 协议。CXL 在 PCIe 之上提供内存一致性（[第13章](第13章-虚拟化技术.md)），是异构计算的方向。
 
-> 📘 **Flit 模式协商**：Gen6+ 在链路训练阶段就要协商是否进入 **Flit 模式**（[第06](第06章-事务层.md)/[07 章](第07章-数据链路层与物理层.md)），这会影响之后所有报文的封装形式。
+> 📘 **新能力的登记位**：**10-bit Tag、Scaled Flow Control** 等现代特性的使能位，都在扩展配置空间的对应 Extended Capability 里声明与协商。
 
-> 📘 **新能力的登记位**：**10-bit / 14-bit Tag、Scaled Flow Control** 等现代特性的使能位，都在扩展配置空间的对应 Extended Capability 里声明与协商。
+> 🔭 **Gen6/7 展望 · Flit 模式协商**：Gen6+ 在链路训练阶段还要协商是否进入 **Flit 模式**（[第06](第06章-事务层.md)/[07 章](第07章-数据链路层与物理层.md) 的展望），这会影响之后所有报文的封装形式；当前主流的 Gen3–5 链路不涉及。
 
 ---
 
