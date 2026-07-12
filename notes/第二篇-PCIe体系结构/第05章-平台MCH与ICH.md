@@ -18,7 +18,7 @@
 | PCIEXBAR | ECAM 基址寄存器 | 定义 ECAM 基址、把配置空间映射进内存 |
 | MCHBAR / EPBAR / DMIBAR | 内部寄存器窗口 BAR | 定位 MCH 内部/Egress/DMI 寄存器块 |
 | TOLUD / TOUUD | 低/高端可用 DRAM 顶 | 划分可用 DRAM 上界，处理 4G 内存空洞 |
-| Legacy 地址空间 | 传统保留区 | 低 1MB、VGA、SMM 等历史保留区 |
+| Legacy Address Space | Legacy 地址空间 | 低 1MB、VGA、SMM 等历史保留区 |
 | MMIO | 存储器映射 I/O | 用存储器地址访问设备寄存器 |
 | ACPI MCFG | MCFG 表 | 固件上报 ECAM 基址的 ACPI 表 |
 | Memory Remap | 内存重映射 | 把被 MMIO 遮住的 DRAM 搬到 4G 以上 |

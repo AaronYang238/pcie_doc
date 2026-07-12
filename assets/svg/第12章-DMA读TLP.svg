@@ -47,6 +47,6 @@
   <g font-size="11" fill="#33415c">
     <text x="80" y="532">• 读吞吐 ≈ <tspan font-weight="700">在途请求数 × MRRS ÷ RTT</tspan>。如果只发 1 个 MRd 就干等，链路大部分时间在空转。</text>
     <text x="80" y="554">• 正确做法：<tspan font-weight="700">同时发多个 MRd</tspan>（每个用不同 Tag），让"发请求"和"收完成"流水线重叠，填满带宽×延迟管道。</text>
-    <text x="80" y="574" fill="#8a97ab" font-size="10">📘 现代高速率下 8-bit Tag(256 个)可能不够 → 需 10/14-bit Tag（本章现代化）。</text>
+    <text x="80" y="574" fill="#8a97ab" font-size="10">📘 现代高速率下 8-bit Tag(256 个)可能不够 → Gen4 起主流启用 10-bit Tag（本章现代化）。</text>
   </g>
 </svg>

@@ -45,16 +45,16 @@
   <g font-size="11" text-anchor="middle">
     <!-- 128B -->
     <text x="120" y="398" fill="#33415c">MPS=128B</text>
-    <rect x="60" y="406" width="70" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="95" y="424" font-size="9">头~20B</text>
-    <rect x="130" y="406" width="180" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="220" y="424" fill="#1c7a4a">负载 128B</text>
-    <text x="360" y="424" fill="#8a97ab" font-size="10">效率 ≈ 86%</text>
+    <rect x="60" y="406" width="40" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="80" y="424" font-size="8">~26B</text>
+    <rect x="100" y="406" width="196" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="198" y="424" fill="#1c7a4a">负载 128B</text>
+    <text x="360" y="424" fill="#8a97ab" font-size="10">效率 ≈ 83%</text>
     <!-- 512B -->
     <text x="120" y="452" fill="#33415c">MPS=512B</text>
-    <rect x="60" y="460" width="30" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="75" y="478" font-size="8">头</text>
-    <rect x="90" y="460" width="500" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="340" y="478" fill="#1c7a4a">负载 512B</text>
-    <text x="640" y="478" fill="#8a97ab" font-size="10">效率 ≈ 96%</text>
+    <rect x="60" y="460" width="26" height="26" fill="#c7d0dd" stroke="#aab8cc"/><text x="73" y="478" font-size="8">开销</text>
+    <rect x="86" y="460" width="504" height="26" fill="#bfe3cd" stroke="#8fd3ac"/><text x="338" y="478" fill="#1c7a4a">负载 512B</text>
+    <text x="640" y="478" fill="#8a97ab" font-size="10">效率 ≈ 95%</text>
   </g>
   <rect x="60" y="500" width="860" height="44" rx="9" fill="#eef3f9" stroke="#c7d0dd"/>
-  <text x="80" y="520" font-size="11.3" fill="#33415c">📘 数值示意：TLP 固定开销 ≈ 头(12/16B)+序号/LCRC/成帧+编码。负载越大，固定开销占比越小 → 有效带宽越高。</text>
-  <text x="80" y="537" font-size="10.5" fill="#8a97ab">但 MPS 越大，单包占用链路时间越长、时延抖动越大，需在吞吐与时延间权衡。Gen6+ Flit 模式的开销模型另算（见 第07章）。</text>
+  <text x="80" y="520" font-size="11.3" fill="#33415c">📘 数值示意：TLP 固定开销 ≈ 26B（头 12/16B + 序号 2B + LCRC 4B + 成帧 ~8B），与 第12章 带宽账同口径。</text>
+  <text x="80" y="537" font-size="10.5" fill="#8a97ab">但 MPS 越大，单包占用链路时间越长、时延抖动越大，需在吞吐与时延间权衡。（🔭 Gen6+ Flit 模式的开销模型另算，见 第07章展望。）</text>
 </svg>
