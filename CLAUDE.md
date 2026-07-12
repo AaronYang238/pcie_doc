@@ -109,7 +109,7 @@ PCIe 是**分层协议**：软件的一次读写，在发送端被事务层→�
 
 ### 第Ⅱ篇　PCI Express 体系结构概述
 - [第04章 PCIe 总线概述](notes/第二篇-PCIe体系结构/第04章-PCIe总线概述.md)
-- [第05章 平台 MCH/ICH（Montevina）](notes/第二篇-PCIe体系结构/第05章-平台MCH与ICH.md)
+- [第05章 平台地址空间组织（附 MCH/ICH 历史案例）](notes/第二篇-PCIe体系结构/第05章-平台MCH与ICH.md)
 - [第06章 事务层 TLP](notes/第二篇-PCIe体系结构/第06章-事务层.md)
 - [第07章 数据链路层与物理层](notes/第二篇-PCIe体系结构/第07章-数据链路层与物理层.md)
 - [第08章 链路训练与电源管理](notes/第二篇-PCIe体系结构/第08章-链路训练与电源管理.md)
